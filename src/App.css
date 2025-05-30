@@ -3229,7 +3229,7 @@ section {
 =========================*/
 /* --Common Banner-- */
 #common_banner {
-    background-image: url('../img/common/bannerInner.jpg');
+    background-image: url('../src/assets/img/common/bannerInner.jpg');
     padding: 200px 0 72px 0;
     background-repeat: no-repeat;
     background-size: cover;
@@ -4190,7 +4190,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 
 #consultation_area {
-    background-image: url('../img/common/counter_bg.png');
+    background-image: url('../src//assets/img/common/counter_bg.png');
     padding: 150px 0 220px 0;
     background-repeat: no-repeat;
     background-size: cover;

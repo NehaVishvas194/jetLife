@@ -9,6 +9,7 @@ import image2 from "../assets/img/payC2.png";
 import image3 from "../assets/img/payC3.png";
 import image4 from "../assets/img/payC4.png";
 import { FaChevronUp } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -69,7 +70,7 @@ const Footer = () => {
               <div className="footer_link_area">
                 <ul>
                   <li>
-                    <a href="about.html">About Us</a>
+                    <Link to="/about">About Us</Link>
                   </li>
                   <li>
                     <a href="#!">Loyalty program</a>
@@ -105,7 +106,7 @@ const Footer = () => {
                     <a href="#!">Legal</a>
                   </li>
                   <li>
-                    <a href="#!">Contact Us</a>
+                    <Link to="/contactUs">Contact Us</Link>
                   </li>
                   <li>
                     <a href="#!">Affiliate Program</a>

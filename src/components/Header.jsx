@@ -64,9 +64,8 @@ const Header = () => {
                     <a href="#!">Help</a>
                   </li>
                   <li>
-                    <a href="contact.html">Contact Us</a>
+                    <Link to="/contactUs">Contact Us</Link>
                   </li>
-
                   <li>
                     <div className="dropdown language-option">
                       <button
