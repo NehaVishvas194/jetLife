@@ -35,9 +35,10 @@ const FormArea = () => {
   const [error, setError] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [travelClass, setTravelClass] = useState("Economy");
-  const [multiCitySegments, setMultiCitySegments] = useState([
-    { from: "", to: "", date: new Date().toISOString().split("T")[0] },
-    { from: "", to: "", date: new Date().toISOString().split("T")[0] },
+  const getTodayDate = () => new Date().toISOString().split("T")[0];
+  const [multiCityData, setMultiCityData] = useState([
+    { from: "", to: "", date: getTodayDate() },
+    { from: "", to: "", date: getTodayDate() },
   ]);
   const navigate = useNavigate();
 
@@ -179,9 +180,11 @@ const FormArea = () => {
   };
 
   // Multi filter data
-  const handleMultiInputChange = (e) => {
+  const handleMultiInputChange = (e, index, type) => {
     const value = e.target.value;
-    setMultiFromInput(value);
+    const updatedData = [...multiCityData];
+    updatedData[index][type] = value;
+    setMultiCityData(updatedData);
 
     const filtered = airportList.filter((airport) =>
       `${airport.AirportCode} ${airport.AirportName} ${airport.City}`
@@ -189,33 +192,58 @@ const FormArea = () => {
         .includes(value.toLowerCase())
     );
 
-    setMultiFilteredList(filtered);
+    if (type === "from") {
+      const updatedFiltered = [...multiFilteredList];
+      updatedFiltered[index] = filtered;
+      setMultiFilteredList(updatedFiltered);
+    } else if (type === "to") {
+      const updatedFiltered = [...multiFilteredToList];
+      updatedFiltered[index] = filtered;
+      setMultiFilteredToList(updatedFiltered);
+    }
   };
 
-  const handleMultiToInputChange = (e) => {
-    const value = e.target.value;
-    setMultiToInput(value);
+  const handleSelectAirport = (airport, index, type) => {
+    const formatted = `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`;
+    const updatedData = [...multiCityData];
+    updatedData[index][type] = formatted;
+    setMultiCityData(updatedData);
 
-    const filtered = airportList.filter((airport) =>
-      `${airport.AirportCode} ${airport.AirportName} ${airport.City}`
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
-
-    setMultiFilteredToList(filtered);
+    if (type === "from") {
+      const updatedFiltered = [...multiFilteredList];
+      updatedFiltered[index] = [];
+      setMultiFilteredList(updatedFiltered);
+    } else {
+      const updatedFiltered = [...multiFilteredToList];
+      updatedFiltered[index] = [];
+      setMultiFilteredToList(updatedFiltered);
+    }
   };
 
-  const handleAddFlight = () => {
-    setMultiCitySegments([
-      ...multiCitySegments,
-      { from: "", to: "", date: new Date().toISOString().split("T")[0] },
-    ]);
+  const handleMultiDateChange = (e, index) => {
+    const updatedData = [...multiCityData];
+    updatedData[index].date = e.target.value;
+    setMultiCityData(updatedData);
   };
 
-  const handleRemoveFlight = (index) => {
-    const updatedSegments = [...multiCitySegments];
-    updatedSegments.splice(index, 1);
-    setMultiCitySegments(updatedSegments);
+  const addFlightSegment = () => {
+    setMultiCityData([...multiCityData, { from: "", to: "", date: "" }]);
+    setMultiFilteredList([...multiFilteredList, []]);
+    setMultiFilteredToList([...multiFilteredToList, []]);
+  };
+
+  const removeFlightSegment = (index) => {
+    const updated = [...multiCityData];
+    updated.splice(index, 1);
+    setMultiCityData(updated);
+
+    const updatedFromFiltered = [...multiFilteredList];
+    updatedFromFiltered.splice(index, 1);
+    setMultiFilteredList(updatedFromFiltered);
+
+    const updatedToFiltered = [...multiFilteredToList];
+    updatedToFiltered.splice(index, 1);
+    setMultiFilteredToList(updatedToFiltered);
   };
 
   // Passengers Calender Data Code
@@ -1124,7 +1152,7 @@ const FormArea = () => {
                               <form action="#!">
                                 <div className="multi_city_form_wrapper">
                                   <div className="multi_city_form">
-                                    {multiCitySegments.map((segment, index) => (
+                                    {multiCityData.map((segment, index) => (
                                       <div className="row mb-2" key={index}>
                                         <div className="row">
                                           <div className="col-lg-12">
@@ -1133,7 +1161,7 @@ const FormArea = () => {
                                                 <button
                                                   type="button"
                                                   onClick={() =>
-                                                    handleRemoveFlight(index)
+                                                    removeFlightSegment(index)
                                                   }
                                                 >
                                                   Remove
@@ -1150,16 +1178,48 @@ const FormArea = () => {
                                               placeholder="Leaving from..."
                                               value={segment.from}
                                               onChange={(e) =>
-                                                handleSegmentChange(
+                                                handleMultiInputChange(
+                                                  e,
                                                   index,
-                                                  "from",
-                                                  e.target.value
+                                                  "from"
                                                 )
                                               }
                                             />
-                                            <span>
-                                              Select your Departure Airports...
-                                            </span>
+                                            {multiFilteredList[index]?.length >
+                                              0 && (
+                                              <ul className="airportList_ul">
+                                                {multiFilteredList[index].map(
+                                                  (airport, i) => (
+                                                    <li
+                                                      className="airportList_li"
+                                                      key={i}
+                                                      onClick={() =>
+                                                        handleSelectAirport(
+                                                          airport,
+                                                          index,
+                                                          "from"
+                                                        )
+                                                      }
+                                                    >
+                                                      {airport.City} (
+                                                      {airport.AirportCode}) -{" "}
+                                                      {airport.AirportName}
+                                                    </li>
+                                                  )
+                                                )}
+                                                {multiFilteredList === 0 && (
+                                                  <li
+                                                    style={{
+                                                      padding: "8px 12px",
+                                                      color: "gray",
+                                                    }}
+                                                  >
+                                                    No result found
+                                                  </li>
+                                                )}
+                                              </ul>
+                                            )}
+                                            <span>Leaving from...</span>
                                             <div className="plan_icon_posation">
                                               <FaPlaneDeparture
                                                 size={30}
@@ -1176,16 +1236,48 @@ const FormArea = () => {
                                               placeholder="Going to..."
                                               value={segment.to}
                                               onChange={(e) =>
-                                                handleSegmentChange(
+                                                handleMultiInputChange(
+                                                  e,
                                                   index,
-                                                  "to",
-                                                  e.target.value
+                                                  "to"
                                                 )
                                               }
                                             />
-                                            <span>
-                                              Select Destination airport...{" "}
-                                            </span>
+                                            {multiFilteredToList[index]
+                                              ?.length > 0 && (
+                                              <ul className="airportList_ul">
+                                                {multiFilteredToList[index].map(
+                                                  (airport, i) => (
+                                                    <li
+                                                      className="airportList_li"
+                                                      key={i}
+                                                      onClick={() =>
+                                                        handleSelectAirport(
+                                                          airport,
+                                                          index,
+                                                          "to"
+                                                        )
+                                                      }
+                                                    >
+                                                      {airport.City} (
+                                                      {airport.AirportCode}) -{" "}
+                                                      {airport.AirportName}
+                                                    </li>
+                                                  )
+                                                )}
+                                                {multiFilteredToList == 0 && (
+                                                  <li
+                                                    style={{
+                                                      padding: "8px 12px",
+                                                      color: "gray",
+                                                    }}
+                                                  >
+                                                    No result found
+                                                  </li>
+                                                )}
+                                              </ul>
+                                            )}
+                                            <span>Going to...</span>
                                             <div className="plan_icon_posation">
                                               <FaPlaneArrival
                                                 size={30}
@@ -1204,26 +1296,21 @@ const FormArea = () => {
                                             <div className="flight_Search_boxed date_flex_area">
                                               <div className="Journey_date">
                                                 <p>Journey date</p>
-                                                <input
-                                                  type="date"
-                                                  value={segment.date}
-                                                  min={
-                                                    new Date()
-                                                      .toISOString()
-                                                      .split("T")[0]
-                                                  }
-                                                  onChange={(e) =>
-                                                    handleSegmentChange(
-                                                      index,
-                                                      "date",
-                                                      e.target.value
-                                                    )
-                                                  }
-                                                />
+                                                    <input
+                                                      type="date"
+                                                      value={segment.date}
+                                                      min={getTodayDate()}
+                                                      onChange={(e) =>
+                                                        handleMultiDateChange(
+                                                          e,
+                                                          index
+                                                        )
+                                                      }
+                                                    />
                                                 <span>
-                                                  {journeyDate &&
+                                                  {segment.date &&
                                                     new Date(
-                                                      journeyDate
+                                                      segment.date
                                                     ).toLocaleDateString(
                                                       "en-US",
                                                       {
@@ -1832,7 +1919,7 @@ const FormArea = () => {
                                       <button
                                         type="button"
                                         id="addMulticityRow"
-                                        onClick={handleAddFlight}
+                                        onClick={addFlightSegment}
                                       >
                                         + Add another flight
                                       </button>

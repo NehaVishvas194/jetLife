@@ -231,11 +231,11 @@ const Header = () => {
               <span className="search-overlay-close-line"></span>
               <span className="search-overlay-close-line"></span>
             </div>
-            <div clclassNameass="search-overlay-form">
+            <div className="search-overlay-form">
               <form>
                 <input
                   type="text"
-                  class="input-search"
+                  className="input-search"
                   placeholder="Search here..."
                 />
                 <button type="button">
