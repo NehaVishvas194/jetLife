@@ -609,6 +609,25 @@ section {
     overflow: hidden;
     white-space: nowrap;
 }
+.flight_Search_boxed .airportList_ul{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 350px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    z-index: 10;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.flight_Search_boxed .airportList_ul .airportList_li{
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
 
 .date_flex_area {
     display: flex;
@@ -622,6 +641,7 @@ section {
     padding: 0;
     font-size: 22px;
     font-weight: 500;
+    text-align: start;
 }
 
 .dropdown_passenger_area button::after {
@@ -678,6 +698,8 @@ section {
     border: 1px solid #d8d8d8;
     width: 20px;
     height: 20px;
+    align-items: center;
+    text-align: center;
 }
 
 .traveller-calulate-persons .passengers .passengers-types {
@@ -3230,7 +3252,7 @@ section {
 /* --Common Banner-- */
 #common_banner {
     background-image: url('../src/assets/img/common/bannerInner.jpg');
-    padding: 200px 0 72px 0;
+    padding: 250px 0 72px 0;
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -3994,7 +4016,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 
 .form-control {
-   height: 40px;
+   height: 45px;
     border: 2px dashed #dddddd75;
     padding: 10px 10px;
     font-size: 15px;
@@ -11572,6 +11594,7 @@ button.btn.commonBtn{
     font-size: 15px;
     padding: 5px 20px;
     font-weight: 500;
+    text-align: center;
 }
 
 .modalHeader .btn-close{
