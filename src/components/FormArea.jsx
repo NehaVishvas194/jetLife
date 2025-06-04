@@ -23,8 +23,8 @@ const FormArea = () => {
   const [filteredList2, setFilteredList2] = useState([]);
   const [toInput2, setToInput2] = useState("");
   const [filteredToList2, setFilteredToList2] = useState([]);
-  const [multiFromInput, setMultiFromInput] = useState([]);
-  const [multiToInput, setMultiToInput] = useState([]);
+  // const [multiFromInput, setMultiFromInput] = useState([]);
+  // const [multiToInput, setMultiToInput] = useState([]);
   const [multiFilteredList, setMultiFilteredList] = useState([]);
   const [multiFilteredToList, setMultiFilteredToList] = useState([]);
   const [journeyDate, setJourneyDate] = useState("");
@@ -115,11 +115,6 @@ const FormArea = () => {
         "session_id",
         response.data.AirSearchResponse.session_id
       );
-
-      // if (response === 200) {
-      //   sessionStorage.getItem('session_id')
-      // }
-
       console.log(response.data.AirSearchResponse);
     } catch (error) {
       console.log("Error Fetching Search List Data:", error);
@@ -136,7 +131,6 @@ const FormArea = () => {
         .toLowerCase()
         .includes(value.toLowerCase())
     );
-
     setFilteredList(filtered);
   };
 
@@ -227,7 +221,7 @@ const FormArea = () => {
   };
 
   const addFlightSegment = () => {
-    setMultiCityData([...multiCityData, { from: "", to: "", date: "" }]);
+    setMultiCityData([...multiCityData, { from: "", to: "", date: getTodayDate() }]);
     setMultiFilteredList([...multiFilteredList, []]);
     setMultiFilteredToList([...multiFilteredToList, []]);
   };

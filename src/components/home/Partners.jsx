@@ -4,14 +4,14 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
 
-import partner1 from "../assets/img/partner/1.png";
-import partner2 from "../assets/img/partner/2.png";
-import partner3 from "../assets/img/partner/3.png";
-import partner4 from "../assets/img/partner/4.png";
-import partner5 from "../assets/img/partner/5.png";
-import partner6 from "../assets/img/partner/6.png";
-import partner7 from "../assets/img/partner/7.png";
-import partner8 from "../assets/img/partner/8.png";
+import partner1 from "../../assets/img/partner/1.png";
+import partner2 from "../../assets/img/partner/2.png";
+import partner3 from "../../assets/img/partner/3.png";
+import partner4 from "../../assets/img/partner/4.png";
+import partner5 from "../../assets/img/partner/5.png";
+import partner6 from "../../assets/img/partner/6.png";
+import partner7 from "../../assets/img/partner/7.png";
+import partner8 from "../../assets/img/partner/8.png";
 
 const partnerLogos = [
   partner1,

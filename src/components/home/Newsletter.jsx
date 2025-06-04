@@ -1,4 +1,4 @@
-import image1 from "../assets/img/email.png";
+import image1 from "../../assets/img/email.png";
 function Newsletter() {
   return (
     <div>

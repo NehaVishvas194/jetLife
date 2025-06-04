@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import image1 from "../assets/img/destination/destination-small1.png";
-import image2 from "../assets/img/destination/destination-small2.png";
-import image3 from "../assets/img/destination/destination-small3.png";
-import image4 from "../assets/img/destination/destination-small4.png";
-import image5 from "../assets/img/destination/destination-small5.png";
-import image6 from "../assets/img/destination/destination-small6.png";
+import image1 from "../../assets/img/destination/destination-small1.png";
+import image2 from "../../assets/img/destination/destination-small2.png";
+import image3 from "../../assets/img/destination/destination-small3.png";
+import image4 from "../../assets/img/destination/destination-small4.png";
+import image5 from "../../assets/img/destination/destination-small5.png";
+import image6 from "../../assets/img/destination/destination-small6.png";
 
 // Helper component for a single destination item
 const DestinationItem = ({ image, alt, title, price }) => (

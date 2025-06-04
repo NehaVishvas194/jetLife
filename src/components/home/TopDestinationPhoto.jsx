@@ -1,10 +1,10 @@
 import React from "react";
-import image1 from "../assets/img/amazing-place/am-place-1.png";
-import image2 from "../assets/img/amazing-place/am-place-2.png";
-import image3 from "../assets/img/amazing-place/am-place-3.png";
-import image4 from "../assets/img/amazing-place/am-place-4.png";
-import image5 from "../assets/img/amazing-place/am-place-5.png";
-import image6 from "../assets/img/amazing-place/am-place-6.png";
+import image1 from "../../assets/img/amazing-place/am-place-1.png";
+import image2 from "../../assets/img/amazing-place/am-place-2.png";
+import image3 from "../../assets/img/amazing-place/am-place-3.png";
+import image4 from "../../assets/img/amazing-place/am-place-4.png";
+import image5 from "../../assets/img/amazing-place/am-place-5.png";
+import image6 from "../../assets/img/amazing-place/am-place-6.png";
 import { FaStar } from "react-icons/fa6";
 
 const TopDestinationPhoto = () => {

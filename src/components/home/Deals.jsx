@@ -1,12 +1,12 @@
 import React from "react";
-import hotel1 from "../assets/img/tab-img/hotel1.png";
-import hotel2 from "../assets/img/tab-img/hotel2.png";
-import hotel3 from "../assets/img/tab-img/hotel3.png";
-import hotel4 from "../assets/img/tab-img/hotel4.png";
-import hotel5 from "../assets/img/tab-img/hotel5.png";
-import hotel6 from "../assets/img/tab-img/hotel6.png";
-import hotel7 from "../assets/img/tab-img/hotel7.png";
-import hotel8 from "../assets/img/tab-img/hotel8.png";
+import hotel1 from "../../assets/img/tab-img/hotel1.png";
+import hotel2 from "../../assets/img/tab-img/hotel2.png";
+import hotel3 from "../../assets/img/tab-img/hotel3.png";
+import hotel4 from "../../assets/img/tab-img/hotel4.png";
+import hotel5 from "../../assets/img/tab-img/hotel5.png";
+import hotel6 from "../../assets/img/tab-img/hotel6.png";
+import hotel7 from "../../assets/img/tab-img/hotel7.png";
+import hotel8 from "../../assets/img/tab-img/hotel8.png";
 import { IoLocationSharp } from "react-icons/io5";
 
 const HotelCard = ({

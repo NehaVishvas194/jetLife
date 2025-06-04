@@ -1,6 +1,6 @@
-import image1 from "../assets/img/imagination1.png";
-import image2 from "../assets/img/imagination2.png";
-import image3 from "../assets/img/imagination3.png";
+import image1 from "../../assets/img/imagination1.png";
+import image2 from "../../assets/img/imagination2.png";
+import image3 from "../../assets/img/imagination3.png";
 
 const Imagination = () => {
   return (

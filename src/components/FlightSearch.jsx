@@ -10,7 +10,7 @@ import {
 import { FaMinus, FaPlus, FaAngleRight } from "react-icons/fa6";
 import Header from "./Header";
 import Footer from "./Footer";
-import Newsletter from "./Newsletter";
+import Newsletter from "./home/Newsletter";
 import flightImg from "../assets/img/common/filght.svg";
 // import rightArrow from "../assets/img/icon/right_arrow.png";
 import { Link } from "react-router-dom";

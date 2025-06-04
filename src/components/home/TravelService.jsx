@@ -5,12 +5,12 @@ import "swiper/css";
 import "swiper/css/autoplay";
 import { IoLocationSharp } from "react-icons/io5";
 
-import image1 from "../assets/img/tab-img/hotel1.png";
-import image2 from "../assets/img/tab-img/hotel2.png";
-import image3 from "../assets/img/tab-img/hotel3.png";
-import image4 from "../assets/img/tab-img/hotel4.png";
-import image6 from "../assets/img/tab-img/hotel6.png";
-import image7 from "../assets/img/tab-img/hotel7.png";
+import image1 from "../../assets/img/tab-img/hotel1.png";
+import image2 from "../../assets/img/tab-img/hotel2.png";
+import image3 from "../../assets/img/tab-img/hotel3.png";
+import image4 from "../../assets/img/tab-img/hotel4.png";
+import image6 from "../../assets/img/tab-img/hotel6.png";
+import image7 from "../../assets/img/tab-img/hotel7.png";
 
 const travelServices = [
   {

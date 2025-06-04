@@ -1,9 +1,9 @@
 import React from "react";
-import image1 from "../assets/img/news/small1.png";
-import image2 from "../assets/img/news/small2.png";
-import image3 from "../assets/img/news/small3.png";
-import image4 from "../assets/img/news/small4.png";
-import image5 from "../assets/img/news/new-big.png";
+import image1 from "../../assets/img/news/small1.png";
+import image2 from "../../assets/img/news/small2.png";
+import image3 from "../../assets/img/news/small3.png";
+import image4 from "../../assets/img/news/small4.png";
+import image5 from "../../assets/img/news/new-big.png";
 import { FaAnglesRight } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
 const HomeNews = () => {
