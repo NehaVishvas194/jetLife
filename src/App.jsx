@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import ForgetPassword from "./components/ForgetPassword";
 import Register from "./components/Register";
 import ResetPassword from "./components/ResetPassword";
+import ReviewBooking from "./components/ReviewBooking";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contactUs" element={<ContactUs />} />
           <Route path="/searchFlight" element={<FlightSearch />} />
+          <Route path="/review_booking" element={<ReviewBooking/>}/>
         </Routes>
       </BrowserRouter>
     </>

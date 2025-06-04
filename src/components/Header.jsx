@@ -168,7 +168,7 @@ const Header = () => {
                         <div className="dropdown-content">
                           <ul>
                             <li>
-                              <a href="register.html">Create Acount</a>
+                              <Link to="/register">Create Acount</Link>
                             </li>
                             <li>
                               <a href="profile.html">Profiles</a>
@@ -177,10 +177,10 @@ const Header = () => {
                               <a href="help.html">Help</a>
                             </li>
                             <li>
-                              <a href="reset-password.html">Reset password</a>
+                              <Link to="/reset_password">Reset password</Link>
                             </li>
                             <li>
-                              <a href="#!">Logout</a>
+                              <Link to="/">Logout</Link>
                             </li>
                           </ul>
                         </div>
