@@ -145,7 +145,7 @@ const Register = () => {
                                         <button className="btn btn_theme btn_md">Register</button>
                                     </div>
                                     <div className="have_acount_area other_author_option">
-                                        <p>Already have an account? <a href="login.html">Log in now</a></p>
+                                        <p>Already have an account? <Link to="/login">Log in now</Link></p>
                                     </div>
                                 </div>
                             </form>

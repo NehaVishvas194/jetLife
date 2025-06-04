@@ -1,11 +1,31 @@
 import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
+import { useState } from "react";
 import Newsletter from "./home/Newsletter";
 import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const ForgetPassword = () => {
+  const [mobile, setMobile] = useState("");
+  const navigate = useNavigate()
+
+  const handleSendCode = () => {
+    const isValid = /^[0-9]{10}$/.test(mobile);
+    if (!isValid) {
+      toast.error("Please enter a valid 10-digit mobile number!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
+    // Proceed to reset password page
+    navigate("/reset_password");
+  };
   return (
     <div>
       <Header />
@@ -43,25 +63,31 @@ const ForgetPassword = () => {
                   <h2>Reset you password</h2>
                 </div>
                 <div className="common_author_form">
-                  <form action="#" id="main_author_form">
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Enter mobile number"
-                      />
-                    </div>
-                    <div className="common_form_submit">
-                      <Link to="/reset_password">
-                        <button
-                          id="sendCodeBtn"
-                          className="btn btn_theme btn_md"
-                        >
-                          Send code
-                        </button>
-                      </Link>
-                    </div>
-                  </form>
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter mobile number"
+                      value={mobile}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d{0,10}$/.test(value)) {
+                          setMobile(value);
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="common_form_submit">
+                    <Link to="/reset_password">
+                    <button
+                      id="sendCodeBtn"
+                      className="btn btn_theme btn_md"
+                      onClick={handleSendCode}
+                    >
+                      Send code
+                    </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -70,6 +96,7 @@ const ForgetPassword = () => {
       </section>
       <Newsletter />
       <Footer />
+      <ToastContainer />
     </div>
   );
 };
