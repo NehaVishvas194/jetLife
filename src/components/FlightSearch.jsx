@@ -754,7 +754,9 @@ const FlightSearch = () => {
                                         />
                                       </div>
                                       <div className="range_plan">
-                                        <FaExchangeAlt />
+                                        <i>
+                                          <FaExchangeAlt />
+                                        </i>
                                       </div>
                                     </div>
                                   </div>
@@ -950,7 +952,9 @@ const FlightSearch = () => {
                                             />
                                           </div>
                                           <div className="range_plan">
-                                            <FaExchangeAlt />
+                                            <i>
+                                              <FaExchangeAlt />
+                                            </i>
                                           </div>
                                         </div>
                                       </div>
@@ -1126,7 +1130,9 @@ const FlightSearch = () => {
                                             />
                                           </div>
                                           <div className="range_plan">
-                                            <FaExchangeAlt />
+                                            <i>
+                                              <FaExchangeAlt />
+                                            </i>
                                           </div>
                                         </div>
                                       </div>
@@ -1995,7 +2001,9 @@ const FlightSearch = () => {
                                             />
                                           </div>
                                           <div className="range_plan">
-                                            <FaExchangeAlt />
+                                            <i>
+                                              <FaExchangeAlt />
+                                            </i>
                                           </div>
                                         </div>
                                       </div>

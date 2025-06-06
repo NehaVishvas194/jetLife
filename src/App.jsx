@@ -10,6 +10,10 @@ import ForgetPassword from "./components/ForgetPassword";
 import Register from "./components/Register";
 import ResetPassword from "./components/ResetPassword";
 import ReviewBooking from "./components/ReviewBooking";
+import PrivacyPolicy from "./components/PrivacyPolicy";
+import Help from "./components/Help";
+import Faq from "./components/Faq";
+import ProfilePage from "./components/ProfilePage";
 
 function App() {
   return (
@@ -25,6 +29,10 @@ function App() {
           <Route path="/contactUs" element={<ContactUs />} />
           <Route path="/searchFlight" element={<FlightSearch />} />
           <Route path="/review_booking" element={<ReviewBooking/>}/>
+          <Route path="/privacy_policy" element={<PrivacyPolicy/>}/>
+          <Route path="/help" element={<Help/>}/>
+          <Route path="/faq" element={<Faq/>}/>
+          <Route path="/profile" element={<ProfilePage/>}/>
         </Routes>
       </BrowserRouter>
     </>

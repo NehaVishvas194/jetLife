@@ -74,7 +74,7 @@ const ForgetPassword = () => {
                         if (/^\d{0,10}$/.test(value)) {
                           setMobile(value);
                         }
-                      }}
+                      }} 
                     />
                   </div>
                   <div className="common_form_submit">

@@ -10,8 +10,11 @@ import Logo2 from "../assets/img/logo.png";
 import image1 from "../assets/img/1.png";
 import image2 from "../assets/img/2.png";
 import image3 from "../assets/img/profile.png";
+import { useState } from "react";
 
 const Header = () => {
+  const [language, setLanguage] = useState("English");
+  const [currency, setCurrency] = useState("USD");
   return (
     <>
       <header className="main_header_arae">
@@ -61,7 +64,7 @@ const Header = () => {
               <div className="col-lg-6 col-md-6">
                 <ul className="topbar-others-options ">
                   <li>
-                    <a href="#!">Help</a>
+                    <Link to="/help">Help</Link>
                   </li>
                   <li>
                     <Link to="/contactUs">Contact Us</Link>
@@ -72,21 +75,24 @@ const Header = () => {
                         className="dropdown-toggle"
                         type="button"
                         data-bs-toggle="dropdown"
-                        aria-haspopup="true"
                         aria-expanded="false"
                       >
-                        <span className="lang-name"></span>
+                        <span className="lang-name">{language}</span>
                       </button>
                       <div className="dropdown-menu language-dropdown-menu">
-                        <a className="dropdown-item" href="#">
-                          English
-                        </a>
-                        <a className="dropdown-item" href="#">
-                          Arabic
-                        </a>
-                        <a className="dropdown-item" href="#">
-                          French
-                        </a>
+                        {["English", "Arabic", "French"].map((lang) => (
+                          <a
+                            className="dropdown-item"
+                            href=""
+                            key={lang}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setLanguage(lang);
+                            }}
+                          >
+                            {lang}
+                          </a>
+                        ))}
                       </div>
                     </div>
                   </li>
@@ -96,24 +102,24 @@ const Header = () => {
                         className="dropdown-toggle"
                         type="button"
                         data-bs-toggle="dropdown"
-                        aria-haspopup="true"
                         aria-expanded="false"
                       >
-                        <span className="lang-name"></span>
+                        <span className="lang-name">{currency}</span>
                       </button>
                       <div className="dropdown-menu language-dropdown-menu">
-                        <a className="dropdown-item" href="#">
-                          KES
-                        </a>
-                        <a className="dropdown-item" href="#">
-                          USD
-                        </a>
-                        <a className="dropdown-item" href="#">
-                          EUR
-                        </a>
-                        <a className="dropdown-item" href="#">
-                          POUNDS
-                        </a>
+                        {["KES", "USD", "EUR", "POUNDS"].map((curr) => (
+                          <a
+                            className="dropdown-item"
+                            href=""
+                            key={curr}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrency(curr);
+                            }}
+                          >
+                            {curr}
+                          </a>
+                        ))}
                       </div>
                     </div>
                   </li>
@@ -171,10 +177,10 @@ const Header = () => {
                               <Link to="/register">Create Acount</Link>
                             </li>
                             <li>
-                              <a href="profile.html">Profiles</a>
+                              <a href="/profile">Profiles</a>
                             </li>
                             <li>
-                              <a href="help.html">Help</a>
+                              <Link to="/help">Help</Link>
                             </li>
                             <li>
                               <Link to="/reset_password">Reset password</Link>

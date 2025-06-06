@@ -1,11 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../Header";
 import Footer from "../Footer";
 import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
 import Newsletter from "../home/Newsletter";
+import { ToastContainer, toast } from "react-toastify";
 
 const ContactUs = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [number, setNumber] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = () => {
+    if (!firstName) {
+      toast.error("Please enter firstName!");
+      return;
+    }
+    if (!lastName) {
+      toast.error("Please enter lastName!");
+      return;
+    }
+    const isEmailValid = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email) 
+    if (!isEmailValid) {
+      toast.error("Please enter a valid email!");
+      return;
+    }
+    const isValid = /^[0-9]{10}$/.test(number);
+    if (!isValid) {
+      toast.error("Please enter a valid 10-digit number!");
+      return;
+    }
+    if (!message) {
+      toast.error("Please enter message!");
+      return;
+    }
+    console.log(firstName);
+    console.log(lastName);
+    console.log(email);
+    console.log(number);
+    console.log(message);
+  };
   return (
     <div>
       <Header />
@@ -118,12 +154,14 @@ const ContactUs = () => {
                   <h2>Leave us a message</h2>
                 </div>
                 <div className="contact_form">
-                  <form action="#!" id="contact_form_content">
+                  <form id="contact_form_content">
                     <div className="row">
                       <div className="col-lg-6">
                         <div className="form-group">
                           <input
                             type="text"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
                             className="form-control bg_input"
                             placeholder="First name*"
                           />
@@ -133,6 +171,8 @@ const ContactUs = () => {
                         <div className="form-group">
                           <input
                             type="text"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
                             className="form-control bg_input"
                             placeholder="Last name*"
                           />
@@ -142,6 +182,8 @@ const ContactUs = () => {
                         <div className="form-group">
                           <input
                             type="text"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             className="form-control bg_input"
                             placeholder="Email address (Optional)"
                           />
@@ -150,15 +192,23 @@ const ContactUs = () => {
                       <div className="col-lg-6">
                         <div className="form-group">
                           <input
-                            type="text"
+                            type="number"
                             className="form-control bg_input"
                             placeholder="Mobile number*"
+                            value={number}
+                            onChange={(e) => {
+                              if (/^\d{0,10}$/.test(e.target.value)) {
+                                setNumber(e.target.value);
+                              }
+                            }}
                           />
                         </div>
                       </div>
                       <div className="col-lg-12">
                         <div className="form-group">
                           <textarea
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
                             className="form-control bg_input"
                             rows="5"
                             placeholder="Message"
@@ -167,7 +217,11 @@ const ContactUs = () => {
                       </div>
                       <div className="col-lg-12">
                         <div className="form-group">
-                          <button type="button" className="btn btn_theme btn_md">
+                          <button
+                            type="button"
+                            className="btn btn_theme btn_md"
+                            onClick={handleSubmit}
+                          >
                             Send message
                           </button>
                         </div>
@@ -182,6 +236,7 @@ const ContactUs = () => {
       </section>
       <Newsletter />
       <Footer />
+      <ToastContainer />
     </div>
   );
 };

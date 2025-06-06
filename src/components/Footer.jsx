@@ -100,7 +100,7 @@ const Footer = () => {
                     <a href="#!">Account</a>
                   </li>
                   <li>
-                    <a href="#!">Faq</a>
+                    <Link to="/faq">Faq</Link>
                   </li>
                   <li>
                     <a href="#!">Legal</a>
@@ -112,7 +112,7 @@ const Footer = () => {
                     <a href="#!">Affiliate Program</a>
                   </li>
                   <li>
-                    <a href="#!">Privacy Policy</a>
+                    <Link to="/privacy_policy">Privacy Policy</Link>
                   </li>
                 </ul>
               </div>
