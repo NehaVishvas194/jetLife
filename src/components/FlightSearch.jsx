@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import { GoDotFill } from "react-icons/go";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import BackToTopButton from "./BackToTop";
 
 const FlightSearch = () => {
   const [airportList, setAirPortList] = useState([]);
@@ -2223,11 +2224,11 @@ const FlightSearch = () => {
       </section>
 
       {/* <!-- Flight Search Areas --> */}
-      <section id="explore_area" class="section_padding">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-3">
-              <div class="left_side_search_area">
+      <section id="explore_area" className="section_padding">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-3">
+              <div className="left_side_search_area">
                 <div className="left_side_search_boxed">
                   <div className="left_side_search_heading">
                     <h5>Number of stops</h5>
@@ -3142,6 +3143,7 @@ const FlightSearch = () => {
         </div>
       </section>
       <Newsletter />
+      <BackToTopButton/>
       <Footer />
     </div>
   );

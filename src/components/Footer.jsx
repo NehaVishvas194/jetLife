@@ -97,7 +97,7 @@ const Footer = () => {
               <div className="footer_link_area">
                 <ul>
                   <li>
-                    <a href="#!">Account</a>
+                    <Link to="/account">Account</Link>
                   </li>
                   <li>
                     <Link to="/faq">Faq</Link>

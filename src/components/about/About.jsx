@@ -18,6 +18,7 @@ import review1 from "../../assets/img/review/review6.png";
 import review2 from "../../assets/img/review/review7.png";
 import { FaStar } from "react-icons/fa6";
 import Newsletter from "../home/Newsletter";
+import BackToTopButton from "../BackToTop";
 
 const About = () => {
   return (
@@ -374,6 +375,7 @@ const About = () => {
         </div>
       </section>
       <Newsletter />
+      <BackToTopButton/>
       <Footer />
     </div>
   );

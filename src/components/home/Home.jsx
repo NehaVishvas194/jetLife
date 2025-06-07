@@ -11,6 +11,7 @@ import Destination from "../home/Destination";
 import TravelService from "../home/TravelService";
 import TopDestinationPhoto from "../home/TopDestinationPhoto";
 import Deals from "../home/Deals";
+import BackToTop from "../BackToTop";
 
 const Home = () => {
   return (
@@ -26,6 +27,7 @@ const Home = () => {
       <HomeNews />
       <Partners />
       <Newsletter />
+      <BackToTop />
       <Footer />
     </div>
   );

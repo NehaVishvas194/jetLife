@@ -5,6 +5,7 @@ import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
 import Newsletter from "./home/Newsletter";
 import { ToastContainer, toast } from "react-toastify";
+import BackToTopButton from "./BackToTop";
 const Login = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -133,7 +134,7 @@ const Login = () => {
                         aria-labelledby="normalUsers-tab"
                         tabindex="0"
                       >
-                        <form action="#" id="main_author_form">
+                        <form onSubmit={handleSubmitNormalUser} id="main_author_form">
                           <div className="form-group">
                             <input
                               type="text"
@@ -158,7 +159,7 @@ const Login = () => {
                           <div className="common_form_submit">
                             <button
                               className="btn btn_theme btn_md"
-                              onClick={handleSubmitNormalUser}
+                              type="submit"
                             >
                               Log in
                             </button>
@@ -178,7 +179,7 @@ const Login = () => {
                         aria-labelledby="corporate-tab"
                         tabindex="0"
                       >
-                        <form action="#" id="main_author_form">
+                        <form id="main_author_form" onSubmit={handleSubmitCorporateUser}>
                           <div className="form-group">
                             <input
                               type="text"
@@ -203,7 +204,7 @@ const Login = () => {
                           <div className="common_form_submit">
                             <button
                               className="btn btn_theme btn_md"
-                              onClick={handleSubmitCorporateUser}
+                              type="submit"
                             >
                               Log in
                             </button>
@@ -224,6 +225,7 @@ const Login = () => {
           </div>
         </section>
         <Newsletter />
+        <BackToTopButton/>
         <Footer />
           <ToastContainer />
       </div>

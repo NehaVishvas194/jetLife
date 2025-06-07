@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { GoDotFill } from "react-icons/go";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
+import BackToTopButton from "./BackToTop";
 const ResetPassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -119,6 +120,7 @@ const ResetPassword = () => {
       </section>
       <Newsletter />
       <Footer />
+      <BackToTopButton/>
       <ToastContainer />
     </div>
   );

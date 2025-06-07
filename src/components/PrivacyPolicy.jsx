@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import Newsletter from "./home/Newsletter";
 import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
+import BackToTopButton from "./BackToTop";
 
 const PrivacyPolicy = () => {
   return (
@@ -145,6 +146,7 @@ const PrivacyPolicy = () => {
         </div>
       </section>
       <Newsletter />
+      <BackToTopButton/>
       <Footer />
     </div>
   );

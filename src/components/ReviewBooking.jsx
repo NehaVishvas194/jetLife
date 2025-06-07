@@ -46,11 +46,7 @@ const ReviewBooking = () => {
                 </label>
                 <div className="airInaDate fontsamll">
                   <span>
-                    <img
-                      className="contryImg"
-                      src={image1}
-                      alt="imgIND"
-                    />
+                    <img className="contryImg" src={image1} alt="imgIND" />
                   </span>{" "}
                   Air India • Tue, Jun 24
                 </div>
@@ -80,7 +76,10 @@ const ReviewBooking = () => {
                   <div className="modal-dialog modal-lg modal-dialog-scrollable">
                     <div className="modal-content">
                       <div className="modal-header modalHeader">
-                        <h1 className="modal-title fs-5" id="explorepackagesLabel">
+                        <h1
+                          className="modal-title fs-5"
+                          id="explorepackagesLabel"
+                        >
                           Flight details
                         </h1>
                         <button
@@ -117,7 +116,9 @@ const ReviewBooking = () => {
                                       <div className="fontsamll">
                                         Indira Gandhi Intl. (DEL)
                                       </div>
-                                      <div className="fontsamll">Terminal 1</div>
+                                      <div className="fontsamll">
+                                        Terminal 1
+                                      </div>
                                     </div>
                                     <div className="rechTimeDate">
                                       <h3 className="allsameheading">7:35pm</h3>
@@ -149,10 +150,14 @@ const ReviewBooking = () => {
                                       <div className="fontsamll">
                                         Chhatrapati Shivaji Intl. (BOM)
                                       </div>
-                                      <div className="fontsamll">Terminal 2</div>
+                                      <div className="fontsamll">
+                                        Terminal 2
+                                      </div>
                                     </div>
                                     <div className="rechTimeDate">
-                                      <h3 className="allsameheading">10:00pm</h3>
+                                      <h3 className="allsameheading">
+                                        10:00pm
+                                      </h3>
                                       <div className="fontsamll">IST</div>
                                       <div className="fontsamll">
                                         <strong>Tue, Jun 24</strong>
@@ -261,7 +266,9 @@ const ReviewBooking = () => {
                                       <div className="fontsamll">
                                         Indira Gandhi Intl. (DEL)
                                       </div>
-                                      <div className="fontsamll">Terminal 1</div>
+                                      <div className="fontsamll">
+                                        Terminal 1
+                                      </div>
                                     </div>
                                     <div className="rechTimeDate">
                                       <h3 className="allsameheading">7:35pm</h3>
@@ -293,10 +300,14 @@ const ReviewBooking = () => {
                                       <div className="fontsamll">
                                         Chhatrapati Shivaji Intl. (BOM)
                                       </div>
-                                      <div className="fontsamll">Terminal 2</div>
+                                      <div className="fontsamll">
+                                        Terminal 2
+                                      </div>
                                     </div>
                                     <div className="rechTimeDate">
-                                      <h3 className="allsameheading">10:00pm</h3>
+                                      <h3 className="allsameheading">
+                                        10:00pm
+                                      </h3>
                                       <div className="fontsamll">IST</div>
                                       <div className="fontsamll">
                                         <strong>Tue, Jun 24</strong>
@@ -390,23 +401,33 @@ const ReviewBooking = () => {
                 <h3 className="allsameheading">Your fare: Eco Value</h3>
                 <ul className="comntitle mt-3">
                   <li>
-                    <span className="greenicon material-icons"> check_circle </span>
+                    <span className="greenicon material-icons">
+                      {" "}
+                      check_circle{" "}
+                    </span>
                     Seat choice included
                   </li>
                   <li>
-                    <span className="greenicon material-icons"> check_circle </span>{" "}
+                    <span className="greenicon material-icons">
+                      {" "}
+                      check_circle{" "}
+                    </span>{" "}
                     Carry-on bag included (15 lbs)
                   </li>
                   <li>
-                    <span className="greenicon material-icons"> check_circle </span>{" "}
+                    <span className="greenicon material-icons">
+                      {" "}
+                      check_circle{" "}
+                    </span>{" "}
                     2 checked bags included (50 lbs each)
                   </li>
                   <li>
-                    <span className="material-icons"> paid </span> Cancellation fee
-                    applies
+                    <span className="material-icons"> paid </span> Cancellation
+                    fee applies
                   </li>
                   <li>
-                    <span className="material-icons"> paid </span> Change fee: $293
+                    <span className="material-icons"> paid </span> Change fee:
+                    $293
                   </li>
                 </ul>
               </div>
@@ -416,7 +437,10 @@ const ReviewBooking = () => {
 
                 <ul className="comntitle mt-3">
                   <li>
-                    <span className="greenicon material-icons"> check_circle </span>
+                    <span className="greenicon material-icons">
+                      {" "}
+                      check_circle{" "}
+                    </span>
                     Seat choice included
                   </li>
                 </ul>
@@ -430,11 +454,17 @@ const ReviewBooking = () => {
 
                 <ul className="comntitle mt-3">
                   <li>
-                    <span className="greenicon material-icons"> check_circle </span>
+                    <span className="greenicon material-icons">
+                      {" "}
+                      check_circle{" "}
+                    </span>
                     Carry-on bag included (15 lbs)
                   </li>
                   <li>
-                    <span className="greenicon material-icons"> check_circle </span>
+                    <span className="greenicon material-icons">
+                      {" "}
+                      check_circle{" "}
+                    </span>
                     2 checked bags included (50 lbs each)
                   </li>
                 </ul>

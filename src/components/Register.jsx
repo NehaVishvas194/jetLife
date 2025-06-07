@@ -5,6 +5,7 @@ import Newsletter from "./home/Newsletter";
 import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import BackToTopButton from "./BackToTop";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -164,7 +165,7 @@ const Register = () => {
                       aria-labelledby="normalUsers-tab"
                       tabindex="0"
                     >
-                      <form id="main_author_form">
+                      <form id="main_author_form" onSubmit={handleNormalUser}>
                         <div className="row">
                           <div className="col-md-6">
                             <div className="form-group">
@@ -245,10 +246,7 @@ const Register = () => {
                             </div>
                           </div>
                           <div className="common_form_submit">
-                            <button
-                              className="btn btn_theme btn_md"
-                              onClick={handleNormalUser}
-                            >
+                            <button className="btn btn_theme btn_md">
                               Register
                             </button>
                           </div>
@@ -269,7 +267,10 @@ const Register = () => {
                       aria-labelledby="corporate-tab"
                       tabindex="0"
                     >
-                      <form id="main_author_form">
+                      <form
+                        id="main_author_form"
+                        onSubmit={handleCorporateUser}
+                      >
                         <div className="row">
                           <div className="col-md-6">
                             <div className="form-group">
@@ -374,10 +375,7 @@ const Register = () => {
                             </div>
                           </div>
                           <div className="common_form_submit">
-                            <button
-                              className="btn btn_theme btn_md"
-                              onClick={handleCorporateUser}
-                            >
+                            <button className="btn btn_theme btn_md">
                               Register
                             </button>
                           </div>
@@ -400,6 +398,7 @@ const Register = () => {
         </div>
       </section>
       <Newsletter />
+      <BackToTopButton />
       <Footer />
       <ToastContainer />
     </div>

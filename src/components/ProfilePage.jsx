@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
 import Newsletter from "./home/Newsletter";
+import BackToTopButton from "./BackToTop";
 
 const ProfilePage = () => {
   return (
@@ -59,6 +60,7 @@ const ProfilePage = () => {
         </div>
       </section>
       <Newsletter />
+      <BackToTopButton/>
       <Footer />
     </>
   );

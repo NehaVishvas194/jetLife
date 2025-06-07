@@ -1,5 +1,17 @@
 import image1 from "../../assets/img/email.png";
+import { ToastContainer, toast } from "react-toastify";
+import { useState } from "react";
+
 function Newsletter() {
+  const [email, setEmail] = useState("");
+  const handleEmailSubmit = () => {
+    const isEmailValid = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email);
+    if (!isEmailValid) {
+      toast.error("Please enter a valid email!");
+      return;
+    }
+  };
+
   return (
     <div>
       <section id="cta_area">
@@ -18,10 +30,12 @@ function Newsletter() {
             </div>
             <div className="col-lg-5">
               <div className="cat_form">
-                <form id="cta_form_wrappper">
+                <form id="cta_form_wrappper" onSubmit={handleEmailSubmit}>
                   <div className="input-group">
                     <input
-                      type="text"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="form-control"
                       placeholder="Enter your mail address"
                     />
@@ -35,6 +49,7 @@ function Newsletter() {
           </div>
         </div>
       </section>
+      <ToastContainer />
     </div>
   );
 }

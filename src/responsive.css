@@ -476,6 +476,14 @@
     }
 } */
 
+@media only screen and (max-width: 1199px) {
+    .main-responsive-nav .main-responsive-menu {
+        position: relative;
+        height: 54px;
+        width: 130px;
+    }
+}
+
 @media (max-width: 992px) {
     .theme_search_form_tabbtn .nav-tabs {
         border-bottom: none;

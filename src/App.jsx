@@ -14,6 +14,8 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import Help from "./components/Help";
 import Faq from "./components/Faq";
 import ProfilePage from "./components/ProfilePage";
+import AccountPage from "./components/AccountPage";
+import HotelSearch from "./components/HotelSearch";
 
 function App() {
   return (
@@ -28,11 +30,13 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contactUs" element={<ContactUs />} />
           <Route path="/searchFlight" element={<FlightSearch />} />
+          <Route path="/searchHotel" element={<HotelSearch/>}/>
           <Route path="/review_booking" element={<ReviewBooking/>}/>
           <Route path="/privacy_policy" element={<PrivacyPolicy/>}/>
           <Route path="/help" element={<Help/>}/>
           <Route path="/faq" element={<Faq/>}/>
           <Route path="/profile" element={<ProfilePage/>}/>
+          <Route path="/account" element={<AccountPage/>}/>
         </Routes>
       </BrowserRouter>
     </>

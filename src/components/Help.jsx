@@ -17,6 +17,7 @@ import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
 import { IoCarSport } from "react-icons/io5";
 import { FaHotel } from "react-icons/fa6";
 import { RiHotelLine } from "react-icons/ri";
+import BackToTopButton from "./BackToTop";
 
 const Help = () => {
   return (
@@ -56,8 +57,8 @@ const Help = () => {
             </div>
             <div className="col-md-7">
               <div className="Search_support">
-                <form action="">
-                  <input type="search" placeholder="How can be Help..." />
+                <form action="" >
+                  <input type="search" placeholder="How can be Help..."  className="form-control"/>
                   <i>
                     <IoSearch />
                   </i>
@@ -238,6 +239,7 @@ const Help = () => {
       </section>
       {/* <!-- Help section end  --> */}
       <Newsletter />
+      <BackToTopButton/>
       <Footer />
     </div>
   );
