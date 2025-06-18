@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Footer from "../Footer";
 import { GoDotFill } from "react-icons/go";
@@ -9,14 +9,19 @@ import BackToTopButton from "../BackToTop";
 import { FaClock } from "react-icons/fa6";
 import { IoMail } from "react-icons/io5";
 import { MdLocalPhone } from "react-icons/md";
+import axios from "axios";
+import { API_BASE_URL } from "../../Url/BaseUrl";
+
 const ContactUs = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [number, setNumber] = useState("");
   const [message, setMessage] = useState("");
+  const [data, setData] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (!firstName) {
       toast.error("Please enter firstName!");
       return;
@@ -39,12 +44,60 @@ const ContactUs = () => {
       toast.error("Please enter message!");
       return;
     }
-    console.log(firstName);
-    console.log(lastName);
-    console.log(email);
-    console.log(number);
-    console.log(message);
+
+    axios
+      .post(`${API_BASE_URL}/user_contactus`, {
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        phoneNumber: number,
+        message: message,
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.data.success === true) {
+          toast.success(response.data.message);
+          setFirstName("");
+          setLastName("");
+          setEmail("");
+          setNumber("");
+          setMessage("");
+        } else {
+          toast.error(response.data.message, {
+            autoClose: 1000,
+            theme: "colored",
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error.response?.data?.message || error.message);
+        toast.error(error.response?.data?.message, {
+          autoClose: 1000,
+          theme: "colored",
+        });
+      });
   };
+
+  const fetchContactData = () => {
+    axios
+      .get(`${API_BASE_URL}/our_contactus`)
+      .then((response) => {
+        console.log(response.data.data);
+        setData(response.data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(error.response?.data?.message || "Something went wrong!", {
+          autoClose: 1000,
+          theme: "colored",
+        });
+      });
+  };
+
+  useEffect(() => {
+    fetchContactData();
+  }, []);
+
   return (
     <div>
       <Header />
@@ -96,7 +149,7 @@ const ContactUs = () => {
                     </div>
                     <div className="info-contact">
                       <h6>Email</h6>
-                      <p>info@jetlifeglobal.com</p>
+                      <p>{data.contact_email}</p>
                     </div>
                   </div>
                 </div>
@@ -113,7 +166,7 @@ const ContactUs = () => {
                     </div>
                     <div className="info-contact">
                       <h6>Phone</h6>
-                      <p>+254 725 206 598</p>
+                      <p>{data.contact_phone}</p>
                     </div>
                   </div>
                 </div>
@@ -130,7 +183,7 @@ const ContactUs = () => {
                     </div>
                     <div className="info-contact">
                       <h6>Schedule</h6>
-                      <p>Monday to Friday: 9 am to 10pm</p>
+                      <p>{data.contact_schedule}</p>
                     </div>
                   </div>
                 </div>
@@ -145,7 +198,7 @@ const ContactUs = () => {
               <div className="col-md-7">
                 <div className="card">
                   <div className="card-body">
-                    <form id="contact_form_content">
+                    <form id="contact_form_content" onSubmit={handleSubmit}>
                       <div className="row">
                         <div className="col-lg-6">
                           <div className="field-set">
@@ -157,7 +210,7 @@ const ContactUs = () => {
                               value={firstName}
                               onChange={(e) => setFirstName(e.target.value)}
                               className="form-control bg_input"
-                              placeholder="First name"
+                              placeholder="Enter First name"
                             />
                           </div>
                         </div>
@@ -171,7 +224,7 @@ const ContactUs = () => {
                               value={lastName}
                               onChange={(e) => setLastName(e.target.value)}
                               className="form-control bg_input"
-                              placeholder="Last name"
+                              placeholder="Enter Last name"
                             />
                           </div>
                         </div>
@@ -181,11 +234,11 @@ const ContactUs = () => {
                               Email<span>*</span>
                             </label>
                             <input
-                              type="text"
+                              type="email"
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
                               className="form-control bg_input"
-                              placeholder="Email address (Optional)"
+                              placeholder="Enter Email address"
                             />
                           </div>
                         </div>
@@ -197,7 +250,7 @@ const ContactUs = () => {
                             <input
                               type="number"
                               className="form-control bg_input"
-                              placeholder="Mobile number"
+                              placeholder="Enter Mobile number"
                               value={number}
                               onChange={(e) => {
                                 if (/^\d{0,10}$/.test(e.target.value)) {
@@ -224,9 +277,9 @@ const ContactUs = () => {
                         <div className="col-lg-12">
                           <div className="form-group">
                             <button
-                              type="button"
+                              type="submit"
                               className="btn btn_theme btn_md"
-                              onClick={handleSubmit}
+                              // onClick={handleSubmit}
                             >
                               Send message
                             </button>
@@ -251,10 +304,10 @@ const ContactUs = () => {
           </div>
         </div>
       </section>
+      <ToastContainer />
       <Newsletter />
       <BackToTopButton />
       <Footer />
-      <ToastContainer />
     </div>
   );
 };

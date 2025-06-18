@@ -12,6 +12,10 @@ import image1 from "../assets/img/1.png";
 import image2 from "../assets/img/2.png";
 import image3 from "../assets/img/profile.png";
 import { useState, useEffect } from "react";
+import axios from "axios";
+import { API_BASE_URL } from "../Url/BaseUrl";
+import { API_IMAGE_URL } from "../Url/BaseUrl";
+import { toast, ToastContainer } from "react-toastify";
 
 const Header = () => {
   const [language, setLanguage] = useState("English");
@@ -19,6 +23,8 @@ const Header = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [menuActive, setMenuActive] = useState(false);
   const [searchActive, setSearchActive] = useState(false);
+  const [fname, setFname] = useState("");
+  const [profileImage, setProfileImage] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,10 +47,50 @@ const Header = () => {
     setSearchActive(false);
   };
 
-  const fname = localStorage.getItem("FirstName");
-  const lname = localStorage.getItem("LastName");
-  // console.log(fname);
-  // console.log(lname);
+  const token = localStorage.getItem("Token");
+  const id = localStorage.getItem("Id");
+
+  const fetchUserDetails = () => {
+    axios
+      .post(`${API_BASE_URL}/userDetails`, {
+        token: token,
+        user_id: id,
+      })
+      .then((response) => {
+        if (response.data.success === true) {
+          const userData = response.data.data;
+          const baseImagePath = response.data.image_path;
+          const imageName = userData.image || "default_image.jpeg";
+          const fullImageUrl = `${baseImagePath}/${imageName}`;
+
+          setProfileImage(fullImageUrl);
+          setFname(`${userData.first_name} ${userData.last_name}`);
+          // setEmail(userData.email);
+          // setMobile(userData.phone_number);
+          // setCompany(userData.company_name || "");
+          // setEmployee(userData.employee_id || "");
+        }
+      })
+      .catch((error) => {
+        const errorMsg =
+          error.response?.data?.message || "Something went wrong!";
+        console.error(errorMsg);
+        // toast.error(errorMsg, {
+        //   autoClose: 1000,
+        //   theme: "colored",
+        // });
+      });
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setFname("");
+    setProfileImage("");
+  };
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
 
   return (
     <>
@@ -207,13 +253,13 @@ const Header = () => {
                       <div className="profile">
                         <img
                           className="dropbtn m-1"
-                          src={image3}
+                          src={profileImage ? profileImage : image3}
                           alt="profile"
                         />
 
                         <span className="signInBtn">
-                          {fname && lname ? (
-                            `${fname} ${lname}`
+                          {fname ? (
+                            `${fname}`
                           ) : (
                             <Link
                               to="/login"
@@ -226,7 +272,7 @@ const Header = () => {
                           )}
                         </span>
 
-                        {fname && lname && (
+                        {fname && (
                           <div className="dropdown-content">
                             <ul>
                               <li>
@@ -235,17 +281,8 @@ const Header = () => {
                               <li>
                                 <Link to="/help">Help</Link>
                               </li>
-                              {/* <li>
-                                <Link to="/reset_password">Reset password</Link>
-                              </li> */}
                               <li>
-                                <Link
-                                  to="/"
-                                  onClick={() => {
-                                    localStorage.clear();
-                                    // window.location.reload();
-                                  }}
-                                >
+                                <Link to="/" onClick={handleLogout}>
                                   Logout
                                 </Link>
                               </li>

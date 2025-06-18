@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Newsletter from "./home/Newsletter";
 import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
 import BackToTopButton from "./BackToTop";
-import image1 from "../assets/img/common/small_banner.png";
+// import image1 from "../assets/img/common/small_banner.png";
 import { IoCamera } from "react-icons/io5";
 import axios from "axios";
 import { API_BASE_URL } from "../Url/BaseUrl";
-import { toast } from "react-toastify";
+import { API_IMAGE_URL } from "../Url/BaseUrl";
+import { toast, ToastContainer } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const AccountPage = () => {
@@ -24,6 +25,8 @@ const AccountPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [profileImage, setProfileImage] = useState("");
+  const [newImageFile, setNewImageFile] = useState(null);
 
   const token = localStorage.getItem("Token");
   const id = localStorage.getItem("Id");
@@ -35,10 +38,13 @@ const AccountPage = () => {
         user_id: id,
       })
       .then((response) => {
-        console.log(response);
         if (response.data.success === true) {
-          console.log(response);
           const userData = response.data.data;
+          const baseImagePath = response.data.image_path;
+          const imageName = userData.image || "default_image.jpeg";
+          const fullImageUrl = `${baseImagePath}/${imageName}`;
+
+          setProfileImage(fullImageUrl);
           setFname(`${userData.first_name} ${userData.last_name}`);
           setEmail(userData.email);
           setMobile(userData.phone_number);
@@ -63,23 +69,29 @@ const AccountPage = () => {
 
   const handleUpdateProfile = () => {
     const [firstName, lastName] = fname.split(" ");
+    const formData = new FormData();
+
+    formData.append("token", token);
+    formData.append("user_id", id);
+    formData.append("email", email);
+    formData.append("phone", String(mobile));
+    formData.append("first_name", firstName);
+    formData.append("last_name", lastName || "");
+    formData.append("company_name", company);
+    formData.append("employee_id", employee);
+
+    if (newImageFile) {
+      formData.append("image", newImageFile); 
+    }
 
     axios
-      .post(`${API_BASE_URL}/user_update_profile`, {
-        token: token,
-        user_id: id,
-        email: email,
-        phone: String(mobile),
-        first_name: firstName,
-        last_name: lastName || "",
-        company_name: company,
-        employee_id: employee,
-      })
+      .post(`${API_BASE_URL}/user_update_profile`, formData)
       .then((response) => {
-        if (response.data.success) {
-          toast.success("Profile updated successfully!", {
-            autoClose: 1000,
-          });
+        if (response.data.success === true) {
+          toast.success("Profile updated successfully!");
+          // const baseImagePath = response.data.image_path;
+          const updatedImageName = response.data.data.image;
+          setProfileImage(`${API_IMAGE_URL}/${updatedImageName}`);
         } else {
           toast.error("Something went wrong!");
         }
@@ -115,11 +127,8 @@ const AccountPage = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setNewImageFile(file);
+      setProfileImage(URL.createObjectURL(file));
     }
   };
 
@@ -169,12 +178,12 @@ const AccountPage = () => {
                 <div className="card-body">
                   <div class="profile-sidebar">
                     <div class="top">
-                      <div class="image-wrap">
-                        <div class="part-img">
+                      <div className="image-wrap">
+                        <div className="part-img">
                           <img
-                            src={image1}
+                            src={profileImage}
                             alt="Profile Picture"
-                            class="img2"
+                            className="img2"
                             id="item_image"
                             height="100"
                           />
@@ -430,6 +439,7 @@ const AccountPage = () => {
       </section>
       <Newsletter />
       <BackToTopButton />
+      <ToastContainer />
       <Footer />
     </>
   );

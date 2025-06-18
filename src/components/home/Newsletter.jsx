@@ -1,19 +1,40 @@
 import image1 from "../../assets/img/email.png";
 import { ToastContainer, toast } from "react-toastify";
 import { useState } from "react";
+import axios from "axios";
+import { API_BASE_URL } from "../../Url/BaseUrl";
 
 function Newsletter() {
   const [email, setEmail] = useState("");
+
   const handleEmailSubmit = () => {
     const isEmailValid = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email);
     if (!isEmailValid) {
       toast.error("Please enter a valid email!");
       return;
     }
+    axios
+      .post(`${API_BASE_URL}/subscriber`, {
+        email: email,
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.data.success === true) {
+          toast.success(response.data.message)
+          setEmail("");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(error.response?.data?.message || "Something went wrong!", {
+          autoClose: 1000,
+          theme: "colored",
+        });
+      });
   };
 
   return (
-    <div>
+    <>
       <section id="cta_area">
         <div className="container">
           <div className="row align-items-center">
@@ -39,7 +60,11 @@ function Newsletter() {
                       className="form-control"
                       placeholder="Enter your mail address"
                     />
-                    <button className="btn btn_theme btn_md" type="button">
+                    <button
+                      className="btn btn_theme btn_md"
+                      type="button"
+                      // onClick={handleEmailSubmit}
+                    >
                       Subscribe
                     </button>
                   </div>
@@ -50,7 +75,7 @@ function Newsletter() {
         </div>
       </section>
       <ToastContainer />
-    </div>
+    </>
   );
 }
 

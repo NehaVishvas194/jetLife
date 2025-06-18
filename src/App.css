@@ -11891,6 +11891,7 @@ span.order-track-status-line.timeLine {
   color: #000;
   font-weight: 500;
   padding: 20px 0;
+  font-size: 14px;
 }
 .privacy_section_para {
   font-size: 14px;
@@ -12939,6 +12940,10 @@ input[type="range"]::-moz-range-thumb {
 /* term and conditions css */
 .term-para p {
   margin-bottom: 20px;
+}
+.term-para li{
+  list-style: inside;
+  margin-bottom: 10px;
 }
 .head-para h5 {
   font-weight: 600;

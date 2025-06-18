@@ -1,8 +1,4 @@
-import React, { useState } from "react";
-import Header from "./Header";
-import Footer from "./Footer";
-import Newsletter from "./home/Newsletter";
-import { GoDotFill } from "react-icons/go";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
@@ -87,6 +83,12 @@ const Register = () => {
         console.log(response);
         if (response.data.success === true) {
           toast.success(response.data.message);
+          setFirstName("");
+          setLastName("");
+          setEmail("");
+          setPassword("");
+          setConfirmPassword("");
+          setMobile("");
           navigate("/login");
         } else {
           toast.error(response.data.message, {
@@ -174,6 +176,14 @@ const Register = () => {
         console.log(response);
         if (response.data.success === true) {
           toast.success(response.data.message);
+          setCFirstName("");
+          setCLastName("");
+          setCEmail("");
+          setCPassword("");
+          setCConfirmPassword("");
+          setCMobile("");
+          setCCompany("");
+          setCEmployeeId("");
           navigate("/login");
         } else {
           toast.error(response.data.message, {
@@ -205,43 +215,45 @@ const Register = () => {
 
   return (
     // new-registertation page
-    <section className="login-page-main">
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-md-6 p-0">
-            <div className="img-cont1">
-              <div className="row justify-content-center">
-                <div className="col-md-8">
-                  <div className="card login-card" data-aos="fade-left">
-                    <div className="card-body">
-                      <div className="main-flexbox">
-                        <div
-                          className=""
-                          data-aos="fade-left"
-                          data-aos-duration="2000"
-                        >
-                          <img src={image1} alt="imgIND" />
-                        </div>
-                        <div
-                          className=""
-                          data-aos="fade-left"
-                          data-aos-duration="2000"
-                        >
-                          <h2>Welcome to Jetlife</h2>
-                          <p>
-                            We are glad to see you again! Get access to your
-                            Orders, Wishlist and Recommendations.
-                          </p>
-                        </div>
-                        <div
-                          className="not-acc"
-                          data-aos="fade-left"
-                          data-aos-duration="2000"
-                        >
-                          <p>
-                            Already have an account?{" "}
-                            <Link to="/login">Log in now</Link>
-                          </p>
+    <>
+      <section className="login-page-main">
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-md-6 p-0">
+              <div className="img-cont1">
+                <div className="row justify-content-center">
+                  <div className="col-md-8">
+                    <div className="card login-card" data-aos="fade-left">
+                      <div className="card-body">
+                        <div className="main-flexbox">
+                          <div
+                            className=""
+                            data-aos="fade-left"
+                            data-aos-duration="2000"
+                          >
+                            <img src={image1} alt="imgIND" />
+                          </div>
+                          <div
+                            className=""
+                            data-aos="fade-left"
+                            data-aos-duration="2000"
+                          >
+                            <h2>Welcome to Jetlife</h2>
+                            <p>
+                              We are glad to see you again! Get access to your
+                              Orders, Wishlist and Recommendations.
+                            </p>
+                          </div>
+                          <div
+                            className="not-acc"
+                            data-aos="fade-left"
+                            data-aos-duration="2000"
+                          >
+                            <p>
+                              Already have an account?{" "}
+                              <Link to="/login">Log in now</Link>
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -249,343 +261,347 @@ const Register = () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-6 p-0">
-            <div className="main-box-cont">
-              <div className="hd-part">
-                <h6>Sign Up</h6>
-                <p>Register your account</p>
-              </div>
-              <div className="common_author_form p-0">
-                <ul
-                  className="nav nav-tabs custom-tab-toggle"
-                  id="myTab"
-                  role="tablist"
-                >
-                  <li className="nav-item" role="presentation">
-                    <button
-                      className="nav-link active"
-                      id="normalUsers-tab"
-                      data-bs-toggle="tab"
-                      data-bs-target="#normalUsers-tab-pane"
-                      type="button"
-                      role="tab"
-                      aria-controls="normalUsers-tab-pane"
-                      aria-selected="true"
-                    >
-                      Individual User
-                    </button>
-                  </li>
-                  <li className="nav-item" role="presentation">
-                    <button
-                      className="nav-link"
-                      id="corporate-tab"
-                      data-bs-toggle="tab"
-                      data-bs-target="#corporate-tab-pane"
-                      type="button"
-                      role="tab"
-                      aria-controls="corporate-tab-pane"
-                      aria-selected="false"
-                    >
-                      Corporate User
-                    </button>
-                  </li>
-                </ul>
-                <div className="tab-content" id="myTabContent">
-                  <div
-                    className="tab-pane fade show active"
-                    id="normalUsers-tab-pane"
-                    role="tabpanel"
-                    aria-labelledby="normalUsers-tab"
-                    tabindex="0"
+            <div className="col-md-6 p-0">
+              <div className="main-box-cont">
+                <div className="hd-part">
+                  <h6>Sign Up</h6>
+                  <p>Register your account</p>
+                </div>
+                <div className="common_author_form p-0">
+                  <ul
+                    className="nav nav-tabs custom-tab-toggle"
+                    id="myTab"
+                    role="tablist"
                   >
-                    <form id="main_author_form" onSubmit={handleNormalUser}>
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="field-set">
-                            <label>
-                              First Name<span>*</span>
-                            </label>
-                            <input
-                              type="text"
-                              value={firstName}
-                              onChange={(e) => setFirstName(e.target.value)}
-                              className="form-control"
-                              placeholder="Enter first name"
-                              autocomplete="off"
-                            />
+                    <li className="nav-item" role="presentation">
+                      <button
+                        className="nav-link active"
+                        id="normalUsers-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#normalUsers-tab-pane"
+                        type="button"
+                        role="tab"
+                        aria-controls="normalUsers-tab-pane"
+                        aria-selected="true"
+                      >
+                        Individual User
+                      </button>
+                    </li>
+                    <li className="nav-item" role="presentation">
+                      <button
+                        className="nav-link"
+                        id="corporate-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#corporate-tab-pane"
+                        type="button"
+                        role="tab"
+                        aria-controls="corporate-tab-pane"
+                        aria-selected="false"
+                      >
+                        Corporate User
+                      </button>
+                    </li>
+                  </ul>
+                  <div className="tab-content" id="myTabContent">
+                    <div
+                      className="tab-pane fade show active"
+                      id="normalUsers-tab-pane"
+                      role="tabpanel"
+                      aria-labelledby="normalUsers-tab"
+                      tabindex="0"
+                    >
+                      <form id="main_author_form" onSubmit={handleNormalUser}>
+                        <div className="row">
+                          <div className="col-md-6">
+                            <div className="field-set">
+                              <label>
+                                First Name<span>*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                                className="form-control"
+                                placeholder="Enter first name"
+                                autocomplete="off"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="field-set">
-                            <label>
-                              Last Name<span>*</span>
-                            </label>
-                            <input
-                              type="text"
-                              value={lastName}
-                              onChange={(e) => setLastName(e.target.value)}
-                              className="form-control"
-                              placeholder="Enter last name"
-                              autocomplete="off"
-                            />
+                          <div className="col-md-6">
+                            <div className="field-set">
+                              <label>
+                                Last Name<span>*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                                className="form-control"
+                                placeholder="Enter last name"
+                                autocomplete="off"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="field-set">
-                            <label>
-                              Email<span>*</span>
-                            </label>
-                            <input
-                              type="email"
-                              value={email}
-                              onChange={(e) => setEmail(e.target.value)}
-                              className="form-control"
-                              placeholder="Enter Email address"
-                              autocomplete="off"
-                            />
+                          <div className="col-md-6">
+                            <div className="field-set">
+                              <label>
+                                Email<span>*</span>
+                              </label>
+                              <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="form-control"
+                                placeholder="Enter Email address"
+                                autocomplete="off"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="field-set">
-                            <label>
-                              Phone Number<span>*</span>
-                            </label>
-                            <input
-                              type="number"
-                              value={mobile}
-                              onChange={(e) => {
-                                if (/^\d{0,10}$/.test(e.target.value)) {
-                                  setMobile(e.target.value);
+                          <div className="col-md-6">
+                            <div className="field-set">
+                              <label>
+                                Phone Number<span>*</span>
+                              </label>
+                              <input
+                                type="number"
+                                value={mobile}
+                                onChange={(e) => {
+                                  if (/^\d{0,10}$/.test(e.target.value)) {
+                                    setMobile(e.target.value);
+                                  }
+                                }}
+                                className="form-control"
+                                placeholder="Enter Mobile number"
+                                autocomplete="off"
+                              />
+                            </div>
+                          </div>
+                          <div className="col-md-6">
+                            <div className="field-set position-relative">
+                              <label>
+                                Password<span>*</span>
+                              </label>
+                              <input
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="form-control"
+                                placeholder="Enter Password"
+                              />
+                              <span
+                                onClick={() => setShowPassword(!showPassword)}
+                                style={iconStyle}
+                              >
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="col-md-6">
+                            <div className="field-set position-relative">
+                              <label>
+                                Confirm Password<span>*</span>
+                              </label>
+                              <input
+                                type={showConfirm ? "text" : "password"}
+                                value={confirmPassword}
+                                onChange={(e) =>
+                                  setConfirmPassword(e.target.value)
                                 }
-                              }}
-                              className="form-control"
-                              placeholder="Enter Mobile number"
-                              autocomplete="off"
-                            />
+                                className="form-control"
+                                placeholder="Enter Confirm Password"
+                              />
+                              <span
+                                onClick={() => setShowConfirm(!showConfirm)}
+                                style={iconStyle}
+                              >
+                                {showConfirm ? <FaEyeSlash /> : <FaEye />}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="field-set position-relative">
-                            <label>
-                              Password<span>*</span>
-                            </label>
-                            <input
-                              type={showPassword ? "text" : "password"}
-                              value={password}
-                              onChange={(e) => setPassword(e.target.value)}
-                              className="form-control"
-                              placeholder="Enter Password"
-                            />
-                            <span
-                              onClick={() => setShowPassword(!showPassword)}
-                              style={iconStyle}
+                          <div className="common_form_submit">
+                            <button
+                              type="submit"
+                              className="btn btn_theme btn_md w-100"
+                              // onClick={handleNormalUser}
                             >
-                              {showPassword ? <FaEyeSlash /> : <FaEye />}
-                            </span>
+                              Register
+                            </button>
                           </div>
                         </div>
-                        <div className="col-md-6">
-                          <div className="field-set position-relative">
-                            <label>
-                              Confirm Password<span>*</span>
-                            </label>
-                            <input
-                              type={showConfirm ? "text" : "password"}
-                              value={confirmPassword}
-                              onChange={(e) =>
-                                setConfirmPassword(e.target.value)
-                              }
-                              className="form-control"
-                              placeholder="Enter Confirm Password"
-                            />
-                            <span
-                              onClick={() => setShowConfirm(!showConfirm)}
-                              style={iconStyle}
-                            >
-                              {showConfirm ? <FaEyeSlash /> : <FaEye />}
-                            </span>
+                      </form>
+                    </div>
+                    {/* <!-- End off Normal User --> */}
+                    <div
+                      className="tab-pane fade"
+                      id="corporate-tab-pane"
+                      role="tabpanel"
+                      aria-labelledby="corporate-tab"
+                      tabindex="0"
+                    >
+                      <form
+                        id="main_author_form"
+                        onSubmit={handleCorporateUser}
+                      >
+                        <div className="row">
+                          <div className="col-md-6">
+                            <div className="field-set">
+                              <label>
+                                First Name<span>*</span>
+                              </label>
+                              <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Enter first name"
+                                autocomplete="off"
+                                value={C_firstName}
+                                onChange={(e) => setCFirstName(e.target.value)}
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="common_form_submit">
-                          <button
-                            type="submit"
-                            className="btn btn_theme btn_md w-100"
-                            // onClick={handleNormalUser}
-                          >
-                            Register
-                          </button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                  {/* <!-- End off Normal User --> */}
-                  <div
-                    className="tab-pane fade"
-                    id="corporate-tab-pane"
-                    role="tabpanel"
-                    aria-labelledby="corporate-tab"
-                    tabindex="0"
-                  >
-                    <form id="main_author_form" onSubmit={handleCorporateUser}>
-                      <div className="row">
-                        <div className="col-md-6">
-                          <div className="field-set">
-                            <label>
-                              First Name<span>*</span>
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Enter first name"
-                              autocomplete="off"
-                              value={C_firstName}
-                              onChange={(e) => setCFirstName(e.target.value)}
-                            />
+                          <div className="col-md-6">
+                            <div className="field-set">
+                              <label>
+                                Last Name<span>*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={C_lastName}
+                                onChange={(e) => setCLastName(e.target.value)}
+                                className="form-control"
+                                placeholder="Enter last name"
+                                autocomplete="off"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="field-set">
-                            <label>
-                              Last Name<span>*</span>
-                            </label>
-                            <input
-                              type="text"
-                              value={C_lastName}
-                              onChange={(e) => setCLastName(e.target.value)}
-                              className="form-control"
-                              placeholder="Enter last name"
-                              autocomplete="off"
-                            />
+                          <div className="col-md-6">
+                            <div className="field-set">
+                              <label>
+                                Company Name<span>*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={C_company}
+                                onChange={(e) => setCCompany(e.target.value)}
+                                className="form-control"
+                                placeholder="Enter Company Name"
+                                autocomplete="off"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="field-set">
-                            <label>
-                              Company Name<span>*</span>
-                            </label>
-                            <input
-                              type="text"
-                              value={C_company}
-                              onChange={(e) => setCCompany(e.target.value)}
-                              className="form-control"
-                              placeholder="Enter Company Name"
-                              autocomplete="off"
-                            />
+                          <div className="col-md-6">
+                            <div className="field-set">
+                              <label>
+                                Employee Id<span>*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={C_employeeId}
+                                onChange={(e) => setCEmployeeId(e.target.value)}
+                                className="form-control"
+                                placeholder="Enter Employee Id"
+                                autocomplete="off"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="field-set">
-                            <label>
-                              Employee Id<span>*</span>
-                            </label>
-                            <input
-                              type="text"
-                              value={C_employeeId}
-                              onChange={(e) => setCEmployeeId(e.target.value)}
-                              className="form-control"
-                              placeholder="Enter Employee Id"
-                              autocomplete="off"
-                            />
+                          <div className="col-md-6">
+                            <div className="field-set">
+                              <label>
+                                Email<span>*</span>
+                              </label>
+                              <input
+                                type="email"
+                                value={C_email}
+                                onChange={(e) => setCEmail(e.target.value)}
+                                className="form-control"
+                                placeholder="Enter Email address"
+                                autocomplete="off"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="field-set">
-                            <label>
-                              Email<span>*</span>
-                            </label>
-                            <input
-                              type="email"
-                              value={C_email}
-                              onChange={(e) => setCEmail(e.target.value)}
-                              className="form-control"
-                              placeholder="Enter Email address"
-                              autocomplete="off"
-                            />
+                          <div className="col-md-6">
+                            <div className="field-set position-relative">
+                              <label>
+                                Phone Number<span>*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={C_mobile}
+                                onChange={(e) => {
+                                  if (/^\d{0,10}$/.test(e.target.value)) {
+                                    setCMobile(e.target.value);
+                                  }
+                                }}
+                                className="form-control"
+                                placeholder="Enter Mobile number*"
+                                autocomplete="off"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="field-set position-relative">
-                            <label>
-                              Phone Number<span>*</span>
-                            </label>
-                            <input
-                              type="text"
-                              value={C_mobile}
-                              onChange={(e) => {
-                                if (/^\d{0,10}$/.test(e.target.value)) {
-                                  setCMobile(e.target.value);
-                                }
-                              }}
-                              className="form-control"
-                              placeholder="Enter Mobile number*"
-                              autocomplete="off"
-                            />
+                          <div className="col-md-6">
+                            <div className="field-set position-relative">
+                              <label>
+                                Password<span>*</span>
+                              </label>
+                              <input
+                                type={showPassword ? "text" : "password"}
+                                value={C_password}
+                                onChange={(e) => setCPassword(e.target.value)}
+                                className="form-control"
+                                placeholder="Enter Password"
+                              />
+                              <span
+                                onClick={() => setShowPassword(!showPassword)}
+                                style={iconStyle}
+                              >
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="field-set">
-                            <label>
-                              Password<span>*</span>
-                            </label>
-                            <input
-                              type={showPassword ? "text" : "password"}
-                              value={C_password}
-                              onChange={(e) => setCPassword(e.target.value)}
-                              className="form-control"
-                              placeholder="Enter Password"
-                            />
-                            <span
-                              onClick={() => setShowPassword(!showPassword)}
-                              style={iconStyle}
-                            >
-                              {showPassword ? <FaEyeSlash /> : <FaEye />}
-                            </span>
-                          </div>
-                        </div>
 
-                        <div className="col-md-6">
-                          <div className="field-set position-relative">
-                            <label>
-                              Confirm Password<span>*</span>
-                            </label>
-                            <input
-                              type={showConfirm ? "text" : "password"}
-                              value={C_confirmPassword}
-                              onChange={(e) =>
-                                setCConfirmPassword(e.target.value)
-                              }
-                              className="form-control"
-                              placeholder="Enter Confirm Password"
-                            />
-                            <span
-                              onClick={() => setShowConfirm(!showConfirm)}
-                              style={iconStyle}
+                          <div className="col-md-6">
+                            <div className="field-set position-relative">
+                              <label>
+                                Confirm Password<span>*</span>
+                              </label>
+                              <input
+                                type={showConfirm ? "text" : "password"}
+                                value={C_confirmPassword}
+                                onChange={(e) =>
+                                  setCConfirmPassword(e.target.value)
+                                }
+                                className="form-control"
+                                placeholder="Enter Confirm Password"
+                              />
+                              <span
+                                onClick={() => setShowConfirm(!showConfirm)}
+                                style={iconStyle}
+                              >
+                                {showConfirm ? <FaEyeSlash /> : <FaEye />}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="common_form_submit">
+                            <button
+                              type="submit"
+                              className="btn btn_theme btn_md w-100"
+                              // onClick={handleCorporateUser}
                             >
-                              {showConfirm ? <FaEyeSlash /> : <FaEye />}
-                            </span>
+                              Register
+                            </button>
                           </div>
                         </div>
-                        <div className="common_form_submit">
-                          <button
-                            type="submit"
-                            className="btn btn_theme btn_md w-100"
-                            // onClick={handleCorporateUser}
-                          >
-                            Register
-                          </button>
-                        </div>
-                      </div>
-                    </form>
+                      </form>
+                    </div>
+                    {/* <!-- End off Carporate User --> */}
                   </div>
-                  {/* <!-- End off Carporate User --> */}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+      <ToastContainer />
+    </>
   );
 };
 export default Register;
