@@ -90,7 +90,7 @@ const Destination = () => {
             </div>
           </div>
           <div className="row">
-            <div className="col-lg-10 offset-lg-1">
+            <div className="col-lg-12">
               <div className="theme_nav_tab">
                 <nav className="theme_nav_tab_item">
                   <div className="nav nav-tabs" id="nav-tab" role="tablist">

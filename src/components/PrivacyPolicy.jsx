@@ -15,8 +15,9 @@ const PrivacyPolicy = () => {
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <div className="common_bannner_text">
-                <h2>Privacy and Policy</h2>
+              <div className="common_bannner_text2">
+               <div>
+                 <h2>Privacy and Policy</h2>
                 <ul>
                   <li>
                     <Link to="/">Home</Link>
@@ -28,6 +29,7 @@ const PrivacyPolicy = () => {
                     Privacy and Policy
                   </li>
                 </ul>
+               </div>
               </div>
             </div>
           </div>

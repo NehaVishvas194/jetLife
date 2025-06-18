@@ -15,8 +15,9 @@ const FAQPage = () => {
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <div className="common_bannner_text">
-                <h2>Faq</h2>
+              <div className="common_bannner_text2">
+                <div>
+                  <h2>Faq</h2>
                 <ul>
                   <li>
                     <Link to="/">Home</Link>
@@ -28,6 +29,7 @@ const FAQPage = () => {
                     Faq
                   </li>
                 </ul>
+                </div>
               </div>
             </div>
           </div>

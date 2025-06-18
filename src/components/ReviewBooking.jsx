@@ -15,8 +15,9 @@ const ReviewBooking = () => {
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <div className="common_bannner_text">
-                <h2>Air India</h2>
+              <div className="common_bannner_text2">
+                <div>
+                  <h2>Air India</h2>
                 <ul>
                   <li>
                     <Link to="/">Home</Link>
@@ -28,6 +29,7 @@ const ReviewBooking = () => {
                     Review your trip
                   </li>
                 </ul>
+                </div>
               </div>
             </div>
           </div>

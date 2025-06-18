@@ -41,6 +41,11 @@ const Header = () => {
     setSearchActive(false);
   };
 
+  const fname = localStorage.getItem("FirstName");
+  const lname = localStorage.getItem("LastName");
+  // console.log(fname);
+  // console.log(lname);
+
   return (
     <>
       <header className="main_header_arae">
@@ -51,50 +56,108 @@ const Header = () => {
               <div className="col-lg-6 col-md-6">
                 <ul className="topbar-list">
                   <li>
-                    <a href="#!"><FaFacebookSquare /></a>
-                    <a href="#!"><FaTwitterSquare /></a>
-                    <a href="#!"><FaInstagram /></a>
-                    <a href="#!"><FaLinkedin /></a>
                     <a href="#!">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                        <path fill="white" d="M448 209.9a210.1 210.1 0 0 1 -122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3V278.2a74.6 74.6 0 1 0 52.2 71.2V0l88 0a121.2 121.2 0 0 0 1.9 22.2h0A122.2 122.2 0 0 0 381 102.4a121.4 121.4 0 0 0 67 20.1z"/>
+                      <FaFacebookSquare />
+                    </a>
+                    <a href="#!">
+                      <FaTwitterSquare />
+                    </a>
+                    <a href="#!">
+                      <FaInstagram />
+                    </a>
+                    <a href="#!">
+                      <FaLinkedin />
+                    </a>
+                    <a href="#!">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          fill="white"
+                          d="M448 209.9a210.1 210.1 0 0 1 -122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3V278.2a74.6 74.6 0 1 0 52.2 71.2V0l88 0a121.2 121.2 0 0 0 1.9 22.2h0A122.2 122.2 0 0 0 381 102.4a121.4 121.4 0 0 0 67 20.1z"
+                        />
                       </svg>
                     </a>
                   </li>
-                  <li><a href="tel:+254725206598"><span>+254 725 206 598</span></a></li>
-                  <li><a href="mailto:info@jetlifeglobal.com"><span>info@jetlifeglobal.com</span></a></li>
+                  <li>
+                    <a href="tel:+254725206598">
+                      <span>+254 725 206 598</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="mailto:info@jetlifeglobal.com">
+                      <span>info@jetlifeglobal.com</span>
+                    </a>
+                  </li>
                 </ul>
               </div>
               <div className="col-lg-6 col-md-6">
                 <ul className="topbar-others-options">
-                  <li><Link to="/help">Help</Link></li>
-                  <li><Link to="/contactUs">Contact Us</Link></li>
+                  <li>
+                    <Link to="/help">Help</Link>
+                  </li>
+                  <li>
+                    <Link to="/contactUs">Contact Us</Link>
+                  </li>
                   <li>
                     <div className="dropdown language-option">
-                      <button className="dropdown-toggle" type="button">
+                      <button
+                        className="dropdown-toggle"
+                        type="button"
+                        id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
                         <span className="lang-name">{language}</span>
                       </button>
-                      <div className="dropdown-menu language-dropdown-menu">
+                      <div
+                        className="dropdown-menu language-dropdown-menu"
+                        aria-labelledby="dropdownMenuButton1"
+                      >
                         {["English", "Arabic", "French"].map((lang) => (
-                          <a key={lang} href="#" className="dropdown-item" onClick={(e) => {
-                            e.preventDefault();
-                            setLanguage(lang);
-                          }}>{lang}</a>
+                          <a
+                            key={lang}
+                            href="#"
+                            className="dropdown-item"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setLanguage(lang);
+                            }}
+                          >
+                            {lang}
+                          </a>
                         ))}
                       </div>
                     </div>
                   </li>
                   <li>
                     <div className="dropdown language-option">
-                      <button className="dropdown-toggle" type="button">
+                      <button
+                        className="dropdown-toggle"
+                        type="button"
+                        id="dropdownMenuButton2"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
                         <span className="lang-name">{currency}</span>
                       </button>
-                      <div className="dropdown-menu language-dropdown-menu">
+                      <div
+                        className="dropdown-menu language-dropdown-menu"
+                        aria-labelledby="dropdownMenuButton2"
+                      >
                         {["KES", "USD", "EUR", "POUNDS"].map((curr) => (
-                          <a key={curr} href="#" className="dropdown-item" onClick={(e) => {
-                            e.preventDefault();
-                            setCurrency(curr);
-                          }}>{curr}</a>
+                          <a
+                            key={curr}
+                            href="#"
+                            className="dropdown-item"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrency(curr);
+                            }}
+                          >
+                            {curr}
+                          </a>
                         ))}
                       </div>
                     </div>
@@ -111,7 +174,9 @@ const Header = () => {
             <div className="container">
               <div className="main-responsive-menu">
                 <div className="logo">
-                  <Link to="/"><img src={logo} alt="logo" /></Link>
+                  <Link to="/">
+                    <img src={logo} alt="logo" />
+                  </Link>
                 </div>
               </div>
             </div>
@@ -120,28 +185,73 @@ const Header = () => {
           <div className="main-navbar">
             <div className="container">
               <nav className="navbar navbar-expand-md navbar-light">
-                <Link className="navbar-brand" to="/"><img src={Logo2} alt="logo" /></Link>
+                <Link className="navbar-brand" to="/">
+                  <img src={Logo2} alt="logo" />
+                </Link>
 
-                <div className="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
+                <div
+                  className="collapse navbar-collapse mean-menu"
+                  id="navbarSupportedContent"
+                >
                   <ul className="navbar-nav">{/* nav items here */}</ul>
                   <div className="others-options d-flex align-items-center">
                     <div className="option-item downloadappIcon">
-                      <Link to="#!"><img src={image1} /></Link>{" "} 
-                      <Link to="#!"><img src={image2} /></Link>
+                      <Link to="#!">
+                        <img src={image1} />
+                      </Link>{" "}
+                      <Link to="#!">
+                        <img src={image2} />
+                      </Link>
                     </div>
                     <div className="dropdown">
                       <div className="profile">
-                        <img className="dropbtn" src={image3} alt="profile" />
-                        <span className="signInBtn">Sign Up</span>
-                        <div className="dropdown-content">
-                          <ul>
-                            <li><Link to="/register">Create Account</Link></li>
-                            <li><Link to="/account">Profiles</Link></li>
-                            <li><Link to="/help">Help</Link></li>
-                            <li><Link to="/reset_password">Reset password</Link></li>
-                            <li><Link to="/">Logout</Link></li>
-                          </ul>
-                        </div>
+                        <img
+                          className="dropbtn m-1"
+                          src={image3}
+                          alt="profile"
+                        />
+
+                        <span className="signInBtn">
+                          {fname && lname ? (
+                            `${fname} ${lname}`
+                          ) : (
+                            <Link
+                              to="/login"
+                              style={{
+                                color: "#000",
+                              }}
+                            >
+                              Sign in
+                            </Link>
+                          )}
+                        </span>
+
+                        {fname && lname && (
+                          <div className="dropdown-content">
+                            <ul>
+                              <li>
+                                <Link to="/account">My Account</Link>
+                              </li>
+                              <li>
+                                <Link to="/help">Help</Link>
+                              </li>
+                              {/* <li>
+                                <Link to="/reset_password">Reset password</Link>
+                              </li> */}
+                              <li>
+                                <Link
+                                  to="/"
+                                  onClick={() => {
+                                    localStorage.clear();
+                                    // window.location.reload();
+                                  }}
+                                >
+                                  Logout
+                                </Link>
+                              </li>
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -151,7 +261,9 @@ const Header = () => {
           </div>
 
           <div className="others-option-for-responsive">
-            <div className={`container container ${menuActive ? "active" : ""}`}>
+            <div
+              className={`container container ${menuActive ? "active" : ""}`}
+            >
               <div className="dot-menu" onClick={toggleMenu}>
                 <div className="inner">
                   <div className="circle circle-one"></div>
@@ -168,7 +280,9 @@ const Header = () => {
                       </a>
                     </div>
                     <div className="option-item">
-                      <a href="#!" className="btn btn_navber">Get free quote</a>
+                      <a href="#!" className="btn btn_navber">
+                        Get free quote
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -179,7 +293,11 @@ const Header = () => {
       </header>
 
       {/* Search Overlay */}
-      <div className={`search-overlay ${searchActive ? "search-overlay-active" : ""}`}>
+      <div
+        className={`search-overlay ${
+          searchActive ? "search-overlay-active" : ""
+        }`}
+      >
         <div className="d-table">
           <div className="d-table-cell">
             <div className="search-overlay-layer"></div>
@@ -191,8 +309,14 @@ const Header = () => {
             </div>
             <div className="search-overlay-form">
               <form>
-                <input type="text" className="input-search" placeholder="Search here..." />
-                <button type="button"><FaSearch /></button>
+                <input
+                  type="text"
+                  className="input-search"
+                  placeholder="Search here..."
+                />
+                <button type="button">
+                  <FaSearch />
+                </button>
               </form>
             </div>
           </div>

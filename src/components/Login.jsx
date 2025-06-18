@@ -1,236 +1,350 @@
-import React, { useState } from "react";
-import Header from "./Header";
-import Footer from "./Footer";
-import { GoDotFill } from "react-icons/go";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import Newsletter from "./home/Newsletter";
+import axios from "axios";
+import { API_BASE_URL } from "../Url/BaseUrl";
 import { ToastContainer, toast } from "react-toastify";
-import BackToTopButton from "./BackToTop";
+import { useNavigate } from "react-router-dom";
+import image1 from "../assets/img/white-logo.png";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 const Login = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmitNormalUser = () => {
+  const handleSubmitNormalUser = (e) => {
+    e.preventDefault();
     if (!name) {
       toast.error("Please enter name!", {
         position: "top-right",
         autoClose: 3000,
-     
       });
-      return; // stop here if name is missing
+      return;
     }
 
     if (!password) {
       toast.error("Please enter password!", {
         position: "top-right",
         autoClose: 3000,
-      
       });
-      return; // stop here if password is missing
+      return;
     }
 
-    // If all validations pass
-    console.log(name);
-    console.log(password);
+    axios
+      .post(`${API_BASE_URL}/login`, {
+        email: name,
+        password: password,
+        user_type: 1,
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.data.success === true) {
+          const fname = response.data.data.first_name;
+          const lname = response.data.data.last_name;
+          const email = response.data.data.email;
+          const token = response.data.data.token;
+          const id = response.data.data.user_id;
+          localStorage.setItem("FirstName", fname);
+          localStorage.setItem("LastName", lname);
+          localStorage.setItem("Email", email);
+          localStorage.setItem("Token", token);
+          localStorage.setItem("Id", id);
+          toast.success(response.data.message);
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        const errorMsg =
+          error.response?.data?.message || "Something went wrong!";
+        console.error(errorMsg);
+        toast.error(errorMsg, {
+          autoClose: 1000,
+          theme: "colored",
+        });
+      });
   };
-  const handleSubmitCorporateUser = () => {
+
+  const handleSubmitCorporateUser = (e) => {
+    e.preventDefault();
     if (!name) {
       toast.error("Please enter name!", {
         position: "top-right",
         autoClose: 3000,
-     
       });
-      return; // stop here if name is missing
+      return;
     }
 
     if (!password) {
       toast.error("Please enter password!", {
         position: "top-right",
         autoClose: 3000,
-     
       });
-      return; // stop here if password is missing
+      return;
     }
-
-    // If all validations pass
+    axios
+      .post(`${API_BASE_URL}/login`, {
+        email: name,
+        password: password,
+        user_type: 2,
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.data.success === true) {
+          const fname = response.data.data.first_name;
+          const lname = response.data.data.last_name;
+          const email = response.data.data.email;
+          const token = response.data.data.token;
+          const id = response.data.data.user_id;
+          localStorage.setItem("FirstName", fname);
+          localStorage.setItem("LastName", lname);
+          localStorage.setItem("Email", email);
+          localStorage.setItem("Token", token);
+          localStorage.setItem("Id", id);
+          toast.success(response.data.message);
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        const errorMsg = error.response?.data?.msg || "Something went wrong!";
+        console.error(errorMsg);
+        toast.error(errorMsg, {
+          autoClose: 1000,
+          theme: "colored",
+        });
+      });
     console.log(name);
     console.log(password);
   };
+
+  const iconStyle = {
+    position: "absolute",
+    right: "10px",
+    top: "60%",
+    transform: "translateY(-30%)",
+    cursor: "pointer",
+    color: "#666",
+  };
+
   return (
     <>
-    
-      <div>
-        <Header />
-        {/* <!-- Common Banner Area --> */}
-        <section id="common_banner">
-          <div className="container">
-            <div className="row">
-              <div className="col-lg-12">
-                <div className="common_bannner_text">
-                  <h2>Login</h2>
-                  <ul>
-                    <li>
-                      <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                      <span>
-                        <GoDotFill />
-                      </span>{" "}
-                      Login
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* <!--  Common Author Area --> */}
-        <section id="common_author_area" className="section_padding">
-          <div className="container">
-            <div className="row">
-              <div className="col-lg-6 offset-lg-3">
-                <div className="common_author_boxed">
-                  <div className="common_author_heading">
-                    <h3>Login your account</h3>
-                    <h2>Logged in to stay in touch</h2>
-                  </div>
-                  <div className="common_author_form">
-                    <ul className="nav nav-tabs" id="myTab" role="tablist">
-                      <li className="nav-item" role="presentation">
-                        <button
-                          className="nav-link active"
-                          id="normalUsers-tab"
-                          data-bs-toggle="tab"
-                          data-bs-target="#normalUsers-tab-pane"
-                          type="button"
-                          role="tab"
-                          aria-controls="normalUsers-tab-pane"
-                          aria-selected="true"
-                        >
-                          Normal Users
-                        </button>
-                      </li>
-                      <li className="nav-item" role="presentation">
-                        <button
-                          className="nav-link"
-                          id="corporate-tab"
-                          data-bs-toggle="tab"
-                          data-bs-target="#corporate-tab-pane"
-                          type="button"
-                          role="tab"
-                          aria-controls="corporate-tab-pane"
-                          aria-selected="true"
-                        >
-                          Corporate Users
-                        </button>
-                      </li>
-                    </ul>
-
-                    <div className="tab-content pt-3" id="myTabContent">
-                      <div
-                        className="tab-pane fade show active"
-                        id="normalUsers-tab-pane"
-                        role="tabpanel"
-                        aria-labelledby="normalUsers-tab"
-                        tabindex="0"
-                      >
-                        <form onSubmit={handleSubmitNormalUser} id="main_author_form">
-                          <div className="form-group">
-                            <input
-                              type="text"
-                              value={name}
-                              onChange={(e) => setName(e.target.value)}
-                              className="form-control"
-                              placeholder="Enter user name"
-                              autocomplete="off"
-                            />
+      {/* new-login page */}
+      <section className="login-page-main">
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-md-6 p-0">
+              <div className="img-cont1">
+                <div className="row justify-content-center">
+                  <div className="col-md-8">
+                    <div className="card login-card" data-aos="fade-left">
+                      <div className="card-body">
+                        <div className="main-flexbox">
+                          <div
+                            className=""
+                            data-aos="fade-left"
+                            data-aos-duration="2000"
+                          >
+                            <img src={image1} alt="imgIND" />
                           </div>
-                          <div className="form-group">
-                            <input
-                              type="password"
-                              value={password}
-                              onChange={(e) => setPassword(e.target.value)}
-                              className="form-control"
-                              placeholder="Enter password"
-                              autocomplete="off"
-                            />
-                            <Link to="/forget_password">Forgot password?</Link>
-                          </div>
-                          <div className="common_form_submit">
-                            <button
-                              className="btn btn_theme btn_md"
-                              type="submit"
-                            >
-                              Log in
-                            </button>
-                          </div>
-                          <div className="have_acount_area">
+                          <div
+                            className=""
+                            data-aos="fade-left"
+                            data-aos-duration="2000"
+                          >
+                            <h2>Welcome to Jetlife</h2>
                             <p>
-                              Dont have an account?{" "}
+                              We are glad to see you again! Get access to your
+                              Orders, Wishlist and Recommendations.
+                            </p>
+                          </div>
+                          <div
+                            className="not-acc"
+                            data-aos="fade-left"
+                            data-aos-duration="2000"
+                          >
+                            <p>
+                              Don't have an account?{" "}
                               <Link to="/register">Register now</Link>
                             </p>
                           </div>
-                        </form>
-                      </div>
-                      <div
-                        className="tab-pane fade"
-                        id="corporate-tab-pane"
-                        role="tabpanel"
-                        aria-labelledby="corporate-tab"
-                        tabindex="0"
-                      >
-                        <form id="main_author_form" onSubmit={handleSubmitCorporateUser}>
-                          <div className="form-group">
-                            <input
-                              type="text"
-                              value={name}
-                              onChange={(e) => setName(e.target.value)}
-                              className="form-control"
-                              placeholder="Enter user name"
-                              autocomplete="off"
-                            />
-                          </div>
-                          <div className="form-group">
-                            <input
-                              type="password"
-                              value={password}
-                              onChange={(e) => setPassword(e.target.value)}
-                              className="form-control"
-                              placeholder="Enter password"
-                              autocomplete="off"
-                            />
-                            <Link to="/forget_password">Forgot password?</Link>
-                          </div>
-                          <div className="common_form_submit">
-                            <button
-                              className="btn btn_theme btn_md"
-                              type="submit"
-                            >
-                              Log in
-                            </button>
-                          </div>
-                          <div className="have_acount_area">
-                            <p>
-                              Dont have an account?{" "}
-                              <Link to="/register">Register now</Link>
-                            </p>
-                          </div>
-                        </form>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            <div className="col-md-6 p-0">
+              <div className="main-box-cont">
+                <div className="hd-part">
+                  <h6>Log In</h6>
+                  <p>Logged in to stay in touch</p>
+                </div>
+                <div className="common_author_form p-0">
+                  <ul
+                    className="nav nav-tabs custom-tab-toggle"
+                    id="myTab"
+                    role="tablist"
+                  >
+                    <li className="nav-item" role="presentation">
+                      <button
+                        className="nav-link active"
+                        id="normalUsers-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#normalUsers-tab-pane"
+                        type="button"
+                        role="tab"
+                        aria-controls="normalUsers-tab-pane"
+                        aria-selected="true"
+                      >
+                        Individual User
+                      </button>
+                    </li>
+                    <li className="nav-item" role="presentation">
+                      <button
+                        className="nav-link"
+                        id="corporate-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#corporate-tab-pane"
+                        type="button"
+                        role="tab"
+                        aria-controls="corporate-tab-pane"
+                        aria-selected="false"
+                      >
+                        Corporate User
+                      </button>
+                    </li>
+                  </ul>
+                  <div className="tab-content" id="myTabContent">
+                    <div
+                      className="tab-pane fade show active"
+                      id="normalUsers-tab-pane"
+                      role="tabpanel"
+                      aria-labelledby="normalUsers-tab"
+                      tabindex="0"
+                    >
+                      <form
+                        onSubmit={handleSubmitNormalUser}
+                        id="main_author_form"
+                      >
+                        <div className="row">
+                          <div className="col-md-12">
+                            <div className="field-set">
+                              <label>
+                                Email / Phone number<span>*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="form-control"
+                                placeholder="Enter user name"
+                                autocomplete="off"
+                              />
+                            </div>
+                          </div>
+                          <div className="col-md-12">
+                            <div className="field-set position-relative">
+                              <label>
+                                Password<span>*</span>
+                              </label>
+                              <input
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="form-control"
+                                placeholder="Enter password"
+                              />
+                              <span
+                                onClick={() => setShowPassword(!showPassword)}
+                                style={iconStyle}
+                              >
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <Link to="/forget_password">Forgot password?</Link>
+                        <div className="common_form_submit">
+                          <button
+                            type="button"
+                            className="btn btn_theme btn_md w-100"
+                            onClick={handleSubmitNormalUser}
+                          >
+                            Log in
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                    <div
+                      className="tab-pane fade"
+                      id="corporate-tab-pane"
+                      role="tabpanel"
+                      aria-labelledby="corporate-tab"
+                      tabindex="0"
+                    >
+                      <form
+                        onSubmit={handleSubmitCorporateUser}
+                        id="main_author_form"
+                      >
+                        <div className="row">
+                          <div className="col-md-12">
+                            <div className="field-set">
+                              <label>
+                              Email / Phone number<span>*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="form-control"
+                                placeholder="Enter user name"
+                                autocomplete="off"
+                              />
+                            </div>
+                          </div>
+                          <div className="col-md-12">
+                            <div className="field-set position-relative">
+                              <label>
+                                Password<span>*</span>
+                              </label>
+                              <input
+                                 type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="form-control"
+                                placeholder="Enter password"
+                                autocomplete="off"
+                              />
+                              <span
+                                onClick={() => setShowPassword(!showPassword)}
+                                style={iconStyle}
+                              >
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <Link to="/forget_password">Forgot password?</Link>
+                        <div className="common_form_submit">
+                          <button
+                            type="button"
+                            className="btn btn_theme btn_md w-100"
+                            onClick={handleSubmitCorporateUser}
+                          >
+                            Log in
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </section>
-        <Newsletter />
-        <BackToTopButton/>
-        <Footer />
-          <ToastContainer />
-      </div>
+        </div>
+      </section>
+      <ToastContainer />
     </>
   );
 };
-
 export default Login;

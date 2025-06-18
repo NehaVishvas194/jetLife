@@ -12,7 +12,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Newsletter from "./home/Newsletter";
 import flightImg from "../assets/img/common/filght.svg";
-// import rightArrow from "../assets/img/icon/right_arrow.png";
+import rightArrow from "../assets/img/icon/right_arrow.png";
 import { Link } from "react-router-dom";
 import { GoDotFill } from "react-icons/go";
 import { useLocation } from "react-router-dom";
@@ -35,6 +35,7 @@ const FlightSearch = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const location = useLocation();
   const searchResults = location.state?.searchResults || [];
+  const [selectedFlight, setSelectedFlight] = useState(0);
 
   const handleClassChange = (event) => {
     setTravelClass(event.target.value);
@@ -148,7 +149,59 @@ const FlightSearch = () => {
     updatedAges[index] = value;
     setChildAges(updatedAges);
   };
-
+  const flightData = [
+    {
+      fromCity: "New York",
+      fromAirport: "JFK - John F. Kennedy International...",
+      toCity: "London",
+      toAirport: "LCY, London city airport",
+      duration: "01h 05minute",
+      price: "$7,560",
+      discount: "*20% OFF",
+      note: "*Discount applicable on some conditions",
+    },
+    // You can copy this object to create multiple flights
+    {
+      fromCity: "New York",
+      fromAirport: "JFK - John F. Kennedy International...",
+      toCity: "London",
+      toAirport: "LCY, London city airport",
+      duration: "01h 05minute",
+      price: "$7,560",
+      discount: "*20% OFF",
+      note: "*Discount applicable on some conditions",
+    },
+    {
+      fromCity: "New York",
+      fromAirport: "JFK - John F. Kennedy International...",
+      toCity: "London",
+      toAirport: "LCY, London city airport",
+      duration: "01h 05minute",
+      price: "$7,560",
+      discount: "*20% OFF",
+      note: "*Discount applicable on some conditions",
+    },
+    {
+      fromCity: "New York",
+      fromAirport: "JFK - John F. Kennedy International...",
+      toCity: "London",
+      toAirport: "LCY, London city airport",
+      duration: "01h 05minute",
+      price: "$7,560",
+      discount: "*20% OFF",
+      note: "*Discount applicable on some conditions",
+    },
+    {
+      fromCity: "New York",
+      fromAirport: "JFK - John F. Kennedy International...",
+      toCity: "London",
+      toAirport: "LCY, London city airport",
+      duration: "01h 05minute",
+      price: "$7,560",
+      discount: "*20% OFF",
+      note: "*Discount applicable on some conditions",
+    },
+  ];
   return (
     <div>
       <Header />
@@ -158,18 +211,20 @@ const FlightSearch = () => {
           <div class="row">
             <div class="col-lg-12">
               <div class="common_bannner_text">
-                <h2>Flight search result</h2>
-                <ul>
-                  <li>
-                    <Link to="/">Home</Link>
-                  </li>
-                  <li>
-                    <span>
-                      <GoDotFill />
-                    </span>{" "}
-                    Flight search result
-                  </li>
-                </ul>
+                <div>
+                  <h2>Flight search result</h2>
+                  <ul>
+                    <li>
+                      <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                      <span>
+                        <GoDotFill />
+                      </span>{" "}
+                      Flight search result
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -293,7 +348,7 @@ const FlightSearch = () => {
                                 aria-controls="roundtrip"
                                 aria-selected="false"
                               >
-                                Roundtrip
+                                Return
                               </button>
                             </li>
                             <li className="nav-item" role="presentation">
@@ -2233,7 +2288,7 @@ const FlightSearch = () => {
                   <div className="left_side_search_heading">
                     <h5>Number of stops</h5>
                   </div>
-                  <div className="tour_search_type">
+                  {/* <div className="tour_search_type">
                     {stopOptions.map((option, index) => (
                       <div className="form-check" key={index}>
                         <input
@@ -2253,6 +2308,65 @@ const FlightSearch = () => {
                         </label>
                       </div>
                     ))}
+                  </div> */}
+
+                  <div class="tour_search_type">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="flexCheckDefaultf1"
+                      />
+                      <label class="form-check-label" for="flexCheckDefaultf1">
+                        <span class="area_flex_one">
+                          <span>1 stop</span>
+                          <span>20</span>
+                        </span>
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="flexCheckDefaultf2"
+                      />
+                      <label class="form-check-label" for="flexCheckDefaultf2">
+                        <span class="area_flex_one">
+                          <span>2 stop</span>
+                          <span>16</span>
+                        </span>
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="flexCheckDefaultf3"
+                      />
+                      <label class="form-check-label" for="flexCheckDefaultf3">
+                        <span class="area_flex_one">
+                          <span>3 stop</span>
+                          <span>30</span>
+                        </span>
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="flexCheckDefaultf4"
+                      />
+                      <label class="form-check-label" for="flexCheckDefaultf4">
+                        <span class="area_flex_one">
+                          <span>Non-stop</span>
+                          <span>22</span>
+                        </span>
+                      </label>
+                    </div>
                   </div>
                 </div>
 
@@ -2509,631 +2623,64 @@ const FlightSearch = () => {
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="flight_search_result_wrapper">
-                    {searchResults.map((item, index) => {
-                      {
-                        /* const itinerary = item.FareItinerary; */
-                      }
-                      const segment =
-                        item.FareItinerary.OriginDestinationOptions[0]
-                          .OriginDestinationOption[0].FlightSegment;
-                      const fare =
-                        item.FareItinerary.AirItineraryFareInfo.ItinTotalFares
-                          .TotalFare;
-                      return (
-                        <div
-                          className="flight_search_item_wrappper"
-                          key={index}
-                        >
+              <div className="row">
+                <div className="col-lg-12">
+                  <div className="flight_search_result_wrapper">
+                    {flightData.map((flight, index) => (
+                      <label className="radio-container" key={index}>
+                        <input
+                          type="radio"
+                          name="leftSelect"
+                          checked={selectedFlight === index}
+                          onChange={() => setSelectedFlight(index)}
+                        />
+                        <span className="checkmark"></span>
+
+                        <div className="flight_search_item_wrappper">
                           <div className="flight_search_items">
                             <div className="multi_city_flight_lists">
                               <div className="flight_multis_area_wrapper">
                                 <div className="flight_search_left">
                                   <div className="flight_logo">
-                                    <img
-                                      src="/images/airline_placeholder.png"
-                                      alt="Airline Logo"
-                                    />
+                                    <img src={flightImg} alt="img" />
                                   </div>
                                   <div className="flight_search_destination">
                                     <p>From</p>
-                                    <h3>
-                                      {segment.DepartureAirportLocationCode}
-                                    </h3>
-                                    <p>{segment.DepartureDateTime}</p>
+                                    <h3>{flight.fromCity}</h3>
+                                    <h6>{flight.fromAirport}</h6>
                                   </div>
                                 </div>
+
                                 <div className="flight_search_middel">
                                   <div className="flight_right_arrow">
-                                    <img
-                                      src="/images/right_arrow.png"
-                                      alt="icon"
-                                    />
-                                    <p>
-                                      {Math.floor(segment.JourneyDuration / 60)}
-                                      h {segment.JourneyDuration % 60}m
-                                    </p>
+                                    <img src={rightArrow} alt="icon" />
+                                    <h6>Non-stop</h6>
+                                    <p>{flight.duration}</p>
                                   </div>
                                   <div className="flight_search_destination">
                                     <p>To</p>
-                                    <h3>
-                                      {segment.ArrivalAirportLocationCode}
-                                    </h3>
-                                    <p>{segment.ArrivalDateTime}</p>
+                                    <h3>{flight.toCity}</h3>
+                                    <h6>{flight.toAirport}</h6>
                                   </div>
                                 </div>
                               </div>
                             </div>
+
                             <div className="flight_search_right">
-                              <h2>${fare.Amount}</h2>
+                              <h3 className="allsameheading">
+                                {flight.price} <sup>{flight.discount}</sup>
+                              </h3>
+                              <p>{flight.note}</p>
                             </div>
                           </div>
                         </div>
-                      );
-                    })}
-                    {/* <!-- Flight Search Item --> */}
-                    {/* <div class="flight_search_item_wrappper">
-                      <div
-                        class="flight_search_items"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasRight"
-                        aria-controls="offcanvasRight"
-                      >
-                        <div class="multi_city_flight_lists">
-                          <div class="flight_multis_area_wrapper">
-                            <div class="flight_search_left">
-                              <div class="flight_logo">
-                                <img src={flightImg} alt="img" />
-                              </div>
-                              <div class="flight_search_destination">
-                                <p>From</p>
-                                <h3>New York</h3>
-                                <h6>JFK - John F. Kennedy International...</h6>
-                              </div>
-                            </div>
-                            <div class="flight_search_middel">
-                              <div class="flight_right_arrow">
-                                <img src={rightArrow} alt="icon" />
-                                <h6>Non-stop</h6>
-                                <p>01h 05minute </p>
-                              </div>
-                              <div class="flight_search_destination">
-                                <p>To</p>
-                                <h3>London </h3>
-                                <h6>LCY, London city airport </h6>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="flight_search_right">
-                          <h2>
-                            $7,560<sup>*20% OFF</sup>
-                          </h2>
-                          <p>*Discount applicable on some conditions</p>
-                        </div>
-                      </div>
-                    </div> */}
-
-                    {/* <!-- -------------------Explore packages Modal---------------------------- --> */}
-                    <div
-                      class="modal fade"
-                      id="explorepackages"
-                      data-bs-backdrop="static"
-                      data-bs-keyboard="false"
-                      tabindex="-1"
-                      aria-labelledby="explorepackagesLabel"
-                      aria-hidden="true"
-                    >
-                      <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                          <div class="modal-header modalHeader">
-                            <h1
-                              class="modal-title fs-5"
-                              id="explorepackagesLabel"
-                            >
-                              Bundle & Save up to $974* with flight + hotel
-                              package deals
-                            </h1>
-                            <button
-                              type="button"
-                              class="btn-close"
-                              data-bs-dismiss="modal"
-                              aria-label="Close"
-                            ></button>
-                          </div>
-                          <div class="modal-body">
-                            <ul class="comntitle">
-                              <li>
-                                <span class="greenicon material-icons">
-                                  {" "}
-                                  check_circle{" "}
-                                </span>
-                                Includes your selected flight
-                              </li>
-                            </ul>
-                            <div class="">
-                              <h1 class="modal-title fs-5 pb-3">
-                                Las Vegas hotel dates
-                              </h1>
-                              <form>
-                                <div class="row">
-                                  <div class="col-lg-6 mb-3">
-                                    <input
-                                      type="date"
-                                      class="form-control"
-                                      id=""
-                                    />
-                                  </div>
-                                  <div class="col-lg-6 mb-3">
-                                    <input
-                                      type="date"
-                                      class="form-control"
-                                      id=""
-                                    />
-                                  </div>
-                                  <div class="col-lg-12 d-grid gap-2 ">
-                                    <button
-                                      class="sidebaarSelectBtn btn btn_theme"
-                                      type="button"
-                                    >
-                                      Explore Packages
-                                    </button>
-                                    {/* <!-- <button class="nothakstextColor btn btn-light" type="button">No Thanks</button> --> */}
-                                    <a
-                                      href="review_your_trip.html"
-                                      class="nothakstextColor btn btn-light"
-                                    >
-                                      Review Your Trip
-                                    </a>
-                                  </div>
-                                  <div class="col-lg-12">
-                                    <p class="savingsrewardsText">
-                                      *Savings vary and are not available on all
-                                      packages. Savings are compared to the
-                                      price of the same components booked
-                                      separately without any discounts or
-                                      rewards.
-                                    </p>
-                                  </div>
-                                </div>
-                              </form>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    {/* <!-- -----------------End Explore Packages------------------------------ --> */}
-
-                    <div
-                      class="offcanvas offcanvas-end"
-                      tabindex="1"
-                      id="offcanvasRight"
-                      data-bs-backdrop="false"
-                      data-bs-keyboard="true"
-                      aria-labelledby="offcanvasRightLabel"
-                    >
-                      <div class="offcanvas-header">
-                        <h5 id="offcanvasRightLabel">
-                          Select fare to New York
-                        </h5>
-                        <button
-                          type="button"
-                          class="btn-close text-reset"
-                          data-bs-dismiss="offcanvas"
-                          aria-label="Close"
-                        ></button>
-                        {/* <!-- data-bs-dismiss="offcanvas" aria-label="Close" --> */}
-                      </div>
-                      <div class="offcanvas-body pt-0">
-                        <div class="empireRateSection">
-                          <div class="empireList">
-                            <div class="">
-                              <h4>
-                                10:00pm - 8:50am (20h 20m, 1 stop)
-                                <small>+1</small>
-                              </h4>
-                              <div class="flightIcons">
-                                <span>
-                                  <img src={flightImg} alt="img" />
-                                </span>
-                                <span>Etihad Airways</span>
-                                <span>
-                                  <i class="fas fa-wifi"></i>
-                                </span>
-                                <span>
-                                  <i class="fas fa-charging-station"></i>
-                                </span>
-                                <span>
-                                  <i class="fas fa-tv"></i>
-                                </span>
-                                <span class="aboveBg">Above average CO₂</span>
-                              </div>
-                            </div>
-                            <ul class="detailBox">
-                              <li class="boxbordered">
-                                <div class="priceAndDetails">
-                                  <h3>$393</h3>
-                                  <small>
-                                    $2,357.54 one way for 6 travelers
-                                  </small>
-                                  <p class="listheading">Economy Basic</p>
-                                  <p class="cabintitle">Cabin: Economy</p>
-                                </div>
-                                <div class="seatbagsFlexibility">
-                                  <ul class="comntitle">
-                                    <li class="listheading">Seat</li>
-                                    <li>
-                                      <span class="greenicon material-icons">
-                                        {" "}
-                                        check_circle
-                                      </span>{" "}
-                                      Seat choice for a fee
-                                    </li>
-                                  </ul>
-                                  <ul class="comntitle">
-                                    <li class="listheading">Bags</li>
-                                    <li>
-                                      <span class="greenicon material-icons">
-                                        {" "}
-                                        check_circle
-                                      </span>{" "}
-                                      Carry-on bag included (15 lbs)
-                                    </li>
-                                    <li>
-                                      <span class="material-icons">
-                                        {" "}
-                                        close{" "}
-                                      </span>{" "}
-                                      2 checked bags included (50 lbs each)
-                                    </li>
-                                  </ul>
-                                  <ul class="comntitle">
-                                    <li class="listheading">Flexibility</li>
-                                    <li>
-                                      <span class="material-icons">
-                                        {" "}
-                                        close{" "}
-                                      </span>
-                                      Non-refundable
-                                    </li>
-                                    <li>
-                                      <div class="addtothisflight">
-                                        <label>
-                                          <span class="greenicon material-icons">
-                                            check_circle{" "}
-                                          </span>{" "}
-                                          Change fee:
-                                        </label>
-                                        <small>$639</small>
-                                      </div>
-                                    </li>
-                                  </ul>
-                                  <div class="priceDrop">
-                                    <h6>
-                                      <span></span>Price Drop Protection{" "}
-                                      <a href="#!">
-                                        <span class="material-icons">
-                                          error_outline
-                                        </span>
-                                      </a>
-                                    </h6>
-                                    <p>
-                                      We’ll refund the difference if the price
-                                      drops before you fly.
-                                    </p>
-                                    <div class="form-check">
-                                      <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value=""
-                                        id="checkDefault"
-                                      />
-                                      <div class="addtothisflight">
-                                        <label
-                                          class="form-check-label"
-                                          for="checkDefault"
-                                        >
-                                          Add to this flight
-                                        </label>
-                                        <span>$39</span>
-                                      </div>
-                                    </div>
-                                    <button
-                                      class="sidebaarSelectBtn btn btn_theme btn_md"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#explorepackages"
-                                    >
-                                      Select
-                                    </button>
-                                  </div>
-                                </div>
-                              </li>
-
-                              <li class="boxbordered">
-                                <div class="priceAndDetails">
-                                  <h3>$393</h3>
-                                  <small>
-                                    $2,357.54 one way for 6 travelers
-                                  </small>
-                                  <p class="listheading">Economy Basic</p>
-                                  <p class="cabintitle">Cabin: Economy</p>
-                                </div>
-                                <div class="seatbagsFlexibility">
-                                  <ul class="comntitle">
-                                    <li class="listheading">Seat</li>
-                                    <li>
-                                      <span class="material-icons"> paid </span>{" "}
-                                      Seat choice for a fee
-                                    </li>
-                                  </ul>
-                                  <ul class="comntitle">
-                                    <li class="listheading">Bags</li>
-                                    <li>
-                                      <span class="greenicon material-icons">
-                                        {" "}
-                                        check_circle
-                                      </span>{" "}
-                                      Carry-on bag included (15 lbs)
-                                    </li>
-                                    <li>
-                                      <span class="material-icons">
-                                        {" "}
-                                        close{" "}
-                                      </span>{" "}
-                                      2 checked bags included (50 lbs each)
-                                    </li>
-                                  </ul>
-                                  <ul class="comntitle">
-                                    <li class="listheading">Flexibility</li>
-                                    <li>
-                                      <span class="material-icons">
-                                        {" "}
-                                        close{" "}
-                                      </span>
-                                      Non-refundable
-                                    </li>
-                                    <li>
-                                      <div class="addtothisflight">
-                                        <label>
-                                          <span class="greenicon material-icons">
-                                            check_circle{" "}
-                                          </span>{" "}
-                                          Change fee:
-                                        </label>
-                                        <small>$639</small>
-                                      </div>
-                                    </li>
-                                  </ul>
-                                  <div class="priceDrop">
-                                    <h6>
-                                      <span></span>Price Drop Protection{" "}
-                                      <a href="#!">
-                                        <span class="material-icons">
-                                          error_outline
-                                        </span>
-                                      </a>
-                                    </h6>
-                                    <p>
-                                      We’ll refund the difference if the price
-                                      drops before you fly.
-                                    </p>
-                                    <div class="form-check">
-                                      <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value=""
-                                        id="checkDefault"
-                                      />
-                                      <div class="addtothisflight">
-                                        <label
-                                          class="form-check-label"
-                                          for="checkDefault"
-                                        >
-                                          Add to this flight
-                                        </label>
-                                        <span>$39</span>
-                                      </div>
-                                    </div>
-                                    <button class="sidebaarSelectBtn btn btn_theme btn_md">
-                                      Select
-                                    </button>
-                                  </div>
-                                </div>
-                              </li>
-
-                              <li class="boxbordered">
-                                <div class="priceAndDetails">
-                                  <h3>$393</h3>
-                                  <small>
-                                    $2,357.54 one way for 6 travelers
-                                  </small>
-                                  <p class="listheading">Economy Basic</p>
-                                  <p class="cabintitle">Cabin: Economy</p>
-                                </div>
-                                <div class="seatbagsFlexibility">
-                                  <ul class="comntitle">
-                                    <li class="listheading">Seat</li>
-                                    <li>
-                                      <span class="material-icons"> paid </span>{" "}
-                                      Seat choice for a fee
-                                    </li>
-                                  </ul>
-                                  <ul class="comntitle">
-                                    <li class="listheading">Bags</li>
-                                    <li>
-                                      <span class="greenicon material-icons">
-                                        {" "}
-                                        check_circle
-                                      </span>{" "}
-                                      Carry-on bag included (15 lbs)
-                                    </li>
-                                    <li>
-                                      <span class="material-icons">
-                                        {" "}
-                                        close{" "}
-                                      </span>{" "}
-                                      2 checked bags included (50 lbs each)
-                                    </li>
-                                  </ul>
-                                  <ul class="comntitle">
-                                    <li class="listheading">Flexibility</li>
-                                    <li>
-                                      <span class="material-icons">
-                                        {" "}
-                                        close{" "}
-                                      </span>
-                                      Non-refundable
-                                    </li>
-                                    <li>
-                                      <div class="addtothisflight">
-                                        <label>
-                                          <span class="greenicon material-icons">
-                                            check_circle{" "}
-                                          </span>{" "}
-                                          Change fee:
-                                        </label>
-                                        <small>$639</small>
-                                      </div>
-                                    </li>
-                                  </ul>
-                                  <div class="priceDrop">
-                                    <h6>
-                                      <span></span>Price Drop Protection{" "}
-                                      <a href="#!">
-                                        <span class="material-icons">
-                                          error_outline
-                                        </span>
-                                      </a>
-                                    </h6>
-                                    <p>
-                                      We’ll refund the difference if the price
-                                      drops before you fly.
-                                    </p>
-                                    <div class="form-check">
-                                      <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value=""
-                                        id="checkDefault"
-                                      />
-                                      <div class="addtothisflight">
-                                        <label
-                                          class="form-check-label"
-                                          for="checkDefault"
-                                        >
-                                          Add to this flight
-                                        </label>
-                                        <span>$39</span>
-                                      </div>
-                                    </div>
-                                    <button class="sidebaarSelectBtn btn btn_theme btn_md">
-                                      Select
-                                    </button>
-                                  </div>
-                                </div>
-                              </li>
-                              <li class="boxbordered">
-                                <div class="priceAndDetails">
-                                  <h3>$393</h3>
-                                  <small>
-                                    $2,357.54 one way for 6 travelers
-                                  </small>
-                                  <p class="listheading">Economy Basic</p>
-                                  <p class="cabintitle">Cabin: Economy</p>
-                                </div>
-                                <div class="seatbagsFlexibility">
-                                  <ul class="comntitle">
-                                    <li class="listheading">Seat</li>
-                                    <li>
-                                      <span class="material-icons"> paid </span>{" "}
-                                      Seat choice for a fee
-                                    </li>
-                                  </ul>
-                                  <ul class="comntitle">
-                                    <li class="listheading">Bags</li>
-                                    <li>
-                                      <span class="greenicon material-icons">
-                                        {" "}
-                                        check_circle
-                                      </span>{" "}
-                                      Carry-on bag included (15 lbs)
-                                    </li>
-                                    <li>
-                                      <span class="material-icons">
-                                        {" "}
-                                        close{" "}
-                                      </span>{" "}
-                                      2 checked bags included (50 lbs each)
-                                    </li>
-                                  </ul>
-                                  <ul class="comntitle">
-                                    <li class="listheading">Flexibility</li>
-                                    <li>
-                                      <span class="material-icons">
-                                        {" "}
-                                        close{" "}
-                                      </span>
-                                      Non-refundable
-                                    </li>
-                                    <li>
-                                      <div class="addtothisflight">
-                                        <label>
-                                          <span class="greenicon material-icons">
-                                            check_circle{" "}
-                                          </span>{" "}
-                                          Change fee:
-                                        </label>
-                                        <small>$639</small>
-                                      </div>
-                                    </li>
-                                  </ul>
-                                  <div class="priceDrop">
-                                    <h6>
-                                      <span></span>Price Drop Protection{" "}
-                                      <a href="#!">
-                                        <span class="material-icons">
-                                          error_outline
-                                        </span>
-                                      </a>
-                                    </h6>
-                                    <p>
-                                      We’ll refund the difference if the price
-                                      drops before you fly.
-                                    </p>
-                                    <div class="form-check">
-                                      <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        value=""
-                                        id="checkDefault"
-                                      />
-                                      <div class="addtothisflight">
-                                        <label
-                                          class="form-check-label"
-                                          for="checkDefault"
-                                        >
-                                          Add to this flight
-                                        </label>
-                                        <span>$39</span>
-                                      </div>
-                                    </div>
-                                    <button class="sidebaarSelectBtn btn btn_theme btn_md">
-                                      Select
-                                    </button>
-                                  </div>
-                                </div>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                      </label>
+                    ))}
                   </div>
-                  <div class="load_more_flight">
-                    <button class="btn btn_md">
-                      <i class="fas fa-spinner fa-spin"></i> Load more..
+
+                  <div className="load_more_flight">
+                    <button className="btn btn_md">
+                      <i className="fas fa-spinner fa-spin"></i> Load more..
                     </button>
                   </div>
                 </div>
@@ -3143,7 +2690,7 @@ const FlightSearch = () => {
         </div>
       </section>
       <Newsletter />
-      <BackToTopButton/>
+      <BackToTopButton />
       <Footer />
     </div>
   );

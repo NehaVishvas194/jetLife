@@ -16,7 +16,7 @@ const Footer = () => {
     <div>
       <footer id="footer_area">
         <div className="container">
-          <div className="row">
+          <div className="row justify-content-between">
             <div className="col-lg-3 col-md-6 col-sm-6 col-12">
               <div className="footer_heading_area">
                 <h5>Need any help?</h5>
@@ -63,7 +63,7 @@ const Footer = () => {
                 </div>
               </div>
             </div>
-            <div className="col-lg-2 offset-lg-1 col-md-6 col-sm-6 col-12">
+            {/* <div className="col-lg-2 offset-lg-1 col-md-6 col-sm-6 col-12">
               <div className="footer_heading_area">
                 <h5>About Company</h5>
               </div>
@@ -89,8 +89,8 @@ const Footer = () => {
                   </li>
                 </ul>
               </div>
-            </div>
-            <div className="col-lg-2 col-md-4 col-sm-6 col-12">
+            </div> */}
+            {/* <div className="col-lg-2 col-md-4 col-sm-6 col-12">
               <div className="footer_heading_area">
                 <h5>Explore</h5>
               </div>
@@ -116,8 +116,8 @@ const Footer = () => {
                   </li>
                 </ul>
               </div>
-            </div>
-            <div className="col-lg-2 col-md-4 col-sm-6 col-12">
+            </div> */}
+            {/* <div className="col-lg-2 col-md-4 col-sm-6 col-12">
               <div className="footer_heading_area">
                 <h5>Policies</h5>
               </div>
@@ -143,30 +143,30 @@ const Footer = () => {
                   </li>
                 </ul>
               </div>
-            </div>
+            </div> */}
             <div className="col-lg-2 col-md-4 col-sm-6 col-12">
               <div className="footer_heading_area">
-                <h5>Help</h5>
+                <h5>Quick Links</h5>
               </div>
               <div className="footer_link_area">
                 <ul>
                   <li>
-                    <a href="#!">Chicago</a>
+                    <Link to="/about">About Us</Link>
                   </li>
                   <li>
-                    <a href="#!">New York</a>
+                    <Link to="/contactUs">Contact Us</Link>
+                  </li>
+                  {/* <li>
+                    <Link to="/help">Help</Link>
                   </li>
                   <li>
-                    <a href="#!">San Francisco</a>
+                    <Link to="/faq">Faq</Link>
+                  </li> */}
+                  <li>
+                    <Link to="/privacy_policy">Privacy & Policy</Link>
                   </li>
                   <li>
-                    <a href="#!">California</a>
-                  </li>
-                  <li>
-                    <a href="#!">Ohio </a>
-                  </li>
-                  <li>
-                    <a href="#!">Alaska</a>
+                    <Link to="/term_condition">Term & Conditions </Link>
                   </li>
                 </ul>
               </div>

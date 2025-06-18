@@ -29,8 +29,9 @@ const About = () => {
         <div class="container">
           <div class="row">
             <div class="col-lg-12">
-              <div class="common_bannner_text">
-                <h2>About us</h2>
+              <div class="common_bannner_text2">
+               <div>
+                 <h2>About us</h2>
                 <ul>
                   <li>
                     <Link to="/">Home</Link>
@@ -42,6 +43,7 @@ const About = () => {
                     About
                   </li>
                 </ul>
+               </div>
               </div>
             </div>
           </div>

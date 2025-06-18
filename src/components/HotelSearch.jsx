@@ -23,10 +23,7 @@ import hotel1 from "../assets/img/tab-img/hotel1.png";
 import hotel2 from "../assets/img/tab-img/hotel2.png";
 import hotel3 from "../assets/img/tab-img/hotel3.png";
 import hotel4 from "../assets/img/tab-img/hotel4.png";
-// import hotel5 from "../../assets/img/tab-img/hotel5.png";
-// import hotel6 from "../../assets/img/tab-img/hotel6.png";
-// import hotel7 from "../../assets/img/tab-img/hotel7.png";
-// import hotel8 from "../../assets/img/tab-img/hotel8.png";
+import Img1 from "../assets/img/apartment/apartment-7.png";
 
 const HotelComponent = ({
   imageUrl,
@@ -72,15 +69,18 @@ const HotelComponent = ({
       </div>
       <div className="prices">
         <div>
-          Trip.com <FaExternalLinkAlt size={12} />:-
+          Trip.com <FaExternalLinkAlt size={12} />
+          :-
           <strong>{other_price1}</strong>
         </div>
         <div>
-          Expedia <FaExternalLinkAlt size={12} />:-
+          Expedia <FaExternalLinkAlt size={12} />
+          :-
           <strong>{other_price2}</strong>
         </div>
         <div>
-          Booking <FaExternalLinkAlt size={12} />:-
+          Booking <FaExternalLinkAlt size={12} />
+          :-
           <strong>{other_price3}</strong>
         </div>
         <div className="more">{view} ▼</div>
@@ -122,12 +122,32 @@ const HotelSearch = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [travelClass, setTravelClass] = useState("Economy");
   const getTodayDate = () => new Date().toISOString().split("T")[0];
-  const [activeTab, setActiveTab] = useState("nepal");
+  const [activeTab, setActiveTab] = useState("recomended");
   const [multiCityData, setMultiCityData] = useState([
     { from: "", to: "", date: getTodayDate() },
     { from: "", to: "", date: getTodayDate() },
   ]);
   const navigate = useNavigate();
+
+  const [isPriceCollapsed, setIsPriceCollapsed] = useState(true);
+  const [isPopularCollapsed, setIsPopularCollapsed] = useState(true);
+  const [isPropertyCollapsed, setIsPropertyCollapsed] = useState(true);
+  const [isStarCollapsed, setIsStarCollapsed] = useState(true);
+  const togglePriceCollapse = () => {
+    setIsPriceCollapsed(!isPriceCollapsed);
+  };
+
+  const togglePopularCollapse = () => {
+    setIsPopularCollapsed(!isPopularCollapsed);
+  };
+
+  const togglePropertyCollapse = () => {
+    setIsPropertyCollapsed(!isPropertyCollapsed);
+  };
+
+  const toggleStarCollapse = () => {
+    setIsStarCollapsed(!isStarCollapsed);
+  };
 
   // const searchTab = () => {
   //   navigate("/searchFlight");
@@ -367,121 +387,121 @@ const HotelSearch = () => {
     setShowDropdown(false);
   };
 
-  const hotelsList = {
-    recomended: [
-      {
-        imageUrl: hotel1,
-        alt: "img1",
-        title: "Taj Santacruz",
-        price: "₹6,000",
-        rating: "⭐⭐⭐⭐⭐",
-        rating2: "4.9/5",
-        ratingText: "Excellent",
-        distance: "0.49 km from Mumbai",
-        other_price1: "₹12,340",
-        other_price2: "₹14,500",
-        other_price3: "₹14,500",
-        view: "View more",
-        thumb1: hotel1,
-        thumb2: hotel2,
-        thumb3: hotel3,
-        thumb4: hotel4,
-        cancle: "Free cancellation",
-        sitename: "agoda",
-        review: "21 reviews",
-      },
-      {
-        imageUrl: hotel2,
-        alt: "img1",
-        title: "Taj Santacruz",
-        price: "₹6,000",
-        rating: "⭐⭐⭐⭐⭐",
-        rating2: "4.9/5",
-        ratingText: "Excellent",
-        distance: "0.49 km from Mumbai",
-        other_price1: "₹12,340",
-        other_price2: "₹14,500",
-        other_price3: "₹14,500",
-        view: "View more",
-        thumb1: hotel1,
-        thumb2: hotel2,
-        thumb3: hotel3,
-        thumb4: hotel4,
-        cancle: "Free cancellation",
-        sitename: "agoda",
-        review: "21 reviews",
-      },
-    ],
-    topReview: [
-      {
-        imageUrl: hotel1,
-        alt: "img1",
-        title: "Taj Santacruz",
-        price: "₹6,000",
-        rating: "⭐⭐⭐⭐⭐",
-        rating2: "4.9/5",
-        ratingText: "Excellent",
-        distance: "0.49 km from Mumbai",
-        other_price1: "₹12,340",
-        other_price2: "₹14,500",
-        other_price3: "₹14,500",
-        view: "View more",
-        thumb1: hotel1,
-        thumb2: hotel2,
-        thumb3: hotel3,
-        thumb4: hotel4,
-        cancle: "Free cancellation",
-        sitename: "agoda",
-        review: "21 reviews",
-      },
-    ],
-    lowestPrice: [
-      {
-        imageUrl: hotel1,
-        alt: "img1",
-        title: "Taj Santacruz",
-        price: "₹6,000",
-        rating: "⭐⭐⭐⭐⭐",
-        rating2: "4.9/5",
-        ratingText: "Excellent",
-        distance: "0.49 km from Mumbai",
-        other_price1: "₹12,340",
-        other_price2: "₹14,500",
-        other_price3: "₹14,500",
-        view: "View more",
-        thumb1: hotel1,
-        thumb2: hotel2,
-        thumb3: hotel3,
-        thumb4: hotel4,
-        cancle: "Free cancellation",
-        sitename: "agoda",
-        review: "21 reviews",
-      },
-    ],
-    mostStars: [
-      {
-        imageUrl: hotel1,
-        alt: "img1",
-        title: "Taj Santacruz",
-        price: "₹6,000",
-        rating: "⭐⭐⭐⭐⭐",
-        rating2: "4.9/5",
-        ratingText: "Excellent",
-        distance: "0.49 km from Mumbai",
-        other_price1: "₹12,340",
-        other_price2: "₹14,500",
-        other_price3: "₹14,500",
-        view: "View more",
-        thumb1: hotel1,
-        thumb2: hotel2,
-        thumb3: hotel3,
-        thumb4: hotel4,
-        cancle: "Free cancellation",
-        sitename: "agoda",
-        review: "21 reviews",
-      },
-    ],
-  };
+  // const hotelsList = {
+  //   recomended: [
+  //     {
+  //       imageUrl: hotel1,
+  //       alt: "img1",
+  //       title: "Taj Santacruz",
+  //       price: "₹6,000",
+  //       rating: "⭐⭐⭐⭐⭐",
+  //       rating2: "4.9/5",
+  //       ratingText: "Excellent",
+  //       distance: "0.49 km from Mumbai",
+  //       other_price1: "₹12,340",
+  //       other_price2: "₹14,500",
+  //       other_price3: "₹14,500",
+  //       view: "View more",
+  //       thumb1: hotel1,
+  //       thumb2: hotel2,
+  //       thumb3: hotel3,
+  //       thumb4: hotel4,
+  //       cancle: "Free cancellation",
+  //       sitename: "agoda",
+  //       review: "21 reviews",
+  //     },
+  //     {
+  //       imageUrl: hotel2,
+  //       alt: "img1",
+  //       title: "Taj Santacruz",
+  //       price: "₹6,000",
+  //       rating: "⭐⭐⭐⭐⭐",
+  //       rating2: "4.9/5",
+  //       ratingText: "Excellent",
+  //       distance: "0.49 km from Mumbai",
+  //       other_price1: "₹12,340",
+  //       other_price2: "₹14,500",
+  //       other_price3: "₹14,500",
+  //       view: "View more",
+  //       thumb1: hotel1,
+  //       thumb2: hotel2,
+  //       thumb3: hotel3,
+  //       thumb4: hotel4,
+  //       cancle: "Free cancellation",
+  //       sitename: "agoda",
+  //       review: "21 reviews",
+  //     },
+  //   ],
+  //   topReview: [
+  //     {
+  //       imageUrl: hotel1,
+  //       alt: "img1",
+  //       title: "Taj Santacruz",
+  //       price: "₹6,000",
+  //       rating: "⭐⭐⭐⭐⭐",
+  //       rating2: "4.9/5",
+  //       ratingText: "Excellent",
+  //       distance: "0.49 km from Mumbai",
+  //       other_price1: "₹12,340",
+  //       other_price2: "₹14,500",
+  //       other_price3: "₹14,500",
+  //       view: "View more",
+  //       thumb1: hotel1,
+  //       thumb2: hotel2,
+  //       thumb3: hotel3,
+  //       thumb4: hotel4,
+  //       cancle: "Free cancellation",
+  //       sitename: "agoda",
+  //       review: "21 reviews",
+  //     },
+  //   ],
+  //   lowestPrice: [
+  //     {
+  //       imageUrl: hotel1,
+  //       alt: "img1",
+  //       title: "Taj Santacruz",
+  //       price: "₹6,000",
+  //       rating: "⭐⭐⭐⭐⭐",
+  //       rating2: "4.9/5",
+  //       ratingText: "Excellent",
+  //       distance: "0.49 km from Mumbai",
+  //       other_price1: "₹12,340",
+  //       other_price2: "₹14,500",
+  //       other_price3: "₹14,500",
+  //       view: "View more",
+  //       thumb1: hotel1,
+  //       thumb2: hotel2,
+  //       thumb3: hotel3,
+  //       thumb4: hotel4,
+  //       cancle: "Free cancellation",
+  //       sitename: "agoda",
+  //       review: "21 reviews",
+  //     },
+  //   ],
+  //   mostStars: [
+  //     {
+  //       imageUrl: hotel1,
+  //       alt: "img1",
+  //       title: "Taj Santacruz",
+  //       price: "₹6,000",
+  //       rating: "⭐⭐⭐⭐⭐",
+  //       rating2: "4.9/5",
+  //       ratingText: "Excellent",
+  //       distance: "0.49 km from Mumbai",
+  //       other_price1: "₹12,340",
+  //       other_price2: "₹14,500",
+  //       other_price3: "₹14,500",
+  //       view: "View more",
+  //       thumb1: hotel1,
+  //       thumb2: hotel2,
+  //       thumb3: hotel3,
+  //       thumb4: hotel4,
+  //       cancle: "Free cancellation",
+  //       sitename: "agoda",
+  //       review: "21 reviews",
+  //     },
+  //   ],
+  // };
 
   return (
     <>
@@ -492,18 +512,20 @@ const HotelSearch = () => {
           <div class="row">
             <div class="col-lg-12">
               <div class="common_bannner_text">
-                <h2>Hotel search result</h2>
-                <ul>
-                  <li>
-                    <Link to="/">Home</Link>
-                  </li>
-                  <li>
-                    <span>
-                      <GoDotFill />
-                    </span>{" "}
-                    Hotel search result
-                  </li>
-                </ul>
+                <div>
+                  <h2>Hotel search result</h2>
+                  <ul>
+                    <li>
+                      <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                      <span>
+                        <GoDotFill />
+                      </span>{" "}
+                      Hotel search result
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -627,7 +649,7 @@ const HotelSearch = () => {
                                 aria-controls="roundtrip"
                                 aria-selected="false"
                               >
-                                Roundtrip
+                                Return
                               </button>
                             </li>
                             <li className="nav-item" role="presentation">
@@ -1830,7 +1852,7 @@ const HotelSearch = () => {
       </section>
 
       {/* Hotel Search Areas */}
-      <section id="explore_area" className="section_padding">
+      {/* <section id="explore_area" className="section_padding">
         <div className="container">
           <div className="row">
             <div className="col-lg-7">
@@ -1897,6 +1919,633 @@ const HotelSearch = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> */}
+
+      {/* <!-- main-section-booking --> */}
+      <section className="section_padding" id="common_author_area">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-3">
+              <div className="card booking-card">
+                <div className="card-body">
+                  <div className="filter-hd">
+                    <h6>Filter</h6>
+                    <a href="">Clear All</a>
+                  </div>
+                  {/* Price Filters */}
+                  <div className="filter-block">
+                    <div
+                      className="filter-header"
+                      onClick={togglePriceCollapse}
+                    >
+                      <div className="adjust-text">
+                        <h6>Price Range</h6>
+                        <i
+                          className={`fas fa-chevron-${
+                            isPriceCollapsed ? "up" : "down"
+                          } toggle-icon`}
+                        ></i>
+                      </div>
+                    </div>
+                    <div
+                      className="filter-content"
+                      style={{ display: isPriceCollapsed ? "block" : "none" }}
+                    >
+                      <div className="price-main">
+                        <div className="price-input">
+                          <div className="field">
+                            <span>Min</span>
+                            <input
+                              type="number"
+                              className="input-min"
+                              defaultValue={2500}
+                            />
+                          </div>
+                          <div className="separator">-</div>
+                          <div className="field">
+                            <span>Max</span>
+                            <input
+                              type="number"
+                              className="input-max"
+                              defaultValue={7500}
+                            />
+                          </div>
+                        </div>
+                        <div className="slider">
+                          <div className="progress"></div>
+                        </div>
+                        <div className="range-input">
+                          <input
+                            type="range"
+                            className="range-min"
+                            min="0"
+                            max="10000"
+                            defaultValue={2500}
+                            step="100"
+                          />
+                          <input
+                            type="range"
+                            className="range-max"
+                            min="0"
+                            max="10000"
+                            defaultValue={7500}
+                            step="100"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Popular Filters */}
+                  <div className="filter-block">
+                    <div
+                      className="filter-header"
+                      onClick={togglePopularCollapse}
+                    >
+                      <div className="adjust-text">
+                        <h6>Popular filters for Mumbai</h6>
+                        <i
+                          className={`fas fa-chevron-${
+                            isPopularCollapsed ? "up" : "down"
+                          } toggle-icon`}
+                        ></i>
+                      </div>
+                    </div>
+                    <div
+                      className="filter-content"
+                      style={{ display: isPopularCollapsed ? "block" : "none" }}
+                    >
+                      <label>
+                        <input type="checkbox" /> Breakfast included
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Coffee/tea maker
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Refrigerator
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Ironing facilities
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Internet access
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Bathtub
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Pay now
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Guest rating: 8+ Excellent
+                      </label>
+                    </div>
+                  </div>
+                  {/* Property Type Filter */}
+                  <div className="filter-block">
+                    <div
+                      className="filter-header"
+                      onClick={togglePropertyCollapse}
+                    >
+                      <div className="adjust-text">
+                        <h6>Property type</h6>
+                        <i
+                          className={`fas fa-chevron-${
+                            isPropertyCollapsed ? "up" : "down"
+                          } toggle-icon`}
+                        ></i>
+                      </div>
+                    </div>
+                    <div
+                      className="filter-content"
+                      style={{
+                        display: isPropertyCollapsed ? "block" : "none",
+                      }}
+                    >
+                      <label>
+                        <input type="checkbox" /> Hotel (2257)
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Resort (28)
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Guesthouse/bed and breakfast
+                        (82)
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Motel (3)
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Hostel (50)
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Apartment/Flat (393)
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Serviced apartment (20)
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Homestay (26)
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Inn (24)
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Resort villa (4)
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Ryokan (3)
+                      </label>
+                      <label>
+                        <input type="checkbox" /> Entire House (119)
+                      </label>
+                    </div>
+                  </div>
+                  {/* Star Rating Filter */}
+                  <div className="filter-block">
+                    <div className="filter-header" onClick={toggleStarCollapse}>
+                      <div className="adjust-text">
+                        <h6>Star rating</h6>
+                        <i
+                          className={`fas fa-chevron-${
+                            isStarCollapsed ? "up" : "down"
+                          } toggle-icon`}
+                        ></i>
+                      </div>
+                    </div>
+                    <div
+                      className="filter-content"
+                      style={{ display: isStarCollapsed ? "block" : "none" }}
+                    >
+                      <label>
+                        <input type="checkbox" />{" "}
+                        <i className="far fa-star"></i>
+                      </label>
+                      <label>
+                        <input type="checkbox" />{" "}
+                        <i className="far fa-star"></i>
+                        <i className="far fa-star"></i>
+                      </label>
+                      <label>
+                        <input type="checkbox" />{" "}
+                        <i className="far fa-star"></i>
+                        <i className="far fa-star"></i>
+                        <i className="far fa-star"></i>
+                      </label>
+                      <label>
+                        <input type="checkbox" />{" "}
+                        <i className="far fa-star"></i>
+                        <i className="far fa-star"></i>
+                        <i className="far fa-star"></i>
+                        <i className="far fa-star"></i>
+                      </label>
+                      <label>
+                        <input type="checkbox" />{" "}
+                        <i className="far fa-star"></i>
+                        <i className="far fa-star"></i>
+                        <i className="far fa-star"></i>
+                        <i className="far fa-star"></i>
+                        <i className="far fa-star"></i>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-9">
+              <div className="row">
+                <div className="col-md-12 mb-4">
+                  <div className="card booking-card">
+                    <div className="card-body">
+                      <div className="filter-bar">
+                        <div className="filter-left">
+                          <div className="dropdown-wrapper" id="filterDropdown">
+                            <div className="dropdown-btn" id="filterBtn">
+                              Nightly total-including taxes and fees
+                            </div>
+                            <ul className="dropdown-menu">
+                              <li className="active">
+                                Nightly total-including taxes and fees
+                              </li>
+                              <li>Base price only</li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div className="filter-right">
+                          <div className="results-text">
+                            <span>488 results</span>
+                          </div>
+                          <div className="label">
+                            <p>
+                              Sort by<span>*</span>
+                            </p>
+                          </div>
+                          <div className="dropdown-wrapper" id="sortDropdown">
+                            <div className="dropdown-btn" id="sortBtn">
+                              Price (low to high)
+                            </div>
+                            <ul className="dropdown-menu">
+                              <li>Recommended</li>
+                              <li className="active">Price (low to high)</li>
+                              <li>Price (high to low)</li>
+                              <li>Hotel class (highest first)</li>
+                              <li>Review score</li>
+                              <li>Distance</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-12 mb-4">
+                  <div className="card booking-card">
+                    <div className="card-body">
+                      <div className="row">
+                        <div className="col-md-4">
+                          <div className="hotel-img">
+                            <img src={Img1} alt="hotel" />
+                          </div>
+                        </div>
+                        <div className="col-md-8">
+                          <div className="hotel-det">
+                            <div className="top-part">
+                              <h2>Krishna Avtar Services Apartment</h2>
+                              <div className="">
+                                <i className="far fa-heart"></i>
+                              </div>
+                            </div>
+                            <p>
+                              1.83 km from St. George Orthodox Syrian Church,
+                              Kalamboli
+                            </p>
+                            <div className="d-flex gap-3 align-items-center mb-2">
+                              <div className="rating-box">
+                                <div className="rating-score">4.6</div>
+                                <div className="rating-info">
+                                  <div className="rating-title">Wonderful</div>
+                                  <div className="rating-count">2 reviews</div>
+                                </div>
+                              </div>
+                              <div className="star-main">
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                              </div>
+                            </div>
+                            <div className="price-section">
+                              <div className="original-price">
+                                <span className="strike">₹2,349</span>
+                                <span className="discount">· 26% off</span>
+                              </div>
+                              <div className="final-price">
+                                ₹1,729{" "}
+                                <span className="night-text">a night</span>
+                              </div>
+                            </div>
+                            <div className="price-comparison">
+                              <div className="price-box">
+                                <div className="price-title">
+                                  Trip.com{" "}
+                                  <i className="fas fa-external-link-alt"></i>
+                                </div>
+                                <div className="price-amount">₹2,478</div>
+                              </div>
+                              <div className="price-box">
+                                <div className="price-title">
+                                  Vio.com{" "}
+                                  <i className="fas fa-external-link-alt"></i>
+                                </div>
+                                <div className="price-amount">₹1,691</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-12 mb-4">
+                  <div className="card booking-card">
+                    <div className="card-body">
+                      <div className="row">
+                        <div className="col-md-4">
+                          <div className="hotel-img">
+                            <img src={Img1} alt="hotel" />
+                          </div>
+                        </div>
+                        <div className="col-md-8">
+                          <div className="hotel-det">
+                            <div className="top-part">
+                              <h2>Krishna Avtar Services Apartment</h2>
+                              <div className="">
+                                <i className="far fa-heart"></i>
+                              </div>
+                            </div>
+                            <p>
+                              1.83 km from St. George Orthodox Syrian Church,
+                              Kalamboli
+                            </p>
+                            <div className="d-flex gap-3 align-items-center mb-2">
+                              <div className="rating-box">
+                                <div className="rating-score">4.6</div>
+                                <div className="rating-info">
+                                  <div className="rating-title">Wonderful</div>
+                                  <div className="rating-count">2 reviews</div>
+                                </div>
+                              </div>
+                              <div className="star-main">
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                              </div>
+                            </div>
+                            <div className="price-section">
+                              <div className="original-price">
+                                <span className="strike">₹2,349</span>
+                                <span className="discount">· 26% off</span>
+                              </div>
+                              <div className="final-price">
+                                ₹1,729{" "}
+                                <span className="night-text">a night</span>
+                              </div>
+                            </div>
+                            <div className="price-comparison">
+                              <div className="price-box">
+                                <div className="price-title">
+                                  Trip.com{" "}
+                                  <i className="fas fa-external-link-alt"></i>
+                                </div>
+                                <div className="price-amount">₹2,478</div>
+                              </div>
+                              <div className="price-box">
+                                <div className="price-title">
+                                  Vio.com{" "}
+                                  <i className="fas fa-external-link-alt"></i>
+                                </div>
+                                <div className="price-amount">₹1,691</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-12 mb-4">
+                  <div className="card booking-card">
+                    <div className="card-body">
+                      <div className="row">
+                        <div className="col-md-4">
+                          <div className="hotel-img">
+                            <img src={Img1} alt="hotel" />
+                          </div>
+                        </div>
+                        <div className="col-md-8">
+                          <div className="hotel-det">
+                            <div className="top-part">
+                              <h2>Krishna Avtar Services Apartment</h2>
+                              <div className="">
+                                <i className="far fa-heart"></i>
+                              </div>
+                            </div>
+                            <p>
+                              1.83 km from St. George Orthodox Syrian Church,
+                              Kalamboli
+                            </p>
+                            <div className="d-flex gap-3 align-items-center mb-2">
+                              <div className="rating-box">
+                                <div className="rating-score">4.6</div>
+                                <div className="rating-info">
+                                  <div className="rating-title">Wonderful</div>
+                                  <div className="rating-count">2 reviews</div>
+                                </div>
+                              </div>
+                              <div className="star-main">
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                              </div>
+                            </div>
+                            <div className="price-section">
+                              <div className="original-price">
+                                <span className="strike">₹2,349</span>
+                                <span className="discount">· 26% off</span>
+                              </div>
+                              <div className="final-price">
+                                ₹1,729{" "}
+                                <span className="night-text">a night</span>
+                              </div>
+                            </div>
+                            <div className="price-comparison">
+                              <div className="price-box">
+                                <div className="price-title">
+                                  Trip.com{" "}
+                                  <i className="fas fa-external-link-alt"></i>
+                                </div>
+                                <div className="price-amount">₹2,478</div>
+                              </div>
+                              <div className="price-box">
+                                <div className="price-title">
+                                  Vio.com{" "}
+                                  <i className="fas fa-external-link-alt"></i>
+                                </div>
+                                <div className="price-amount">₹1,691</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-12 mb-4">
+                  <div className="card booking-card">
+                    <div className="card-body">
+                      <div className="row">
+                        <div className="col-md-4">
+                          <div className="hotel-img">
+                            <img src={Img1} alt="hotel" />
+                          </div>
+                        </div>
+                        <div className="col-md-8">
+                          <div className="hotel-det">
+                            <div className="top-part">
+                              <h2>Krishna Avtar Services Apartment</h2>
+                              <div className="">
+                                <i className="far fa-heart"></i>
+                              </div>
+                            </div>
+                            <p>
+                              1.83 km from St. George Orthodox Syrian Church,
+                              Kalamboli
+                            </p>
+                            <div className="d-flex gap-3 align-items-center mb-2">
+                              <div className="rating-box">
+                                <div className="rating-score">4.6</div>
+                                <div className="rating-info">
+                                  <div className="rating-title">Wonderful</div>
+                                  <div className="rating-count">2 reviews</div>
+                                </div>
+                              </div>
+                              <div className="star-main">
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                              </div>
+                            </div>
+                            <div className="price-section">
+                              <div className="original-price">
+                                <span className="strike">₹2,349</span>
+                                <span className="discount">· 26% off</span>
+                              </div>
+                              <div className="final-price">
+                                ₹1,729{" "}
+                                <span className="night-text">a night</span>
+                              </div>
+                            </div>
+                            <div className="price-comparison">
+                              <div className="price-box">
+                                <div className="price-title">
+                                  Trip.com{" "}
+                                  <i className="fas fa-external-link-alt"></i>
+                                </div>
+                                <div className="price-amount">₹2,478</div>
+                              </div>
+                              <div className="price-box">
+                                <div className="price-title">
+                                  Vio.com{" "}
+                                  <i className="fas fa-external-link-alt"></i>
+                                </div>
+                                <div className="price-amount">₹1,691</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-12 mb-4">
+                  <div className="card booking-card">
+                    <div className="card-body">
+                      <div className="row">
+                        <div className="col-md-4">
+                          <div className="hotel-img">
+                            <img src={Img1} alt="hotel" />
+                          </div>
+                        </div>
+                        <div className="col-md-8">
+                          <div className="hotel-det">
+                            <div className="top-part">
+                              <h2>Krishna Avtar Services Apartment</h2>
+                              <div className="">
+                                <i className="far fa-heart"></i>
+                              </div>
+                            </div>
+                            <p>
+                              1.83 km from St. George Orthodox Syrian Church,
+                              Kalamboli
+                            </p>
+                            <div className="d-flex gap-3 align-items-center mb-2">
+                              <div className="rating-box">
+                                <div className="rating-score">4.6</div>
+                                <div className="rating-info">
+                                  <div className="rating-title">Wonderful</div>
+                                  <div className="rating-count">2 reviews</div>
+                                </div>
+                              </div>
+                              <div className="star-main">
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                                <i className="far fa-star"></i>
+                              </div>
+                            </div>
+                            <div className="price-section">
+                              <div className="original-price">
+                                <span className="strike">₹2,349</span>
+                                <span className="discount">· 26% off</span>
+                              </div>
+                              <div className="final-price">
+                                ₹1,729{" "}
+                                <span className="night-text">a night</span>
+                              </div>
+                            </div>
+                            <div className="price-comparison">
+                              <div className="price-box">
+                                <div className="price-title">
+                                  Trip.com{" "}
+                                  <i className="fas fa-external-link-alt"></i>
+                                </div>
+                                <div className="price-amount">₹2,478</div>
+                              </div>
+                              <div className="price-box">
+                                <div className="price-title">
+                                  Vio.com{" "}
+                                  <i className="fas fa-external-link-alt"></i>
+                                </div>
+                                <div className="price-amount">₹1,691</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

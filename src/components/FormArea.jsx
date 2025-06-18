@@ -42,9 +42,9 @@ const FormArea = () => {
   ]);
   const navigate = useNavigate();
 
-  // const searchTab = () => {
-  //   navigate("/searchFlight");
-  // };
+  const searchTab = () => {
+    navigate("/searchFlight");
+  };
 
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
@@ -105,17 +105,19 @@ const FormArea = () => {
         "Navigating to searchFlight with data:",
         response.data.AirSearchResponse.AirSearchResult.FareItineraries
       );
-      navigate("/searchFlight", {
-        state: {
-          searchResults:
-            response.data.AirSearchResponse.AirSearchResult.FareItineraries,
-        },
-      });
+      // navigate("/searchFlight", {
+      //   state: {
+      //     searchResults:
+      //       response.data.AirSearchResponse.AirSearchResult.FareItineraries,
+      //   },
+      // });
+
+      // navigate("/searchFlight")
       sessionStorage.setItem(
         "session_id",
         response.data.AirSearchResponse.session_id
       );
-      console.log(response.data.AirSearchResponse);
+      console.log(response.data.AirSearchResponse.AirSearchResult.FareItineraries);
     } catch (error) {
       console.log("Error Fetching Search List Data:", error);
     }
@@ -395,7 +397,7 @@ const FormArea = () => {
                                 aria-controls="roundtrip"
                                 aria-selected="false"
                               >
-                                Roundtrip
+                                Return
                               </button>
                             </li>
                             <li className="nav-item" role="presentation">
@@ -810,7 +812,7 @@ const FormArea = () => {
                                   <div className="top_form_search_button">
                                     <button
                                       type="submit"
-                                      onClick={fetchAirportSearch}
+                                      onClick={searchTab}
                                       className="btn btn_theme btn_md"
                                     >
                                       Search

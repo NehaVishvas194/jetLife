@@ -28,8 +28,9 @@ const Help = () => {
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <div className="common_bannner_text">
-                <h2>Help Center</h2>
+              <div className="common_bannner_text2">
+                <div>
+                  <h2>Help Center</h2>
                 <ul>
                   <li>
                     <Link to="/">Home</Link>
@@ -41,6 +42,7 @@ const Help = () => {
                     Help Center
                   </li>
                 </ul>
+                </div>
               </div>
             </div>
           </div>

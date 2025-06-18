@@ -6,7 +6,10 @@ import { Link } from "react-router-dom";
 import { GoDotFill } from "react-icons/go";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
+import { API_BASE_URL } from "../Url/BaseUrl";
 import BackToTopButton from "./BackToTop";
+import axios from "axios";
+
 const ResetPassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -44,7 +47,9 @@ const ResetPassword = () => {
       autoClose: 3000,
     });
 
-    // Add logic here to call backend API for resetting password
+    axios.post(`${API_BASE_URL}/changepassword`, {
+      // user_id:
+    });
   };
   return (
     <div>
@@ -54,8 +59,9 @@ const ResetPassword = () => {
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <div className="common_bannner_text">
-                <h2>Reset password</h2>
+              <div className="common_bannner_text2">
+                <div>
+                  <h2>Reset password</h2>
                 <ul>
                   <li>
                     <Link to="/">Home</Link>
@@ -67,6 +73,7 @@ const ResetPassword = () => {
                     Reset password
                   </li>
                 </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -120,7 +127,7 @@ const ResetPassword = () => {
       </section>
       <Newsletter />
       <Footer />
-      <BackToTopButton/>
+      <BackToTopButton />
       <ToastContainer />
     </div>
   );
