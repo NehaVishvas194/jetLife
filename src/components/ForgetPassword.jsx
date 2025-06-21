@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 // import { useNavigate } from "react-router-dom";
 import image1 from "../assets/img/white-logo.png";
@@ -120,7 +119,6 @@ const ForgetPassword = () => {
           </div>
         </div>
       </section>
-      <ToastContainer />
     </div>
   );
 };

@@ -21,8 +21,13 @@ import TermCondition from "./components/TermCondition";
 import ScrollToTop from "./components/ScrollToTop";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import MyBooking from "./components/MyBooking";
+import Notification from "./components/Notification";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import FlightBookingDetails from "./components/FlightBookingDetails";
 
-console.log("date:-17-06-2025", "time:-6:28");
+console.log("date:-21-06-2025", "time:-10:10");
 
 function App() {
   useEffect(() => {
@@ -31,11 +36,11 @@ function App() {
       once: true, // only animate once
     });
   }, []);
-  
+
   return (
     <>
       <BrowserRouter basename="jettravel">
-      <ScrollToTop/>
+        <ScrollToTop />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/forget_password" element={<ForgetPassword />} />
@@ -45,6 +50,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contactUs" element={<ContactUs />} />
           <Route path="/searchFlight" element={<FlightSearch />} />
+          <Route path="/booking_details" element={<FlightBookingDetails/>}/>
           <Route path="/searchHotel" element={<HotelSearch />} />
           <Route path="/review_booking" element={<ReviewBooking />} />
           <Route path="/privacy_policy" element={<PrivacyPolicy />} />
@@ -53,7 +59,10 @@ function App() {
           <Route path="/faq" element={<Faq />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route path="/my_booking" element={<MyBooking />} />
+          <Route path="/notification" element={<Notification />} />
         </Routes>
+        <ToastContainer />
       </BrowserRouter>
     </>
   );

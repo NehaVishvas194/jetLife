@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../Url/BaseUrl";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import image1 from "../assets/img/white-logo.png";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -44,11 +44,13 @@ const Login = () => {
           const email = response.data.data.email;
           const token = response.data.data.token;
           const id = response.data.data.user_id;
+          const image = response.data.data.image;
           localStorage.setItem("FirstName", fname);
           localStorage.setItem("LastName", lname);
           localStorage.setItem("Email", email);
           localStorage.setItem("Token", token);
           localStorage.setItem("Id", id);
+          localStorage.setItem("Image", image);
           toast.success(response.data.message);
           navigate("/");
         }
@@ -290,7 +292,7 @@ const Login = () => {
                           <div className="col-md-12">
                             <div className="field-set">
                               <label>
-                              Email / Phone number<span>*</span>
+                                Email / Phone number<span>*</span>
                               </label>
                               <input
                                 type="text"
@@ -308,7 +310,7 @@ const Login = () => {
                                 Password<span>*</span>
                               </label>
                               <input
-                                 type={showPassword ? "text" : "password"}
+                                type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="form-control"
@@ -343,7 +345,6 @@ const Login = () => {
           </div>
         </div>
       </section>
-      <ToastContainer />
     </>
   );
 };

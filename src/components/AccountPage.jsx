@@ -10,7 +10,7 @@ import { IoCamera } from "react-icons/io5";
 import axios from "axios";
 import { API_BASE_URL } from "../Url/BaseUrl";
 import { API_IMAGE_URL } from "../Url/BaseUrl";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const AccountPage = () => {
@@ -27,6 +27,7 @@ const AccountPage = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [profileImage, setProfileImage] = useState("");
   const [newImageFile, setNewImageFile] = useState(null);
+  const [userType, setUserType] = useState(null);
 
   const token = localStorage.getItem("Token");
   const id = localStorage.getItem("Id");
@@ -43,13 +44,13 @@ const AccountPage = () => {
           const baseImagePath = response.data.image_path;
           const imageName = userData.image || "default_image.jpeg";
           const fullImageUrl = `${baseImagePath}/${imageName}`;
-
           setProfileImage(fullImageUrl);
           setFname(`${userData.first_name} ${userData.last_name}`);
           setEmail(userData.email);
           setMobile(userData.phone_number);
           setCompany(userData.company_name || "");
           setEmployee(userData.employee_id || "");
+          setUserType(userData.user_type);
         }
       })
       .catch((error) => {
@@ -81,19 +82,23 @@ const AccountPage = () => {
     formData.append("employee_id", employee);
 
     if (newImageFile) {
-      formData.append("image", newImageFile); 
+      formData.append("image", newImageFile);
     }
 
     axios
       .post(`${API_BASE_URL}/user_update_profile`, formData)
       .then((response) => {
         if (response.data.success === true) {
-          toast.success("Profile updated successfully!");
+          toast.success("Profile updated successfully!", {
+            autoClose: 1000,
+          });
           // const baseImagePath = response.data.image_path;
           const updatedImageName = response.data.data.image;
-          setProfileImage(`${API_IMAGE_URL}/${updatedImageName}`);
-        } else {
-          toast.error("Something went wrong!");
+          const updatedImageURL = `${API_IMAGE_URL}/${updatedImageName}`;
+          setProfileImage(updatedImageURL);
+          localStorage.setItem("FirstName", firstName);
+          localStorage.setItem("LastName", lastName || "");
+          localStorage.setItem("Image", updatedImageURL);
         }
       })
       .catch((error) => {
@@ -114,8 +119,6 @@ const AccountPage = () => {
       .then((response) => {
         if (response.data.success) {
           toast.success("Password changed successfully!", { autoClose: 1000 });
-        } else {
-          toast.error("Something went wrong!");
         }
       })
       .catch((error) => {
@@ -274,6 +277,7 @@ const AccountPage = () => {
                             />
                           </div>
                         </div>
+
                         <div className="col-md-6">
                           <div className="field-set">
                             <label>
@@ -287,6 +291,7 @@ const AccountPage = () => {
                             />
                           </div>
                         </div>
+
                         <div className="col-md-6">
                           <div className="field-set">
                             <label>
@@ -300,32 +305,38 @@ const AccountPage = () => {
                             />
                           </div>
                         </div>
-                        <div className="col-md-6">
-                          <div className="field-set">
-                            <label>
-                              Company<span>*</span>
-                            </label>
-                            <input
-                              className="form-control"
-                              value={company}
-                              type="text"
-                              onChange={(e) => setCompany(e.target.value)}
-                            />
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="field-set">
-                            <label>
-                              Employee Id<span>*</span>
-                            </label>
-                            <input
-                              className="form-control"
-                              value={employee}
-                              type="text"
-                              onChange={(e) => setEmployee(e.target.value)}
-                            />
-                          </div>
-                        </div>
+
+                        {/* Show only for Corporate users */}
+                        {userType === 2 && (
+                          <>
+                            <div className="col-md-6">
+                              <div className="field-set">
+                                <label>
+                                  Company<span>*</span>
+                                </label>
+                                <input
+                                  className="form-control"
+                                  value={company}
+                                  type="text"
+                                  onChange={(e) => setCompany(e.target.value)}
+                                />
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <div className="field-set">
+                                <label>
+                                  Employee Id<span>*</span>
+                                </label>
+                                <input
+                                  className="form-control"
+                                  value={employee}
+                                  type="text"
+                                  onChange={(e) => setEmployee(e.target.value)}
+                                />
+                              </div>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -421,7 +432,6 @@ const AccountPage = () => {
                       </div>
                     </div>
                   </div>
-
                   <div className="text-center mt-4">
                     <button
                       type="button"
@@ -439,7 +449,6 @@ const AccountPage = () => {
       </section>
       <Newsletter />
       <BackToTopButton />
-      <ToastContainer />
       <Footer />
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Newsletter from "./home/Newsletter";
@@ -7,10 +7,11 @@ import { Link } from "react-router-dom";
 import BackToTopButton from "./BackToTop";
 import axios from "axios";
 import { API_BASE_URL } from "../Url/BaseUrl";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const PrivacyPolicy = () => {
   const [data, setData] = useState("");
+  const [imagePath, setImagePath] = useState("");
 
   const fetchPrivacyData = () => {
     axios
@@ -18,6 +19,7 @@ const PrivacyPolicy = () => {
       .then((response) => {
         // console.log(response.data.data);
         setData(response.data.data);
+        setImagePath(response.data.image_path);
       })
       .catch((error) => {
         console.log(error);
@@ -35,7 +37,16 @@ const PrivacyPolicy = () => {
     <div>
       <Header />
       {/* <!-- Common Banner Area --> */}
-      <section id="common_banner">
+      <section
+        id="common_banner_img"
+        style={{
+          backgroundImage: `url(${imagePath}/${data?.image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height: "100%",
+        }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
@@ -83,7 +94,6 @@ const PrivacyPolicy = () => {
       </section>
       <Newsletter />
       <BackToTopButton />
-      <ToastContainer />
       <Footer />
     </div>
   );

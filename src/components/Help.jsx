@@ -1,4 +1,3 @@
-import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Newsletter from "./home/Newsletter";
@@ -6,16 +5,11 @@ import { GoDotFill } from "react-icons/go";
 import { IoSearch } from "react-icons/io5";
 import { Link } from "react-router-dom";
 // import Img1 from "..//img/currency.png";
-import Img1 from "../assets/img/currency.png";
-import Img2 from "../assets/img/money-travel.png";
-import Img3 from "../assets/img/return.png";
-import { MdKeyboardArrowRight } from "react-icons/md";
 import { MdFlight,MdOutlineAccountCircle,MdOutlinePrivacyTip ,MdOutlineSecurity  } from "react-icons/md";
 import { RiRefund2Line } from "react-icons/ri";
 import { TbPackages } from "react-icons/tb";
 import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
 import { IoCarSport } from "react-icons/io5";
-import { FaHotel } from "react-icons/fa6";
 import { RiHotelLine } from "react-icons/ri";
 import BackToTopButton from "./BackToTop";
 

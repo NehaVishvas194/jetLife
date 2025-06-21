@@ -22,7 +22,6 @@ body {
   padding: 0;
   margin: 0;
   font-size: 16px;
-  font-family: "Roboto", sans-serif;
 }
 
 img {
@@ -66,7 +65,6 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Roboto", sans-serif;
   margin: 0;
 }
 
@@ -107,7 +105,6 @@ p {
   line-height: 28px;
   color: var(--paragraph-color);
   font-weight: 400;
-  font-family: "Poppins", sans-serif;
   margin-bottom: 0;
 }
 
@@ -398,8 +395,8 @@ section {
 }
 
 .btn_md {
-  padding: 5px 24px;
-  font-size: 16px;
+  padding: 5px 20px !important;
+  font-size: 12px !important;
 }
 
 .btn_sm {
@@ -977,8 +974,7 @@ section {
 
 .theme_nav_tab {
   background: #ffffff;
-  box-shadow: -4px -4px 16px rgb(139 62 234 / 8%),
-    4px 14px 28px rgb(139 148 250 / 7%);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 30px;
@@ -3300,7 +3296,7 @@ section {
 .common_bannner_text ul li {
   display: inline-block;
   color: var(--white-color);
-  padding-left: 7px;
+  padding-left: 12px;
 }
 
 .common_bannner_text ul li:first-child {
@@ -4177,6 +4173,11 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   margin-top: 25px;
 }
 
+.about_us_right img {
+  width: 100%;
+  max-height: 70vh;
+}
+
 .about_offer_banner img {
   width: 100%;
   height: 100%;
@@ -4712,7 +4713,6 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   padding: 14px 20px;
   color: var(--black-color);
   font-weight: 400;
-  font-family: "Poppins", sans-serif;
   transition: var(--transition);
   border-radius: 12px;
   border-left: 5px solid var(--main-color);
@@ -4733,7 +4733,6 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   background-color: #f3f6fd;
   padding: 10px 22px;
   color: var(--heading-color);
-  font-family: "Poppins", sans-serif;
   transition: var(--transition);
   border-radius: 10px;
 }
@@ -5531,14 +5530,12 @@ textarea {
 
 .flight_search_items {
   background: #ffffff;
-  border: 1px solid #dddddd;
   border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   cursor: pointer;
-  overflow: hidden;
-  padding: 10px 0;
+  /* overflow: hidden; */
+  padding: 0px !important;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border: 0px;
 }
 
 .flight_search_item_wrappper {
@@ -5548,25 +5545,27 @@ textarea {
 .flight_search_left {
   display: flex;
   align-items: center;
-  padding: 0 0px 0 10px;
+  gap: 15px;
+  /* padding: 0 0px 0 10px; */
 }
 
-.flight_search_middel {
+/* .flight_search_middel {
   display: flex;
   align-items: center;
-  /* padding-left: 47px; */
-}
-
+  gap: 15px;
+  padding-left:15px;
+} */
+/* 
 .flight_multis_area_wrapper {
   display: flex;
   justify-content: space-between;
-}
+} */
 .flight_logo img {
   width: 40px;
 }
 
 .flight_search_destination {
-  padding-left: 10px;
+  /* padding-left: 10px; */
 }
 
 .flight_search_destination p {
@@ -5575,22 +5574,20 @@ textarea {
 }
 
 .flight_search_destination h3 {
-  font-weight: 500;
-  padding-top: 5px;
+  font-weight: 600;
+  /* padding-top: 5px; */
   font-size: 18px;
+  margin-bottom: 0px;
+  line-height: 28px;
 }
 
-.flight_search_destination h6 {
-  padding-top: 5px;
+.flight_search_destination p {
   font-size: 12px;
-  text-overflow: ellipsis;
+  margin-bottom: 0px;
+  /* text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  width: 140px;
-}
-
-.flight_right_arrow {
-  text-align: center;
+  width: 140px; */
 }
 
 .flight_right_arrow img {
@@ -5601,8 +5598,9 @@ textarea {
 }
 
 .flight_right_arrow p {
-  font-size: 11px;
-  line-height: 18px;
+  font-size: 12px;
+  font-weight: 600;
+  /* line-height: 18px; */
 }
 
 .flight_right_arrow h6 {
@@ -5614,7 +5612,7 @@ textarea {
 .flight_search_right {
   /* background: #F3EFF9;
     padding: 0px 16px 8px 16px; */
-  padding-right: 10px;
+  /* padding-right: 10px; */
 }
 
 .flight_search_right h5 {
@@ -5642,9 +5640,10 @@ textarea {
 
 .flight_search_right p {
   font-size: 12px;
-  padding-top: 2px;
+  /* padding-top: 2px; */
   font-weight: 500;
   color: var(--black-color);
+  text-align: end;
 }
 
 .flight_search_right h6 {
@@ -5654,13 +5653,15 @@ textarea {
   cursor: pointer;
 }
 
-.load_more_flight {
+/* .load_more_flight {
   text-align: center;
   padding-top: 40px;
-}
+} */
 
 .load_more_flight button {
   border: 1px solid var(--main-color);
+  text-transform: capitalize;
+  color: var(--black-color);
 }
 
 .load_more_flight button:hover {
@@ -11416,12 +11417,14 @@ section#home_news .section_heading_center h2 {
 }
 ul.choosedepartList {
   display: flex;
-  gap: 16px;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 30px;
 }
 .choosedepartList li button.chooseBtnFlt {
-  border: 1px solid #eee;
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 8px 24px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 .choosedepartList li button.chooseBtnFlt:hover {
   color: #000;
@@ -11434,7 +11437,8 @@ ul.choosedepartList {
   font-size: 12px;
 }
 .priceBigText {
-  font-size: 18px;
+  font-size: 14px;
+  font-weight: 600;
 }
 .chooseTitle {
   padding-bottom: 20px;
@@ -11624,10 +11628,12 @@ button.btn.commonBtn {
   font-size: 14px;
   font-weight: 700;
 }
-.allsameheading {
-  font-size: 20px;
-  font-weight: 500;
-  color: #0a2848;
+.allsameheading h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 10px;
+  text-align: end;
 }
 .fontsamll {
   font-size: 12px;
@@ -11891,7 +11897,6 @@ span.order-track-status-line.timeLine {
   color: #000;
   font-weight: 500;
   padding: 20px 0;
-  font-size: 14px;
 }
 .privacy_section_para {
   font-size: 14px;
@@ -11900,7 +11905,6 @@ span.order-track-status-line.timeLine {
   line-height: 28px;
   color: var(--paragraph-color);
   font-weight: 400;
-  font-family: "Poppins", sans-serif;
   font-size: 14px;
   list-style: inside;
 }
@@ -12348,7 +12352,6 @@ span.order-track-status-line.timeLine {
   border: 1px solid #ddd;
   border-radius: 12px;
   overflow: hidden;
-  font-family: Arial, sans-serif;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   /* max-width: 820px; */
   margin: 20px auto;
@@ -12700,7 +12703,7 @@ input[type="range"]::-moz-range-thumb {
   padding-bottom: 20px;
 }
 .filter-content label {
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 500;
   margin-bottom: 8px;
   display: block;
@@ -12718,13 +12721,16 @@ input[type="range"]::-moz-range-thumb {
 }
 .hotel-img img {
   height: 250px;
-  border-radius: 10px;
+  border-radius: 8px;
   width: 100%;
   object-fit: cover;
 }
 
 .booking-card {
-  border-radius: 10px;
+  border-radius: 8px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border: 0px;
+  margin: 10px;
 }
 .hotel-det h2 {
   font-size: 22px;
@@ -12783,7 +12789,6 @@ input[type="range"]::-moz-range-thumb {
 .rating-box {
   display: flex;
   align-items: center;
-  font-family: Arial, sans-serif;
 }
 
 .rating-score {
@@ -12941,16 +12946,16 @@ input[type="range"]::-moz-range-thumb {
 .term-para p {
   margin-bottom: 20px;
 }
-.term-para li{
-  list-style: inside;
-  margin-bottom: 10px;
-}
 .head-para h5 {
   font-weight: 600;
   margin-bottom: 20px;
 }
 .head-para p {
   margin-bottom: 20px;
+}
+.term-para li {
+  list-style: inside;
+  margin-bottom: 10px;
 }
 
 #our_partners .partner_slider_area img {
@@ -13033,7 +13038,7 @@ input[type="range"]::-moz-range-thumb {
 .common_bannner_text2 ul li {
   display: inline-block;
   color: var(--white-color);
-  padding-left: 7px;
+  padding-left: 20px;
 }
 
 .common_bannner_text2 ul li:first-child {
@@ -13179,6 +13184,7 @@ input[type="range"]::-moz-range-thumb {
   padding: 10px 20px;
   font-weight: 500;
   transition: all 0.3s;
+  font-size: 12px;
 }
 
 .custom-tab-toggle .nav-link.active {
@@ -13191,8 +13197,685 @@ input[type="range"]::-moz-range-thumb {
   line-height: 30px;
   margin-bottom: 0px;
 }
-.main-box-cont .hd-part p{
+.main-box-cont .hd-part p {
   margin-bottom: 30px;
-    font-size: 14px;
-    line-height: 24px;
+  font-size: 14px;
+  line-height: 24px;
 }
+
+.extra-dis {
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.extra-dis svg {
+  color: var(--main-color);
+}
+.flight_logo p {
+  font-size: 12px;
+  font-weight: 600;
+}
+/* .allsameheading{
+  text-align: end;
+} */
+/* .allsameheading svg{
+  vertical-align: top;
+} */
+.allsameheading:hover svg {
+  color: var(--main-color);
+}
+.extra-dis svg:hover {
+  color: var(--black-color);
+}
+.price-bdy {
+  padding: 10px;
+}
+.price-hdr {
+  padding: 10px 10px 0px;
+  border: 0px;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+.price-hdr .btn-close {
+  font-size: 10px;
+}
+.price-hdr h5 {
+  font-size: 14px;
+}
+.price-bdy h6 {
+  font-size: 14px;
+  padding-top: 0px;
+  font-weight: 500;
+  margin-bottom: 0px;
+}
+.price-bdy table tbody tr td {
+  font-size: 12px;
+}
+.badge-main span {
+  background-color: #17386626 !important;
+}
+.badge-main span {
+  display: inline-block;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 500;
+  line-height: 1;
+  color: #163866;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  width: 300px;
+  border-radius: 8px;
+  z-index: 99;
+  background-color: #fff;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.1s ease-in-out;
+}
+
+.dropdown-list.show {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+.cross-icon {
+  color: var(--paragraph-color) !important;
+}
+.dialog-box .MuiModal-backdrop {
+  background-color: rgb(0 0 0 / 15%);
+}
+.dialog-box .MuiPaper-elevation24 {
+  box-shadow: unset !important;
+}
+.bestflight {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.bestflight img {
+  width: 50px;
+}
+.bestflight p {
+  font-size: 12px;
+  line-height: 22px;
+}
+/* tab-section */
+.tab__list {
+  display: flex;
+  margin-bottom: 20px;
+}
+.tab__item {
+  overflow: hidden;
+  cursor: pointer;
+  padding: 10px 15px;
+  margin-right: 20px;
+  transition: 0.2s;
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+}
+.tab__item:before {
+  content: "";
+  position: absolute;
+  top: 95%;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--main-color);
+  transition: 0.2s;
+  visibility: hidden;
+  opacity: 0;
+}
+.tab__item.is--active {
+  color: var(--black-color);
+  position: relative;
+}
+.tab__item.is--active:before {
+  visibility: visible;
+  opacity: 1;
+}
+.tab__content-item {
+  display: none;
+}
+.tab__content-item.is--active {
+  display: block;
+}
+.tab__content-title {
+  padding: 24px 24px 24px 0;
+}
+
+.tab .tab .tab__item {
+  font-size: 16px;
+}
+.tab .tab .tab__content {
+  padding: 0;
+}
+.filter-content h6 {
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 12px;
+}
+.flight-serach-main {
+  border-right: 1px solid #ccc;
+}
+hr {
+  background-color: #ccc;
+}
+
+.flight-card {
+  transition: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px 0.1s;
+}
+.flight-detail-toggle {
+  margin-top: 10px;
+  cursor: pointer;
+  color: var(--black-color);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.flight-detail {
+  margin-top: 15px;
+  background-color: #f8f8f8;
+  padding: 15px;
+  border-radius: 6px;
+}
+
+.detail-segment {
+  margin-bottom: 10px;
+}
+.flight-detail {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.flightLine {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  background-color: var(--black-color);
+}
+.flightLine > :first-child {
+  left: 0;
+  background-color: white;
+}
+.flightLine > * {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--black-color);
+  border-radius: 100%;
+}
+.flightLine > :nth-child(2) {
+  right: 0;
+  background-color: var(--black-color);
+}
+.flight_right_arrow {
+  text-align: center;
+  width: 35%;
+}
+
+/* -------------------------------------surbhi(19-6-25)--------------------------------------- */
+.notifi-content {
+  display: flex;
+  justify-content: space-between;
+}
+.date-time-noti svg {
+  vertical-align: middle;
+  font-size: 14px;
+  height: 14px;
+  display: inline-block;
+  color: var(--paragraph-color);
+  margin-right: 5px;
+}
+.date-time-noti span {
+  font-size: 14px;
+  color: var(--paragraph-color);
+}
+.cross-noti {
+  background-color: var(--main-color);
+  height: 30px;
+  width: 30px;
+  padding: 2px;
+  text-align: center;
+  border-radius: 8px;
+  color: var(--black-color);
+}
+.main-noti-cont h6 {
+  font-size: 16px;
+  font-weight: 500;
+}
+.main-noti-cont p {
+  font-size: 14px;
+  font-weight: 500;
+}
+.main-noti-cont span {
+  display: inline-block;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 500;
+  line-height: 1;
+  color: #163866;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  margin-bottom: 10px;
+  background-color: #17386626 !important;
+}
+
+.rating-high svg {
+  vertical-align: middle;
+  font-size: 20px;
+  height: 18px;
+  display: inline-block;
+  color: var(--black-color);
+  margin-right: 5px;
+}
+.rating-high .star {
+  color: #cf6c18 !important;
+}
+.rating-high {
+  display: flex;
+  gap: 20px;
+}
+.noti-icon {
+  font-size: 18px;
+}
+
+.flight-tab {
+  display: flex;
+  align-items: center;
+}
+.flight-tab svg {
+  margin-right: 5px;
+  font-size: 16px;
+}
+.book-img img {
+  width: 50px;
+}
+.det-data p {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--black-color);
+}
+.det-data p span {
+  color: green;
+}
+.det-data .other p {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #000 !important;
+}
+.other .flightLine {
+  width: 20% !important;
+}
+.det-data .other {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.unverify {
+  color: var(--paragraph-color) !important;
+}
+/* -------------------------------------------------surbhi(20-6-25)-------------------------------------------------------------- */
+.pull-up:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+.flight-search h6 {
+  font-size: 16px;
+  font-weight: 600;
+}
+.flight-search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.banner-card {
+  background-color: var(--black-color);
+  padding: 0px;
+}
+.banner-card .text-cont {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.banner-card .text-cont h6 {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--white-color);
+}
+
+.pagination-controls{
+  text-align: end;
+}
+.pagination-controls button {
+  margin: 0 5px;
+  padding: 4px 4px !important;
+  border-radius: 5px;
+  background-color: var(--black-color);
+  color: var(--bg-color);
+  border: none;
+  font-size: 14px;
+}
+
+.pagination-controls button.active {
+  background-color: var(--main-color) !important;
+  color: white;
+}
+
+.slick-prev,
+.slick-next {
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.slick-next {
+  left: 52% !important;
+  right: 0 !important;
+}
+.slick-prev {
+  right: 0 !important;
+  left: -50% !important;
+}
+.slick-prev:before, .slick-next:before{
+  color: var(--main-color) !important;
+}
+
+/*-----------------------------------------------------surbhi 20-6-25 -----------------------------------------*/
+ 
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+ 
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+ 
+.label {
+  font-size: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+ 
+.line {
+  height: 1px;
+  width: 60px;
+  background: #ccc;
+  margin: 0 10px;
+}
+ 
+.step-pane {
+  display: none;
+}
+ 
+.step-pane.active {
+  display: block;
+}
+ 
+.stepper .step {
+  cursor: pointer;
+  text-align: center;
+}
+ 
+.stepper .circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 12px;
+}
+ 
+.step.active .circle,
+.step.completed .circle {
+  background-color: var(--black-color);
+  color: white;
+  border-color: var(--black-color);
+}
+ 
+.step.active .label {
+  font-weight: bold;
+}
+ 
+.step-controls {
+  margin-top: 20px;
+  text-align: right;
+}
+ 
+.from-to-main h6 {
+  font-size: 20px;
+  font-weight: 600;
+}
+.from-to-main {
+  margin-bottom: 48px;
+  text-align: center;
+}
+.enter-detail h6 {
+  font-size: 18px;
+  font-weight: 600;
+}
+.person-hd h6 {
+  font-size: 20px;
+  font-weight: 600;
+}
+.baggage .item {
+  display: flex;
+  gap: 10px;
+}
+.baggage .item .icon {
+  font-size: 25px;
+}
+.baggage .item .included {
+  color: green;
+}
+.enter-detail {
+  margin-bottom: 20px;
+}
+ 
+.card h3 {
+  margin-top: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+ 
+.price {
+  font-weight: bold;
+  margin: 10px 0;
+  font-size: 16px;
+}
+ 
+.features p {
+  font-weight: 600;
+  font-size: 14px;
+}
+ 
+.features p span {
+  color: green;
+  margin-right: 5px;
+}
+ 
+.features p.strike::before {
+  content: "❌ ";
+  color: red;
+}
+ 
+.extra {
+  font-size: 13px;
+  margin-top: 10px;
+  color: #333;
+}
+ 
+.info-text {
+  font-size: 12px;
+  margin-top: 10px;
+  color: #666;
+}
+.how-to ul {
+  padding-left: 20px;
+  margin: 0;
+}
+ 
+.how-to li {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  list-style-type: disc;
+}
+.how-to h6 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.features {
+  margin-bottom: 10px;
+}
+.features p span i {
+  vertical-align: middle;
+}
+.hdr-card h6 {
+  font-weight: 600;
+  color: var(--black-color);
+}
+.hrd-modal {
+  border-bottom: 0px;
+  padding: 15px 15px 0px;
+}
+.hrd-modal button {
+  font-size: 14px;
+}
+.btn-close:focus {
+  box-shadow: none !important;
+}
+.btn-close {
+  opacity: unset !important;
+}
+.hrd-modal .modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: black;
+}
+.field-set p {
+  color: red;
+  font-size: 10px;
+  line-height: 20px;
+}
+.accordion-button:not(.collapsed) {
+  color: var(--black-color);
+  background-color: unset;
+}
+.accor-btn h6{
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--black-color);
+}
+ 
+ 
+ 
+ 
+    .seat-grid {
+      display: grid;
+      grid-template-columns: 40px repeat(3, 40px) 20px repeat(2, 40px) 20px repeat(3, 40px);
+      gap: 8px;
+      align-items: center;
+    }
+ 
+    .header {
+      font-weight: bold;
+      text-align: center;
+      font-size: 14px;
+      color: #333;
+    }
+ 
+    .row-number {
+      font-weight: bold;
+      text-align: center;
+      font-size: 14px;
+    }
+ 
+    .seat {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      background-color: #1E90FF;
+    }
+ 
+    .seat.booked {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+ 
+    .seat.my-seat {
+      background-color: white;
+      border: 2px solid #00c896;
+      color: #00c896;
+      font-weight: bold;
+    }
+ 
+    .seat.my-seat::after {
+      content: "MY";
+      font-size: 12px;
+    }
+ 
+    .empty {
+      background: transparent;
+      border: none;
+    }
+    .bag-hr{
+      margin: 10px 0px !important;
+    }
+    .hdr-card a{
+      font-weight: 600;
+    }
+    .fli-del h6{
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .tra-name{
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .hdr-card P{
+      font-size: 14px;
+    }
+ 

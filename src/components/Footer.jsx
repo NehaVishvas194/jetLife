@@ -10,8 +10,34 @@ import image3 from "../assets/img/payC3.png";
 import image4 from "../assets/img/payC4.png";
 import { FaChevronUp } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { API_BASE_URL } from "../Url/BaseUrl";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const Footer = () => {
+  const [data, setData] = useState("");
+
+  const fetchFooterData = () => {
+    axios
+      .get(`${API_BASE_URL}/footer`)
+      .then((response) => {
+        console.log(response.data.data);
+        setData(response.data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(error.response?.data?.message, {
+          autoClose: 1000,
+          theme: "colored",
+        });
+      });
+  };
+
+  useEffect(() => {
+    fetchFooterData();
+  }, []);
+
   return (
     <div>
       <footer id="footer_area">
@@ -26,14 +52,14 @@ const Footer = () => {
                   <h5>Call 24/7 for any help</h5>
                   <h3>
                     {" "}
-                    <a href="#!">+00 123 456 789</a>
+                    <a href="#!">{data.number}</a>
                   </h3>
                 </div>
                 <div className="footer_inquery_area">
                   <h5>Mail to our support team</h5>
                   <h3>
                     {" "}
-                    <a href="#!">support@domain.com</a>
+                    <a href="#!">{data.email}</a>
                   </h3>
                 </div>
                 <div className="footer_inquery_area">

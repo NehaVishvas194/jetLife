@@ -4,13 +4,14 @@ import Footer from "../Footer";
 import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
 import Newsletter from "../home/Newsletter";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import BackToTopButton from "../BackToTop";
 import { FaClock } from "react-icons/fa6";
 import { IoMail } from "react-icons/io5";
 import { MdLocalPhone } from "react-icons/md";
 import axios from "axios";
 import { API_BASE_URL } from "../../Url/BaseUrl";
+import { API_IMAGE_URL } from "../../Url/BaseUrl";
 
 const ContactUs = () => {
   const [firstName, setFirstName] = useState("");
@@ -19,6 +20,7 @@ const ContactUs = () => {
   const [number, setNumber] = useState("");
   const [message, setMessage] = useState("");
   const [data, setData] = useState("");
+  const [imagePath, setImagePath] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,17 +58,14 @@ const ContactUs = () => {
       .then((response) => {
         console.log(response);
         if (response.data.success === true) {
-          toast.success(response.data.message);
+          toast.success(response.data.message, {
+            autoClose: 1000,
+          });
           setFirstName("");
           setLastName("");
           setEmail("");
           setNumber("");
           setMessage("");
-        } else {
-          toast.error(response.data.message, {
-            autoClose: 1000,
-            theme: "colored",
-          });
         }
       })
       .catch((error) => {
@@ -84,6 +83,7 @@ const ContactUs = () => {
       .then((response) => {
         console.log(response.data.data);
         setData(response.data.data);
+        setImagePath(response.data.image_path);
       })
       .catch((error) => {
         console.error(error);
@@ -102,7 +102,16 @@ const ContactUs = () => {
     <div>
       <Header />
       {/* <!-- Common Banner Area --> */}
-      <section id="common_banner">
+      <section
+        id="common_banner_img"
+        style={{
+          backgroundImage: `url(${imagePath}/${data?.image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height:"100%"
+        }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
@@ -304,7 +313,6 @@ const ContactUs = () => {
           </div>
         </div>
       </section>
-      <ToastContainer />
       <Newsletter />
       <BackToTopButton />
       <Footer />

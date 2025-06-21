@@ -1,34 +1,44 @@
-import React, { useState } from "react";
-import Header from "./Header";
-import Footer from "./Footer";
-import Newsletter from "./home/Newsletter";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { GoDotFill } from "react-icons/go";
-import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import { API_BASE_URL } from "../Url/BaseUrl";
-import BackToTopButton from "./BackToTop";
 import axios from "axios";
+import image1 from "../assets/img/white-logo.png";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const ResetPassword = () => {
-  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const iconStyle = {
+    position: "absolute",
+    right: "10px",
+    top: "60%",
+    transform: "translateY(-30%)",
+    cursor: "pointer",
+    color: "#666",
+  };
+
+  const navigate = useNavigate();
+  // const id = localStorage.getItem("Id");
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission
-
-    if (!oldPassword) {
-      toast.error("Please enter your old password", {
+    e.preventDefault();
+    if (!newPassword) {
+      toast.error("Please enter your new password", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
       });
       return;
     }
 
-    if (!newPassword) {
-      toast.error("Please enter your new password", {
+    if (!confirmPassword) {
+      toast.error("Please enter your confirm password", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
       });
       return;
     }
@@ -36,85 +46,153 @@ const ResetPassword = () => {
     if (newPassword.length < 6) {
       toast.error("New password must be at least 6 characters", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 1000,
+      });
+      return;
+    }
+    if (confirmPassword.length < 6) {
+      toast.error("New password must be at least 6 characters", {
+        position: "top-right",
+        autoClose: 1000,
       });
       return;
     }
 
-    // If all validations pass
-    toast.success("Password reset successfully!", {
-      position: "top-right",
-      autoClose: 3000,
-    });
+    if (newPassword !== confirmPassword) {
+      toast.error("New password and confirm password should be same", {
+        position: "top-right",
+        autoClose: 1000,
+      });
+    }
 
-    axios.post(`${API_BASE_URL}/changepassword`, {
-      // user_id:
-    });
+  // Get token from URL
+  const queryParams = new URLSearchParams(window.location.search);
+  const token = queryParams.get("token");
+
+  if (!token) {
+    toast.error("Invalid or missing reset token");
+    return;
+  }
+    axios
+      .post(`${API_BASE_URL}/reset_password`, {
+        token: token,
+        new_password: newPassword,
+        confirm_password: confirmPassword,
+      })
+      .then((response) => {
+        if (response.data.success) {
+          toast.success("Password reset successfully!", { autoClose: 1000 });
+          navigate("/login");
+        } else {
+          toast.error("Something went wrong!");
+        }
+      })
+      .catch((error) => {
+        const msg = error.response?.data?.message || "Something went wrong!";
+        toast.error(msg, { autoClose: 1000, theme: "colored" });
+      });
   };
+
   return (
     <div>
-      <Header />
       {/* <!-- Common Banner Area --> */}
-      <section id="common_banner">
-        <div className="container">
+      <section className="login-page-main">
+        <div className="container-fluid">
           <div className="row">
-            <div className="col-lg-12">
-              <div className="common_bannner_text2">
-                <div>
-                  <h2>Reset password</h2>
-                <ul>
-                  <li>
-                    <Link to="/">Home</Link>
-                  </li>
-                  <li>
-                    <span>
-                      <GoDotFill />
-                    </span>
-                    Reset password
-                  </li>
-                </ul>
+            <div className="col-md-6 p-0">
+              <div className="img-cont1">
+                <div className="row justify-content-center">
+                  <div className="col-md-8">
+                    <div className="card login-card" data-aos="fade-left">
+                      <div className="card-body">
+                        <div className="main-flexbox">
+                          <div
+                            className=""
+                            data-aos="fade-left"
+                            data-aos-duration="2000"
+                          >
+                            <img src={image1} alt="imgIND" />
+                          </div>
+                          <div
+                            className=""
+                            data-aos="fade-left"
+                            data-aos-duration="2000"
+                          >
+                            <h2>Welcome to Jetlife</h2>
+                            <p>
+                              We are glad to see you again! Get access to your
+                              Orders, Wishlist and Recommendations.
+                            </p>
+                          </div>
+                          <div
+                            className="not-acc"
+                            data-aos="fade-left"
+                            data-aos-duration="2000"
+                          >
+                            <p>
+                              Already have an account?{" "}
+                              <Link to="/login">Login now</Link>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-      {/* <!--  Common Author Area --> */}
-      <section id="common_author_area" className="section_padding">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-8 offset-lg-2">
-              <div className="common_author_boxed">
-                <div className="common_author_heading">
-                  <h3>Reset password</h3>
-                  <h2>Reset you password</h2>
+            <div className="col-md-6 p-0">
+              <div className="main-box-cont">
+                <div className="hd-part">
+                  <h6>Reset password</h6>
+                  <p>Reset you password</p>
                 </div>
-                <div className="common_author_form">
-                  <form
-                    action="#"
-                    id="main_author_form"
-                    onSubmit={handleSubmit}
-                  >
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="New password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Old password"
-                        value={oldPassword}
-                        onChange={(e) => setOldPassword(e.target.value)}
-                      />
+                <div className="common_author_form p-0">
+                  <form onSubmit={handleSubmit}>
+                    <div className="row">
+                      <div className="col-md-12">
+                        <div className="field-set position-relative">
+                          <label>
+                            New Password<span>*</span>
+                          </label>
+                          <input
+                            type={showNew ? "text" : "password"}
+                            className="form-control"
+                            placeholder="Enter New password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
+                          <span
+                            onClick={() => setShowNew(!showNew)}
+                            style={iconStyle}
+                          >
+                            {showNew ? <FaEyeSlash /> : <FaEye />}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="col-md-12">
+                        <div className="field-set position-relative">
+                          <label>
+                            Confirm Password<span>*</span>
+                          </label>
+                          <input
+                            type={showConfirm ? "text" : "password"}
+                            className="form-control"
+                            placeholder="Confirm password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                          />
+                          <span
+                            onClick={() => setShowConfirm(!showConfirm)}
+                            style={iconStyle}
+                          >
+                            {showConfirm ? <FaEyeSlash /> : <FaEye />}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                     <div className="common_form_submit">
-                      <button className="btn btn_theme btn_md">
+                      <button className="btn btn_theme btn_md" type="submit">
                         Reset password
                       </button>
                     </div>
@@ -125,10 +203,6 @@ const ResetPassword = () => {
           </div>
         </div>
       </section>
-      <Newsletter />
-      <Footer />
-      <BackToTopButton />
-      <ToastContainer />
     </div>
   );
 };

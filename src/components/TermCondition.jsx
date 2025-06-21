@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./Header";
 import BackToTopButton from "./BackToTop";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../Url/BaseUrl";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
-const TermCondotion = () => {
+const TermCondition = () => {
   const [data, setData] = useState("");
 
   const fetchData = () => {
@@ -32,7 +32,16 @@ const TermCondotion = () => {
   return (
     <div>
       <Header />
-      <section id="common_banner">
+      <section
+        id="common_banner_img"
+        style={{
+          backgroundImage: `url(${data?.image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height:"100%"
+        }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
@@ -79,10 +88,9 @@ const TermCondotion = () => {
         </div>
       </section>
       <BackToTopButton />
-      <ToastContainer />
       <Footer />
     </div>
   );
 };
 
-export default TermCondotion;
+export default TermCondition;

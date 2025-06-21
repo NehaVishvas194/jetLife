@@ -5,6 +5,7 @@ import {
   FaLinkedin,
   FaSearch,
 } from "react-icons/fa";
+import { IoMdNotifications } from "react-icons/io";
 import logo from "../assets/img/favicon.png";
 import { Link } from "react-router-dom";
 import Logo2 from "../assets/img/logo.png";
@@ -15,16 +16,16 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../Url/BaseUrl";
 import { API_IMAGE_URL } from "../Url/BaseUrl";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const Header = () => {
-  const [language, setLanguage] = useState("English");
-  const [currency, setCurrency] = useState("USD");
   const [isSticky, setIsSticky] = useState(false);
   const [menuActive, setMenuActive] = useState(false);
   const [searchActive, setSearchActive] = useState(false);
-  const [fname, setFname] = useState("");
-  const [profileImage, setProfileImage] = useState("");
+  const [profile, setProfile] = useState({});
+  // const [fname, setFname] = useState("");
+  // const [profileImage, setProfileImage] = useState("");
+  const [data, setData] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,50 +48,33 @@ const Header = () => {
     setSearchActive(false);
   };
 
-  const token = localStorage.getItem("Token");
-  const id = localStorage.getItem("Id");
+  const image = localStorage.getItem("Image");
+  const fname = localStorage.getItem("FirstName");
+  const lname = localStorage.getItem("LastName");
 
-  const fetchUserDetails = () => {
+  const fetchFooterData = () => {
     axios
-      .post(`${API_BASE_URL}/userDetails`, {
-        token: token,
-        user_id: id,
-      })
+      .get(`${API_BASE_URL}/footer`)
       .then((response) => {
-        if (response.data.success === true) {
-          const userData = response.data.data;
-          const baseImagePath = response.data.image_path;
-          const imageName = userData.image || "default_image.jpeg";
-          const fullImageUrl = `${baseImagePath}/${imageName}`;
-
-          setProfileImage(fullImageUrl);
-          setFname(`${userData.first_name} ${userData.last_name}`);
-          // setEmail(userData.email);
-          // setMobile(userData.phone_number);
-          // setCompany(userData.company_name || "");
-          // setEmployee(userData.employee_id || "");
-        }
+        console.log(response.data.data);
+        setData(response.data.data);
       })
       .catch((error) => {
-        const errorMsg =
-          error.response?.data?.message || "Something went wrong!";
-        console.error(errorMsg);
-        // toast.error(errorMsg, {
-        //   autoClose: 1000,
-        //   theme: "colored",
-        // });
+        console.error(error);
+        toast.error(error.response?.data?.message, {
+          autoClose: 1000,
+          theme: "colored",
+        });
       });
   };
 
+  useEffect(() => {
+    fetchFooterData();
+  }, []);
+
   const handleLogout = () => {
     localStorage.clear();
-    setFname("");
-    setProfileImage("");
   };
-
-  useEffect(() => {
-    fetchUserDetails();
-  }, []);
 
   return (
     <>
@@ -99,7 +83,7 @@ const Header = () => {
         <div className="topbar-area">
           <div className="container">
             <div className="row align-items-center">
-              <div className="col-lg-6 col-md-6">
+              <div className="col-lg-8 col-md-8">
                 <ul className="topbar-list">
                   <li>
                     <a href="#!">
@@ -128,85 +112,25 @@ const Header = () => {
                   </li>
                   <li>
                     <a href="tel:+254725206598">
-                      <span>+254 725 206 598</span>
+                      <span>{data.number}</span>
                     </a>
                   </li>
                   <li>
                     <a href="mailto:info@jetlifeglobal.com">
-                      <span>info@jetlifeglobal.com</span>
+                      <span>{data.email}</span>
                     </a>
                   </li>
                 </ul>
               </div>
-              <div className="col-lg-6 col-md-6">
+              <div className="col-lg-4 col-md-4">
                 <ul className="topbar-others-options">
                   <li>
-                    <Link to="/help">Help</Link>
+                    <Link to="/notification">
+                      <IoMdNotifications className="noti-icon" />
+                    </Link>
                   </li>
                   <li>
                     <Link to="/contactUs">Contact Us</Link>
-                  </li>
-                  <li>
-                    <div className="dropdown language-option">
-                      <button
-                        className="dropdown-toggle"
-                        type="button"
-                        id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        <span className="lang-name">{language}</span>
-                      </button>
-                      <div
-                        className="dropdown-menu language-dropdown-menu"
-                        aria-labelledby="dropdownMenuButton1"
-                      >
-                        {["English", "Arabic", "French"].map((lang) => (
-                          <a
-                            key={lang}
-                            href="#"
-                            className="dropdown-item"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setLanguage(lang);
-                            }}
-                          >
-                            {lang}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="dropdown language-option">
-                      <button
-                        className="dropdown-toggle"
-                        type="button"
-                        id="dropdownMenuButton2"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        <span className="lang-name">{currency}</span>
-                      </button>
-                      <div
-                        className="dropdown-menu language-dropdown-menu"
-                        aria-labelledby="dropdownMenuButton2"
-                      >
-                        {["KES", "USD", "EUR", "POUNDS"].map((curr) => (
-                          <a
-                            key={curr}
-                            href="#"
-                            className="dropdown-item"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setCurrency(curr);
-                            }}
-                          >
-                            {curr}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
                   </li>
                 </ul>
               </div>
@@ -253,13 +177,12 @@ const Header = () => {
                       <div className="profile">
                         <img
                           className="dropbtn m-1"
-                          src={profileImage ? profileImage : image3}
+                          src={image ? image : image3}
                           alt="profile"
                         />
-
                         <span className="signInBtn">
-                          {fname ? (
-                            `${fname}`
+                          {fname && lname ? (
+                            `${fname} ${lname}`
                           ) : (
                             <Link
                               to="/login"
@@ -272,14 +195,17 @@ const Header = () => {
                           )}
                         </span>
 
-                        {fname && (
+                        {fname && lname && (
                           <div className="dropdown-content">
                             <ul>
                               <li>
                                 <Link to="/account">My Account</Link>
                               </li>
                               <li>
-                                <Link to="/help">Help</Link>
+                                <Link to="/my_booking">My Booking</Link>
+                              </li>
+                              <li>
+                                <Link to="/notification">Notification</Link>
                               </li>
                               <li>
                                 <Link to="/" onClick={handleLogout}>
