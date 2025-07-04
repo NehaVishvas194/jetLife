@@ -89,63 +89,78 @@ const Footer = () => {
                 </div>
               </div>
             </div>
-            {/* <div className="col-lg-2 offset-lg-1 col-md-6 col-sm-6 col-12">
+            <div className="col-lg-2 offset-lg-1 col-md-6 col-sm-6 col-12">
               <div className="footer_heading_area">
                 <h5>About Company</h5>
               </div>
               <div className="footer_link_area">
                 <ul>
                   <li>
+                    <Link to="/blog">Blogs</Link>
+                  </li>
+                  <li>
+                    <Link to="">Events</Link>
+                  </li>
+                  <li>
                     <Link to="/about">About Us</Link>
                   </li>
                   <li>
-                    <a href="#!">Loyalty program</a>
-                  </li>
-                  <li>
-                    <a href="#!">Latest News</a>
-                  </li>
-                  <li>
-                    <a href="#!">Work with Us</a>
-                  </li>
-                  <li>
-                    <a href="#!">Meet the Team </a>
-                  </li>
-                  <li>
-                    <a href="#!">Blog</a>
+                    <Link to="/news">Latest News</Link>
                   </li>
                 </ul>
               </div>
-            </div> */}
-            {/* <div className="col-lg-2 col-md-4 col-sm-6 col-12">
+            </div>
+            <div className="col-lg-2 col-md-4 col-sm-6 col-12">
               <div className="footer_heading_area">
-                <h5>Explore</h5>
+                <h5>Services</h5>
               </div>
               <div className="footer_link_area">
                 <ul>
                   <li>
-                    <Link to="/account">Account</Link>
+                    <Link to="">Hotels</Link>
                   </li>
                   <li>
-                    <Link to="/faq">Faq</Link>
+                    <Link to="">Flights Finder</Link>
+                  </li>
+                  {/* <li>
+                    <a href="#!">Events</a>
                   </li>
                   <li>
-                    <a href="#!">Legal</a>
-                  </li>
+                    <Link to="/blog">Blog</Link>
+                  </li> */}
+                </ul>
+              </div>
+            </div>
+            <div className="col-lg-2 col-md-4 col-sm-6 col-12">
+              <div className="footer_heading_area">
+                <h5>Support</h5>
+              </div>
+              <div className="footer_link_area">
+                <ul>
+                  {/* <li>
+                    <Link to="/about">About Us</Link>
+                  </li> */}
                   <li>
                     <Link to="/contactUs">Contact Us</Link>
                   </li>
-                  <li>
-                    <a href="#!">Affiliate Program</a>
+                  {/* <li>
+                    <Link to="/help">Help</Link>
                   </li>
                   <li>
-                    <Link to="/privacy_policy">Privacy Policy</Link>
+                    <Link to="/faq">Faq</Link>
+                  </li> */}
+                  <li>
+                    <Link to="/privacy_policy">Privacy & Policy</Link>
+                  </li>
+                  <li>
+                    <Link to="/term_condition">Term & Conditions </Link>
                   </li>
                 </ul>
               </div>
-            </div> */}
-            {/* <div className="col-lg-2 col-md-4 col-sm-6 col-12">
+            </div>
+            <div className="col-lg-2 col-md-4 col-sm-6 col-12">
               <div className="footer_heading_area">
-                <h5>Policies</h5>
+                <h5>Destination</h5>
               </div>
               <div className="footer_link_area">
                 <ul>
@@ -166,33 +181,6 @@ const Footer = () => {
                   </li>
                   <li>
                     <a href="#!">Thailand grand suit</a>
-                  </li>
-                </ul>
-              </div>
-            </div> */}
-            <div className="col-lg-2 col-md-4 col-sm-6 col-12">
-              <div className="footer_heading_area">
-                <h5>Quick Links</h5>
-              </div>
-              <div className="footer_link_area">
-                <ul>
-                  <li>
-                    <Link to="/about">About Us</Link>
-                  </li>
-                  <li>
-                    <Link to="/contactUs">Contact Us</Link>
-                  </li>
-                  {/* <li>
-                    <Link to="/help">Help</Link>
-                  </li>
-                  <li>
-                    <Link to="/faq">Faq</Link>
-                  </li> */}
-                  <li>
-                    <Link to="/privacy_policy">Privacy & Policy</Link>
-                  </li>
-                  <li>
-                    <Link to="/term_condition">Term & Conditions </Link>
                   </li>
                 </ul>
               </div>

@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import {
   FaPlaneArrival,
@@ -307,6 +308,38 @@ const FlightSearch = () => {
     ],
   };
 
+  const setting2 = {
+    dots: false,
+    arrows: true,
+    infinite: true,
+    autoHeight: true,
+    speed: 500,
+    slidesToShow: 6,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2500,
+    spaceBetween: 30,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 780,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  };
   const navigate = useNavigate();
   const bookingDetails = () => {
     navigate("/booking_details");
@@ -339,14 +372,13 @@ const FlightSearch = () => {
           </div>
         </div>
       </section>
-
       {/* <!-- Form Area --> */}
       <section id="theme_search_form">
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
               <div className="theme_search_form_area">
-                <div className="theme_search_form_tabbtn">
+                {/* <div className="theme_search_form_tabbtn">
                   <ul className="nav nav-tabs" role="tablist">
                     <li className="nav-item" role="presentation">
                       <button
@@ -363,7 +395,7 @@ const FlightSearch = () => {
                       </button>
                     </li>
                   </ul>
-                </div>
+                </div> */}
                 <div className="tab-content" id="myTabContent">
                   <div
                     className="tab-pane fade show active"
@@ -1537,9 +1569,8 @@ const FlightSearch = () => {
                       <div className="adjust-text">
                         <h6>Number of stops</h6>
                         <i
-                          className={`fas fa-chevron-${
-                            isPriceCollapsed ? "up" : "down"
-                          } toggle-icon`}
+                          className={`fas fa-chevron-${isPriceCollapsed ? "up" : "down"
+                            } toggle-icon`}
                         ></i>
                       </div>
                     </div>
@@ -1567,9 +1598,8 @@ const FlightSearch = () => {
                       <div className="adjust-text">
                         <h6>Airlines</h6>
                         <i
-                          className={`fas fa-chevron-${
-                            isPopularCollapsed ? "up" : "down"
-                          } toggle-icon`}
+                          className={`fas fa-chevron-${isPopularCollapsed ? "up" : "down"
+                            } toggle-icon`}
                         ></i>
                       </div>
                     </div>
@@ -1603,9 +1633,8 @@ const FlightSearch = () => {
                       <div className="adjust-text">
                         <h6>Flight times</h6>
                         <i
-                          className={`fas fa-chevron-${
-                            isPropertyCollapsed ? "up" : "down"
-                          } toggle-icon`}
+                          className={`fas fa-chevron-${isPropertyCollapsed ? "up" : "down"
+                            } toggle-icon`}
                         ></i>
                       </div>
                     </div>
@@ -1649,9 +1678,8 @@ const FlightSearch = () => {
                       <div className="adjust-text">
                         <h6>Duration</h6>
                         <i
-                          className={`fas fa-chevron-${
-                            isStarCollapsed ? "up" : "down"
-                          } toggle-icon`}
+                          className={`fas fa-chevron-${isStarCollapsed ? "up" : "down"
+                            } toggle-icon`}
                         ></i>
                       </div>
                     </div>
@@ -1713,54 +1741,18 @@ const FlightSearch = () => {
                               </div>
                             </div>
                           </div>
-                          <div className="col-md-12">
-                            <div className="">
-                              <ul className="choosedepartList">
-                                <li>
-                                  <button className="btn chooseBtnFlt">
-                                    <span className="smalltext">Jul 16</span>
-                                    <span className="priceBigText">$1,102</span>
-                                  </button>
-                                </li>
-                                <li>
-                                  <button className="btn chooseBtnFlt">
-                                    <span className="smalltext">Jul 16</span>
-                                    <span className="priceBigText">$1,102</span>
-                                  </button>
-                                </li>
-                                <li>
-                                  <button className="btn chooseBtnFlt">
-                                    <span className="smalltext">Jul 16</span>
-                                    <span className="priceBigText">$1,102</span>
-                                  </button>
-                                </li>
-                                <li>
-                                  <button className="btn chooseBtnFlt">
-                                    <span className="smalltext">Jul 16</span>
-                                    <span className="priceBigText">$1,102</span>
-                                  </button>
-                                </li>
-                                <li>
-                                  <button className="btn chooseBtnFlt">
-                                    <span className="smalltext">Jul 16</span>
-                                    <span className="priceBigText">$1,102</span>
-                                  </button>
-                                </li>
-                                <li>
-                                  <button className="btn chooseBtnFlt">
-                                    <span className="smalltext">Jul 16</span>
-                                    <span className="priceBigText">$1,102</span>
-                                  </button>
-                                </li>
-                                <li>
-                                  <button className="btn chooseBtnFlt">
-                                    <span className="smalltext">Jul 16</span>
-                                    <span className="priceBigText">$1,102</span>
-                                  </button>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
+                          <Slider {...setting2} className="choosedepartList">
+                            {/* Each item becomes a slide */}
+                            {[...Array(7)].map((_, index) => (
+                              <div key={index} className="px-2">
+                                <button className="btn chooseBtnFlt w-100">
+                                  <span className="smalltext">Jul 16</span>
+                                  <div></div>
+                                  <span className="priceBigText">$1,102</span>
+                                </button>
+                              </div>
+                            ))}
+                          </Slider>
                         </div>
                         <div className="row">
                           <div className="col-lg-12">
@@ -1841,11 +1833,10 @@ const FlightSearch = () => {
                                                 <BsFillInfoCircleFill />
                                               </h3>
                                               <div
-                                                className={`dropdown-list ${
-                                                  openDropdown === index
-                                                    ? "show"
-                                                    : ""
-                                                }`}
+                                                className={`dropdown-list ${openDropdown === index
+                                                  ? "show"
+                                                  : ""
+                                                  }`}
                                               >
                                                 <div className="list list-1">
                                                   <div className="price-hdr">
@@ -1989,7 +1980,7 @@ const FlightSearch = () => {
                                 onClick={() =>
                                   setCurrentPage((prev) =>
                                     prev <
-                                    Math.ceil(flightData.length / itemsPerPage)
+                                      Math.ceil(flightData.length / itemsPerPage)
                                       ? prev + 1
                                       : prev
                                   )

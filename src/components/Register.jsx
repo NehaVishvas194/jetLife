@@ -6,6 +6,8 @@ import { API_BASE_URL } from "../Url/BaseUrl";
 import { useNavigate } from "react-router-dom";
 import image1 from "../assets/img/white-logo.png";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/material.css";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -13,57 +15,56 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [mobile, setMobile] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [phoneCode, setPhoneCode] = useState("");
 
-  // const [company, setCompany] = useState("");
-  // const [employeeId, setEmployeeId] = useState("");
+  // const [countryCodes, setCountryCodes] = useState([]);
+  const [fullPhone, setFullPhone] = useState("");
+  // const [mobile, setMobile] = useState("");
 
   const [C_firstName, setCFirstName] = useState("");
   const [C_lastName, setCLastName] = useState("");
   const [C_email, setCEmail] = useState("");
   const [C_password, setCPassword] = useState("");
   const [C_confirmPassword, setCConfirmPassword] = useState("");
-  const [C_mobile, setCMobile] = useState("");
+  const [C_fullPhone, setCFullPhone] = useState("");
   const [C_company, setCCompany] = useState("");
   const [C_employeeId, setCEmployeeId] = useState("");
+  const [C_phoneCode, setCPhoneCode] = useState("");
 
   const navigate = useNavigate();
   const handleNormalUser = (e) => {
     e.preventDefault();
+
     if (!firstName) {
       toast.error("Please enter first name!");
       return;
     }
-
     if (!lastName) {
       toast.error("Please enter last name!");
       return;
     }
-
     const isEmailValid = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email);
     if (!isEmailValid) {
       toast.error("Please enter a valid email!");
       return;
     }
-
-    const isMobileValid = /^[0-9]{10}$/.test(mobile);
-    if (!isMobileValid) {
-      toast.error("Please enter a valid 10-digit number!");
+    if (!fullPhone || !phoneCode) {
+      toast.error("Please enter a valid phone number");
       return;
     }
+
+    const phoneNumber = fullPhone.slice(phoneCode.replace("+", "").length);
 
     if (!password) {
       toast.error("Please enter password!");
       return;
     }
-
     if (!confirmPassword) {
       toast.error("Please enter confirm password!");
       return;
     }
-
     if (password !== confirmPassword) {
       toast.error("Password and Confirm Password should be the same!");
       return;
@@ -71,94 +72,60 @@ const Register = () => {
 
     axios
       .post(`${API_BASE_URL}/register`, {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
+        firstName,
+        lastName,
+        email,
+        password,
         password_confirmation: confirmPassword,
-        phoneNumber: mobile,
+        phoneNumber,
+        phone_code: phoneCode,
         userType: 1,
       })
       .then((response) => {
-        console.log(response);
         if (response.data.success === true) {
-          toast.success(response.data.message);
+          toast.success("User Registered successfully");
           setFirstName("");
           setLastName("");
           setEmail("");
           setPassword("");
           setConfirmPassword("");
-          setMobile("");
+          setFullPhone("");
+          setPhoneCode("");
           navigate("/login");
         } else {
-          toast.error(response.data.message, {
-            autoClose: 1000,
-            theme: "colored",
-          });
+          toast.error(response.data.message, { autoClose: 1000 });
         }
       })
       .catch((error) => {
-        console.log(error.response?.data?.message || error.message);
-        toast.error(
-          error.response?.data?.message || "User Email Already Registered",
-          {
-            autoClose: 1000,
-            theme: "colored",
-          }
-        );
+        toast.error(error.response?.data?.message || "Something went wrong", {
+          autoClose: 1000,
+        });
       });
   };
-
   const handleCorporateUser = (e) => {
     e.preventDefault();
-    if (!C_firstName) {
-      toast.error("Please enter first name!");
-      return;
-    }
 
-    if (!C_lastName) {
-      toast.error("Please enter last name!");
-      return;
-    }
+    if (!C_firstName) return toast.error("Please enter first name!");
+    if (!C_lastName) return toast.error("Please enter last name!");
 
     const isEmailValid = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
       C_email
     );
-    if (!isEmailValid) {
-      toast.error("Please enter a valid email!");
-      return;
-    }
+    if (!isEmailValid) return toast.error("Please enter a valid email!");
 
-    const isMobileValid = /^[0-9]{10}$/.test(C_mobile);
-    if (!isMobileValid) {
-      toast.error("Please enter a valid 10-digit number!");
-      return;
-    }
+    if (!C_fullPhone || !C_phoneCode)
+      return toast.error("Please enter a valid phone number");
 
-    if (!C_password) {
-      toast.error("Please enter password!");
-      return;
-    }
+    const phoneNumber = C_fullPhone.slice(C_phoneCode.replace("+", "").length);
 
-    if (!C_confirmPassword) {
-      toast.error("Please enter confirm password!");
-      return;
-    }
-
-    if (C_password !== C_confirmPassword) {
-      toast.error("Password and Confirm Password should be the same!");
-      return;
-    }
-
-    if (!C_company) {
-      toast.error("Please enter Company Name!");
-      return;
-    }
-
-    if (!C_employeeId) {
-      toast.error("Please enter Company Emp. Id!");
-      return;
-    }
+    if (!phoneNumber) return toast.error("Please enter a valid phone number!");
+    if (!C_password) return toast.error("Please enter password!");
+    if (!C_confirmPassword)
+      return toast.error("Please enter confirm password!");
+    if (C_password !== C_confirmPassword)
+      return toast.error("Password and Confirm Password should be the same!");
+    if (!C_company) return toast.error("Please enter Company Name!");
+    if (!C_employeeId) return toast.error("Please enter Company Emp. Id!");
 
     axios
       .post(`${API_BASE_URL}/register`, {
@@ -167,13 +134,13 @@ const Register = () => {
         email: C_email,
         password: C_password,
         password_confirmation: C_confirmPassword,
-        phoneNumber: C_mobile,
+        phoneNumber,
         companyName: C_company,
+        phone_code: C_phoneCode,
         employeeId: C_employeeId,
         userType: 2,
       })
       .then((response) => {
-        console.log(response);
         if (response.data.success === true) {
           toast.success(response.data.message);
           setCFirstName("");
@@ -181,7 +148,8 @@ const Register = () => {
           setCEmail("");
           setCPassword("");
           setCConfirmPassword("");
-          setCMobile("");
+          setCFullPhone("");
+          setCPhoneCode("");
           setCCompany("");
           setCEmployeeId("");
           navigate("/login");
@@ -194,15 +162,25 @@ const Register = () => {
       })
       .catch((error) => {
         console.log(error.response?.data?.message || error.message);
-        toast.error(
-          error.response?.data?.message || "User Email Already Registered",
-          {
-            autoClose: 1000,
-            theme: "colored",
-          }
-        );
+        toast.error(error.response?.data?.message || "Something went wrong", {
+          autoClose: 1000,
+          theme: "colored",
+        });
       });
   };
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`${API_BASE_URL}/country/code`)
+  //     .then((response) => {
+  //       if (response.data.success) {
+  //         setCountryCodes(response.data.data);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.error("Error fetching country codes:", err);
+  //     });
+  // }, []);
 
   const iconStyle = {
     position: "absolute",
@@ -359,20 +337,14 @@ const Register = () => {
                           </div>
                           <div className="col-md-6">
                             <div className="field-set">
-                              <label>
-                                Phone Number<span>*</span>
-                              </label>
-                              <input
-                                type="number"
-                                value={mobile}
-                                onChange={(e) => {
-                                  if (/^\d{0,10}$/.test(e.target.value)) {
-                                    setMobile(e.target.value);
-                                  }
+                              <label>Phone Number <span>*</span></label>
+                              <PhoneInput
+                                country={"in"}
+                                value={fullPhone}
+                                onChange={(value, data) => {
+                                  setFullPhone(value);
+                                  setPhoneCode(`+${data.dialCode}`);
                                 }}
-                                className="form-control"
-                                placeholder="Enter Mobile number"
-                                autocomplete="off"
                               />
                             </div>
                           </div>
@@ -519,21 +491,16 @@ const Register = () => {
                             </div>
                           </div>
                           <div className="col-md-6">
-                            <div className="field-set position-relative">
-                              <label>
-                                Phone Number<span>*</span>
-                              </label>
-                              <input
-                                type="text"
-                                value={C_mobile}
-                                onChange={(e) => {
-                                  if (/^\d{0,10}$/.test(e.target.value)) {
-                                    setCMobile(e.target.value);
-                                  }
+                            <div className="field-set">
+                              <label>Phone Number<span>*</span></label>
+                              <PhoneInput
+                                country={"in"}
+                                value={C_fullPhone}
+                                onChange={(value, data) => {
+                                  setCFullPhone(value);
+                                  setCPhoneCode(`+${data.dialCode}`);
                                 }}
-                                className="form-control"
-                                placeholder="Enter Mobile number*"
-                                autocomplete="off"
+                  
                               />
                             </div>
                           </div>

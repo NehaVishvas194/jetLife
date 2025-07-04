@@ -4,10 +4,14 @@ import hotel2 from "../../assets/img/tab-img/hotel2.png";
 import hotel3 from "../../assets/img/tab-img/hotel3.png";
 import hotel4 from "../../assets/img/tab-img/hotel4.png";
 import hotel5 from "../../assets/img/tab-img/hotel5.png";
-import hotel6 from "../../assets/img/tab-img/hotel6.png";
-import hotel7 from "../../assets/img/tab-img/hotel7.png";
 import hotel8 from "../../assets/img/tab-img/hotel8.png";
 import { IoLocationSharp } from "react-icons/io5";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/autoplay";
+import { Link, useNavigate } from "react-router-dom";
 
 const HotelCard = ({
   imageUrl,
@@ -19,12 +23,12 @@ const HotelCard = ({
   discount,
 }) => {
   return (
-    <div className="col-lg-3 col-md-6 col-sm-6 col-12">
+    <div>
       <div className="theme_common_box_two img_hover">
         <div className="theme_two_box_img">
-          <a href="#!">
+          <Link to="/travel_details">
             <img src={imageUrl} alt="img" />
-          </a>
+          </Link>
           <p>
             <IoLocationSharp /> {location}
           </p>
@@ -35,13 +39,14 @@ const HotelCard = ({
           )}
         </div>
         <div className="theme_two_box_content">
-          <h4>
-            <a href="#!">{title}</a>
-          </h4>
           <p>
             <span className="review_rating">{rating} Excellent</span>{" "}
             <span className="review_count">({reviewCount} reviews)</span>
           </p>
+          <h4>
+            <a href="#!">{title}</a>
+          </h4>
+
           <h3>
             ${price} <span>Price starts from</span>
           </h3>
@@ -71,7 +76,7 @@ const Deals = () => {
       rating: "4.8/5",
       reviewCount: 1214,
       price: "99.00",
-      discount: "50%",
+      discount: "50% discount",
     },
     {
       id: 3,
@@ -91,47 +96,17 @@ const Deals = () => {
       rating: "4.8/5",
       reviewCount: 1214,
       price: "99.00",
-      discount: "50%",
+      discount: "50% discount",
     },
     {
       id: 5,
       imageUrl: hotel5,
-      location: "Kathmandu, Nepal",
-      title: "Hotel rajavumi",
+      location: "Mariana island",
+      title: "Hotel deluxe",
       rating: "4.8/5",
       reviewCount: 1214,
       price: "99.00",
-      discount: null,
-    },
-    {
-      id: 6,
-      imageUrl: hotel6,
-      location: "Beach view",
-      title: "Thailand grand suit",
-      rating: "4.8/5",
-      reviewCount: 1214,
-      price: "99.00",
-      discount: null,
-    },
-    {
-      id: 7,
-      imageUrl: hotel7,
-      location: "Long island",
-      title: "Zefi resort and spa",
-      rating: "4.8/5",
-      reviewCount: 1214,
-      price: "99.00",
-      discount: null,
-    },
-    {
-      id: 8,
-      imageUrl: hotel8,
-      location: "Philippine",
-      title: "Manila international resort",
-      rating: "4.8/5",
-      reviewCount: 1214,
-      price: "99.00",
-      discount: null,
+      discount: "50% discount",
     },
   ];
 
@@ -214,162 +189,288 @@ const Deals = () => {
     },
   ];
 
+  const navigate = useNavigate();
+  const detailsPage = () => {
+    navigate("/travel_details");
+  };
+
   return (
     <div>
-      <section id="explore_area" className="section_padding_top">
+      <section id="explore_area1" className="section_padding_top">
         <div className="container">
-          <div className="row">
-            <div className="col-lg-12 col-md-12 col-sm-12 col-12">
+          <div className="row justify-content-center">
+            <div className="col-lg-7 col-md-7 col-sm-12 col-12">
               <div className="section_heading_center">
-                <h2>Explore our hot deals</h2>
+                <h2>Our Best Services</h2>
+                <p>
+                  Choose from a wide range of travel services including flights,
+                  luxury hotels, car rentals, guided tours, and even space
+                  travel – all tailored to make your journey memorable.
+                </p>
               </div>
             </div>
           </div>
-          <div className="row">
-            <div className="col-lg-6 offset-lg-3">
-              <div className="theme_nav_tab">
-                <nav className="theme_nav_tab_item">
-                  <div className="nav nav-tabs" id="nav-tab1" role="tablist">
+          <div className="row justify-content-center">
+            <div className="col-lg-12">
+              <div className="our-service-tab">
+                <ul
+                  class="nav nav-pills mb-3 justify-content-center"
+                  id="pills-tab"
+                  role="tablist"
+                >
+                  <li class="nav-item" role="presentation">
                     <button
-                      className="nav-link active"
-                      id="nav-hotels-tab"
-                      data-bs-toggle="tab"
-                      data-bs-target="#nav-hotels"
+                      class="nav-link active"
+                      id="pills-home-tab"
+                      data-bs-toggle="pill"
+                      data-bs-target="#pills-home"
                       type="button"
                       role="tab"
-                      aria-controls="nav-hotels"
+                      aria-controls="pills-home"
                       aria-selected="true"
+                    >
+                      Flights
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      id="pills-profile-tab"
+                      data-bs-toggle="pill"
+                      data-bs-target="#pills-profile"
+                      type="button"
+                      role="tab"
+                      aria-controls="pills-profile"
+                      aria-selected="false"
                     >
                       Hotels
                     </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
                     <button
-                      className="nav-link"
-                      id="nav-tours-tab"
-                      data-bs-toggle="tab"
-                      data-bs-target="#nav-tours"
+                      class="nav-link"
+                      id="pills-contact-tab"
+                      data-bs-toggle="pill"
+                      data-bs-target="#pills-contact"
                       type="button"
                       role="tab"
-                      aria-controls="nav-tours"
+                      aria-controls="pills-contact"
+                      aria-selected="false"
+                    >
+                      Cars
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      id="pills-tour-tab"
+                      data-bs-toggle="pill"
+                      data-bs-target="#pills-tour"
+                      type="button"
+                      role="tab"
+                      aria-controls="pills-tour"
                       aria-selected="false"
                     >
                       Tours
                     </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
                     <button
-                      className="nav-link"
-                      id="nav-space-tab"
-                      data-bs-toggle="tab"
-                      data-bs-target="#nav-space"
+                      class="nav-link"
+                      id="pills-space-tab"
+                      data-bs-toggle="pill"
+                      data-bs-target="#pills-space"
                       type="button"
                       role="tab"
-                      aria-controls="nav-space"
+                      aria-controls="pills-space"
                       aria-selected="false"
                     >
                       Space
                     </button>
-                    <button
-                      className="nav-link"
-                      id="nav-events-tab"
-                      data-bs-toggle="tab"
-                      data-bs-target="#nav-events"
-                      type="button"
-                      role="tab"
-                      aria-controls="nav-events"
-                      aria-selected="false"
-                    >
-                      Events
-                    </button>
-                  </div>
-                </nav>
+                  </li>
+                </ul>
               </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="tab-content" id="nav-tabContent">
+              <div class="tab-content" id="pills-tabContent">
                 <div
                   className="tab-pane fade show active"
-                  id="nav-hotels"
+                  id="pills-home"
                   role="tabpanel"
-                  aria-labelledby="nav-hotels-tab"
+                  aria-labelledby="pills-home-tab"
+                  tabIndex="0"
                 >
                   <div className="row">
-                    {hotelDeals.map((deal) => (
-                      <HotelCard
-                        key={deal.id}
-                        imageUrl={deal.imageUrl}
-                        location={deal.location}
-                        title={deal.title}
-                        rating={deal.rating}
-                        reviewCount={deal.reviewCount}
-                        price={deal.price}
-                        discount={deal.discount}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <div
-                  className="tab-pane fade"
-                  id="nav-tours"
-                  role="tabpanel"
-                  aria-labelledby="nav-tours-tab"
-                >
-                  <div className="row">
-                    {toursDeal.map((tour) => (
-                      <HotelCard
-                        key={tour.id}
-                        imageUrl={tour.imageUrl}
-                        location={tour.location}
-                        title={tour.title}
-                        rating={tour.rating}
-                        reviewCount={tour.reviewCount}
-                        price={tour.price}
-                        discount={tour.discount}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div
-                  className="tab-pane fade"
-                  id="nav-space"
-                  role="tabpanel"
-                  aria-labelledby="nav-space-tab"
-                >
-                  <div className="row">
-                    {spaceDeal.map((deal) => (
-                      <HotelCard
-                        key={deal.id}
-                        imageUrl={deal.imageUrl}
-                        location={deal.location}
-                        title={deal.title}
-                        rating={deal.rating}
-                        reviewCount={deal.reviewCount}
-                        price={deal.price}
-                        discount={deal.discount}
-                      />
-                    ))}
+                    <div className="col-12">
+                      <Swiper
+                        modules={[Navigation, Autoplay]}
+                        spaceBetween={30}
+                        slidesPerView={4}
+                        loop={true}
+                        navigation={true}
+                        autoplay={{
+                          delay: 2500,
+                          disableOnInteraction: false,
+                        }}
+                        breakpoints={{
+                          320: { slidesPerView: 1 },
+                          640: { slidesPerView: 2 },
+                          1024: { slidesPerView: 4 },
+                        }}
+                      >
+                        {hotelDeals?.map((deal) => (
+                          <SwiperSlide>
+                            <HotelCard
+                              key={deal.id}
+                              imageUrl={deal.imageUrl}
+                              location={deal.location}
+                              title={deal.title}
+                              rating={deal.rating}
+                              reviewCount={deal.reviewCount}
+                              price={deal.price}
+                              discount={deal.discount}
+                            />
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                    </div>
                   </div>
                 </div>
                 <div
-                  className="tab-pane fade"
-                  id="nav-events"
+                  class="tab-pane fade"
+                  id="pills-profile"
                   role="tabpanel"
-                  aria-labelledby="nav-events-tab"
+                  aria-labelledby="pills-profile-tab"
+                  tabindex="0"
                 >
                   <div className="row">
-                    {eventDeal.map((deal) => (
-                      <HotelCard
-                        key={deal.id}
-                        imageUrl={deal.imageUrl}
-                        location={deal.location}
-                        title={deal.title}
-                        rating={deal.rating}
-                        reviewCount={deal.reviewCount}
-                        price={deal.price}
-                        discount={deal.discount}
-                      />
-                    ))}
+                    <div className="col-12">
+                      <Swiper
+                        modules={[Navigation, Autoplay]}
+                        spaceBetween={30}
+                        slidesPerView={4}
+                        loop={true}
+                        navigation={true}
+                        autoplay={{
+                          delay: 2500,
+                          disableOnInteraction: false,
+                        }}
+                        breakpoints={{
+                          320: { slidesPerView: 1 },
+                          640: { slidesPerView: 2 },
+                          1024: { slidesPerView: 4 },
+                        }}
+                      >
+                        {toursDeal?.map((tour) => (
+                          <SwiperSlide>
+                            <HotelCard
+                              key={tour.id}
+                              imageUrl={tour.imageUrl}
+                              location={tour.location}
+                              title={tour.title}
+                              rating={tour.rating}
+                              reviewCount={tour.reviewCount}
+                              price={tour.price}
+                              discount={tour.discount}
+                            />
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                    </div>
                   </div>
+                </div>
+                <div
+                  class="tab-pane fade"
+                  id="pills-contact"
+                  role="tabpanel"
+                  aria-labelledby="pills-contact-tab"
+                  tabindex="0"
+                >
+                  <div className="row">
+                    <div className="col-12">
+                      <Swiper
+                        modules={[Navigation, Autoplay]}
+                        spaceBetween={30}
+                        slidesPerView={4}
+                        loop={true}
+                        navigation={true}
+                        autoplay={{
+                          delay: 2500,
+                          disableOnInteraction: false,
+                        }}
+                        breakpoints={{
+                          320: { slidesPerView: 1 },
+                          640: { slidesPerView: 2 },
+                          1024: { slidesPerView: 4 },
+                        }}
+                      >
+                        {spaceDeal.map((deal) => (
+                          <SwiperSlide>
+                            <HotelCard
+                              key={deal.id}
+                              imageUrl={deal.imageUrl}
+                              location={deal.location}
+                              title={deal.title}
+                              rating={deal.rating}
+                              reviewCount={deal.reviewCount}
+                              price={deal.price}
+                              discount={deal.discount}
+                            />
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="tab-pane fade"
+                  id="pills-tour"
+                  role="tabpanel"
+                  aria-labelledby="pills-tour-tab"
+                  tabindex="0"
+                >
+                  <div className="row">
+                    <div className="col-12">
+                      <Swiper
+                        modules={[Navigation, Autoplay]}
+                        spaceBetween={30}
+                        slidesPerView={4}
+                        loop={true}
+                        navigation={true}
+                        autoplay={{
+                          delay: 2500,
+                          disableOnInteraction: false,
+                        }}
+                        breakpoints={{
+                          320: { slidesPerView: 1 },
+                          640: { slidesPerView: 2 },
+                          1024: { slidesPerView: 4 },
+                        }}
+                      >
+                        {eventDeal.map((deal) => (
+                          <SwiperSlide>
+                            <HotelCard
+                              key={deal.id}
+                              imageUrl={deal.imageUrl}
+                              location={deal.location}
+                              title={deal.title}
+                              rating={deal.rating}
+                              reviewCount={deal.reviewCount}
+                              price={deal.price}
+                              discount={deal.discount}
+                            />
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="tab-pane fade"
+                  id="pills-space"
+                  role="tabpanel"
+                  aria-labelledby="pills-space-tab"
+                  tabindex="0"
+                >
+                  ...
                 </div>
               </div>
             </div>

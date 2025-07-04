@@ -20,12 +20,12 @@ const Home = () => {
       <Banner />
       <FormArea />
       <Imagination />
-      <TravelService />
-      <TopDestinationPhoto />
       <Deals />
       <Destination />
-      <HomeNews />
+      <TravelService />
+      <TopDestinationPhoto />
       <Partners />
+      <HomeNews />
       <Newsletter />
       <BackToTop />
       <Footer />

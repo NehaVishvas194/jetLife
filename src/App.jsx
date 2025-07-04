@@ -26,8 +26,11 @@ import Notification from "./components/Notification";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FlightBookingDetails from "./components/FlightBookingDetails";
+import Blog from "./components/Blog";
+import News from "./components/News";
+import TravelDetails from "./components/TravelDetails";
 
-console.log("date:-21-06-2025", "time:-10:10");
+console.log("date:-27-06-2025", "time:-05:28");
 
 function App() {
   useEffect(() => {
@@ -50,17 +53,20 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contactUs" element={<ContactUs />} />
           <Route path="/searchFlight" element={<FlightSearch />} />
-          <Route path="/booking_details" element={<FlightBookingDetails/>}/>
+          <Route path="/booking_details" element={<FlightBookingDetails />} />
           <Route path="/searchHotel" element={<HotelSearch />} />
           <Route path="/review_booking" element={<ReviewBooking />} />
           <Route path="/privacy_policy" element={<PrivacyPolicy />} />
           <Route path="/term_condition" element={<TermCondition />} />
           <Route path="/help" element={<Help />} />
           <Route path="/faq" element={<Faq />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/news" element={<News />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/my_booking" element={<MyBooking />} />
           <Route path="/notification" element={<Notification />} />
+          <Route path="/travel_details" element={<TravelDetails />} />
         </Routes>
         <ToastContainer />
       </BrowserRouter>

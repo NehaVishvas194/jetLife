@@ -1,33 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
-
-import partner1 from "../../assets/img/partner/1.png";
-import partner2 from "../../assets/img/partner/2.png";
-import partner3 from "../../assets/img/partner/3.png";
-import partner4 from "../../assets/img/partner/4.png";
-import partner5 from "../../assets/img/partner/5.png";
-import partner6 from "../../assets/img/partner/6.png";
-import partner7 from "../../assets/img/partner/7.png";
-import partner8 from "../../assets/img/partner/8.png";
-
-const partnerLogos = [
-  partner1,
-  partner2,
-  partner3,
-  partner4,
-  partner5,
-  partner6,
-  partner7,
-  partner8,
-  partner5,
-  partner3,
-  partner2,
-];
+import axios from "axios";
+import { API_BASE_URL } from "../../Url/BaseUrl";
 
 const Partners = () => {
+  const [partner, setPartner] = useState([]);
+  const [imagePath, setImagePath] = useState("");
+
+  const fetchPartnerData = () => {
+    axios
+      .get(`${API_BASE_URL}/our/partner`)
+      .then((response) => {
+        console.log(response.data.data);
+        setPartner(response.data.data);
+        setImagePath(response.data.image_path);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    fetchPartnerData();
+  }, []);
+
   return (
     <section id="our_partners" className="section_padding">
       <div className="container">
@@ -56,12 +55,12 @@ const Partners = () => {
                 1024: { slidesPerView: 8 },
               }}
             >
-              {partnerLogos.map((logo, index) => (
+              {partner.map((logo, index) => (
                 <SwiperSlide key={index}>
                   <div className="partner_slider_area">
                     <div className="partner_logo">
                       <a href="#!">
-                        <img src={logo} alt={`logo${index + 1}`} />
+                        <img src={`${imagePath}/${logo?.image}`} alt={`logo${index + 1}`} />
                       </a>
                     </div>
                   </div>

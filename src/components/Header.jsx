@@ -22,7 +22,7 @@ const Header = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [menuActive, setMenuActive] = useState(false);
   const [searchActive, setSearchActive] = useState(false);
-  const [profile, setProfile] = useState({});
+  // const [profile, setProfile] = useState({});
   // const [fname, setFname] = useState("");
   // const [profileImage, setProfileImage] = useState("");
   const [data, setData] = useState("");

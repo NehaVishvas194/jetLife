@@ -8,28 +8,27 @@ import image6 from "../../assets/img/destination/destination-small6.png";
 
 // Helper component for a single destination item
 const DestinationItem = ({ image, alt, title, price }) => (
-  <div className="col-lg-4 col-md-6 col-sm-12 col-12">
-    <div className="tab_destinations_boxed">
-      <div className="tab_destinations_img">
-        <a href="#!">
-          <img src={image} alt={alt} />
+  <div className="col-lg-4 col-md-6 col-sm-12 col-12 mb-4">
+    <div className="card desti-card">
+      <div className="card-body">
+        <a className="tab_destinations_boxed">
+          <div className="tab_destinations_img">
+            <img src={image} alt={alt} />
+          </div>
+          <div className="tab_destinations_conntent">
+            <h6>{title}</h6>
+            <p>Price starts at <span>${price.toFixed(2)}</span></p>
+          </div>
         </a>
       </div>
-      <div className="tab_destinations_conntent">
-        <h3>
-          <a href="#!">{title}</a>
-        </h3>
-        <p>
-          Price starts at <span>${price.toFixed(2)}</span>
-        </p>
-      </div>
     </div>
+
   </div>
 );
 
 const Destination = () => {
-  const [activeTab, setActiveTab] = useState("nepal"); 
-  
+  const [activeTab, setActiveTab] = useState("nepal");
+
   const destinationsData = {
     nepal: [
       {
@@ -91,42 +90,41 @@ const Destination = () => {
           </div>
           <div className="row">
             <div className="col-lg-12">
-              <div className="theme_nav_tab">
-                <nav className="theme_nav_tab_item">
-                  <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                    {Object.keys(destinationsData).map((tabKey) => (
+              <div className="our-service-tab">
+                <ul class="nav nav-pills mb-3 justify-content-center"
+                  id="pills-tab"
+                  role="tablist"
+                >
+                  {Object.keys(destinationsData).map((tabKey) => (
+                    <li class="nav-item" role="presentation">
                       <button
                         key={tabKey}
-                        className={`nav-link ${
-                          activeTab === tabKey ? "active" : ""
-                        }`}
-                        id={`nav-${tabKey}-tab`}
+                        className={`nav-link ${activeTab === tabKey ? "active" : ""
+                          }`}
+                        id={`pills-${tabKey}-tab`}
                         onClick={() => setActiveTab(tabKey)}
                         type="button"
                         role="tab"
-                        aria-controls={`nav-${tabKey}`}
+                        data-bs-toggle="pill"
+                        data-bs-target={`#pills-${tabKey}`}
+                        aria-controls={`pills-${tabKey}`}
                         aria-selected={activeTab === tabKey ? "true" : "false"}
                       >
                         {tabKey.charAt(0).toUpperCase() + tabKey.slice(1)}
                       </button>
-                    ))}
-                  </div>
-                </nav>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="tab-content" id="nav-tabContent1">
+              <div className="tab-content" id="pills-tabContent">
                 {Object.keys(destinationsData).map((tabKey) => (
                   <div
                     key={tabKey}
-                    className={`tab-pane fade ${
-                      activeTab === tabKey ? "show active" : ""
-                    }`}
-                    id={`nav-${tabKey}`}
+                    className={`tab-pane fade ${activeTab === tabKey ? "show active" : ""
+                      }`}
+                    id={`pills-${tabKey}`}
                     role="tabpanel"
-                    aria-labelledby={`nav-${tabKey}-tab`}
+                    aria-labelledby={`pills-${tabKey}-tab`}
                   >
                     <div className="row">
                       {destinationsData[tabKey].map((destination, index) => (
@@ -144,9 +142,9 @@ const Destination = () => {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </div >
+      </section >
+    </div >
   );
 };
 

@@ -12,6 +12,7 @@ import { API_BASE_URL } from "../Url/BaseUrl";
 import { API_IMAGE_URL } from "../Url/BaseUrl";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import PhoneInput from "react-phone-input-2";
 
 const AccountPage = () => {
   const [fname, setFname] = useState("");
@@ -25,10 +26,12 @@ const AccountPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [profileImage, setProfileImage] = useState("");
+  const [profileImage, setProfileImage] = useState(
+    localStorage.getItem("Image")
+  );
   const [newImageFile, setNewImageFile] = useState(null);
   const [userType, setUserType] = useState(null);
-
+  const [countryCode, setCountryCode] = useState("");
   const token = localStorage.getItem("Token");
   const id = localStorage.getItem("Id");
 
@@ -48,6 +51,7 @@ const AccountPage = () => {
           setFname(`${userData.first_name} ${userData.last_name}`);
           setEmail(userData.email);
           setMobile(userData.phone_number);
+          setCountryCode(userData.phone_code || "");
           setCompany(userData.company_name || "");
           setEmployee(userData.employee_id || "");
           setUserType(userData.user_type);
@@ -96,9 +100,10 @@ const AccountPage = () => {
           const updatedImageName = response.data.data.image;
           const updatedImageURL = `${API_IMAGE_URL}/${updatedImageName}`;
           setProfileImage(updatedImageURL);
+          localStorage.setItem("Image", updatedImageURL);
           localStorage.setItem("FirstName", firstName);
           localStorage.setItem("LastName", lastName || "");
-          localStorage.setItem("Image", updatedImageURL);
+          window.dispatchEvent(new Event("profileUpdated"));
         }
       })
       .catch((error) => {
@@ -134,6 +139,13 @@ const AccountPage = () => {
       setProfileImage(URL.createObjectURL(file));
     }
   };
+
+  useEffect(() => {
+    const storedImage = localStorage.getItem("Image");
+    if (storedImage) {
+      setProfileImage(storedImage);
+    }
+  }, []);
 
   const iconStyle = {
     position: "absolute",
@@ -209,7 +221,9 @@ const AccountPage = () => {
                       </div>
                       <div class="part-txt">
                         <h6>Hi,{fname}</h6>
-                        <p>{mobile}</p>
+                        <p>
+                          {countryCode} {mobile}
+                        </p>
                         <p>{email}</p>
                       </div>
                     </div>
@@ -291,7 +305,6 @@ const AccountPage = () => {
                             />
                           </div>
                         </div>
-
                         <div className="col-md-6">
                           <div className="field-set">
                             <label>

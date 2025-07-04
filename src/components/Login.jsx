@@ -232,14 +232,14 @@ const Login = () => {
                           <div className="col-md-12">
                             <div className="field-set">
                               <label>
-                                Email / Phone number<span>*</span>
+                                Email<span>*</span>
                               </label>
                               <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className="form-control"
-                                placeholder="Enter user name"
+                                placeholder="Enter your email"
                                 autocomplete="off"
                               />
                             </div>
@@ -254,7 +254,7 @@ const Login = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="form-control"
-                                placeholder="Enter password"
+                                placeholder="Enter your password"
                               />
                               <span
                                 onClick={() => setShowPassword(!showPassword)}
@@ -292,14 +292,14 @@ const Login = () => {
                           <div className="col-md-12">
                             <div className="field-set">
                               <label>
-                                Email / Phone number<span>*</span>
+                                Email<span>*</span>
                               </label>
                               <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className="form-control"
-                                placeholder="Enter user name"
+                                placeholder="Enter your email"
                                 autocomplete="off"
                               />
                             </div>
@@ -314,7 +314,7 @@ const Login = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="form-control"
-                                placeholder="Enter password"
+                                placeholder="Enter your password"
                                 autocomplete="off"
                               />
                               <span
