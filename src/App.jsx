@@ -29,6 +29,8 @@ import FlightBookingDetails from "./components/FlightBookingDetails";
 import Blog from "./components/Blog";
 import News from "./components/News";
 import TravelDetails from "./components/TravelDetails";
+import Events from "./components/Events";
+import DestinationDetails from "./components/home/DestinationDetails";
 
 console.log("date:-27-06-2025", "time:-05:28");
 
@@ -67,6 +69,8 @@ function App() {
           <Route path="/my_booking" element={<MyBooking />} />
           <Route path="/notification" element={<Notification />} />
           <Route path="/travel_details" element={<TravelDetails />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/destination_details" element={<DestinationDetails />} />
         </Routes>
         <ToastContainer />
       </BrowserRouter>

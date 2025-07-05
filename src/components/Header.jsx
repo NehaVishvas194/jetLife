@@ -17,6 +17,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../Url/BaseUrl";
 import { API_IMAGE_URL } from "../Url/BaseUrl";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -26,7 +27,7 @@ const Header = () => {
   // const [fname, setFname] = useState("");
   // const [profileImage, setProfileImage] = useState("");
   const [data, setData] = useState("");
-
+  const navigate = useNavigate();
   useEffect(() => {
     const handleScroll = () => {
       setIsSticky(window.scrollY > 10);
@@ -74,6 +75,7 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.clear();
+    navigate("/");
   };
 
   return (

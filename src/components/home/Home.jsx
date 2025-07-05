@@ -8,7 +8,7 @@ import Newsletter from "../home/Newsletter";
 import Partners from "../home/Partners";
 import HomeNews from "../home/HomeNews";
 import Destination from "../home/Destination";
-import TravelService from "../home/TravelService";
+import SpecialOffer from "./SpecialOffer";
 import TopDestinationPhoto from "../home/TopDestinationPhoto";
 import Deals from "../home/Deals";
 import BackToTop from "../BackToTop";
@@ -22,7 +22,7 @@ const Home = () => {
       <Imagination />
       <Deals />
       <Destination />
-      <TravelService />
+      <SpecialOffer/>
       <TopDestinationPhoto />
       <Partners />
       <HomeNews />

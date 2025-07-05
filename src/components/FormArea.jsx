@@ -301,7 +301,7 @@ const FormArea = () => {
                           <span className="tab-icon"><RiHotelFill /></span>Hotels
                         </button>
                       </li>
-                      <li className="nav-item" role="presentation">
+                      {/* <li className="nav-item" role="presentation">
                         <button
                           className="nav-link tab-btn"
                           id="bus-tab"
@@ -343,7 +343,7 @@ const FormArea = () => {
                         >
                           <span className="tab-icon"><MdRestaurantMenu /></span>Concierge{" "}
                         </button>
-                      </li>
+                      </li> */}
                     </ul>
                   </div>
                 </div>
@@ -1387,14 +1387,14 @@ const FormArea = () => {
                             </div>
                           </form>
                         </div>
-                        <div className="tab-pane fade" id="hotels" role="tabpanel" aria-labelledby="hotels-tab">
-                          <HotelForm />
-                        </div>
-                        <div className="tab-pane fade" id="bus" role="tabpanel" aria-labelledby="bus-tab">
-                          <CarForm />
-                        </div>
                       </div>
                     </div>
+                    <div className="tab-pane fade" id="hotels" role="tabpanel" aria-labelledby="hotels-tab">
+                      <HotelForm />
+                    </div>
+                    {/* <div className="tab-pane fade" id="bus" role="tabpanel" aria-labelledby="bus-tab">
+                          <CarForm />
+                        </div> */}
                   </div>
                 </div>
               </div >

@@ -95,13 +95,6 @@ const Blog = () => {
                     <div className="blog-cnt">
                       <div className="d-inline-flex align-items-center border-end pe-3 me-3">
                         <a href="javascript:void(0);" className="pro-name">
-                          {/* <span className="avtr-profile">
-                            <img
-                              src={profile}
-                              className="rounded-circle"
-                              alt="img"
-                            />
-                          </span> */}
                           <p>{curelm.title}</p>
                         </a>
                       </div>

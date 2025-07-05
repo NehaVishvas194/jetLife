@@ -189,10 +189,10 @@ const Deals = () => {
     },
   ];
 
-  const navigate = useNavigate();
-  const detailsPage = () => {
-    navigate("/travel_details");
-  };
+  // const navigate = useNavigate();
+  // const detailsPage = () => {
+  //   navigate("/travel_details");
+  // };
 
   return (
     <div>

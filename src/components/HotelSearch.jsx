@@ -76,22 +76,7 @@ const HotelSearch = () => {
             <div className="col-lg-12">
               <div className="theme_search_form_area">
                 <div className="theme_search_form_tabbtn">
-                  <ul className="nav nav-tabs" role="tablist">
-                    <li className="nav-item" role="presentation">
-                      <button
-                        className="nav-link active"
-                        id="hotels-tab"
-                        data-bs-toggle="tab"
-                        data-bs-target="#hotels"
-                        type="button"
-                        role="tab"
-                        aria-controls="hotels"
-                        aria-selected="false"
-                      >
-                        <FaHotel size={15} /> Hotels
-                      </button>
-                    </li>
-                  </ul>
+                  
                 </div>
                 <div className="tab-content" id="myTabContent">
                   <div

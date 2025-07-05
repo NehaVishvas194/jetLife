@@ -5,24 +5,26 @@ import image3 from "../../assets/img/destination/destination-small3.png";
 import image4 from "../../assets/img/destination/destination-small4.png";
 import image5 from "../../assets/img/destination/destination-small5.png";
 import image6 from "../../assets/img/destination/destination-small6.png";
+import { Link } from "react-router-dom";
 
 // Helper component for a single destination item
 const DestinationItem = ({ image, alt, title, price }) => (
   <div className="col-lg-4 col-md-6 col-sm-12 col-12 mb-4">
     <div className="card desti-card">
       <div className="card-body">
-        <a className="tab_destinations_boxed">
+        <Link to="/destination_details" className="tab_destinations_boxed">
           <div className="tab_destinations_img">
             <img src={image} alt={alt} />
           </div>
           <div className="tab_destinations_conntent">
             <h6>{title}</h6>
-            <p>Price starts at <span>${price.toFixed(2)}</span></p>
+            <p>
+              Price starts at <span>${price.toFixed(2)}</span>
+            </p>
           </div>
-        </a>
+        </Link>
       </div>
     </div>
-
   </div>
 );
 
@@ -35,45 +37,45 @@ const Destination = () => {
         image: image1,
         alt: "img1",
         title: "Everest trek to Base Camp",
-        price: 105.00,
+        price: 105.0,
       },
-      { image: image2, alt: "img2", title: "Kathmundu tour", price: 85.00 },
-      { image: image3, alt: "img3", title: "Beautiful pokhara", price: 100.00 },
-      { image: image4, alt: "img4", title: "Annapurna region", price: 75.00 },
+      { image: image2, alt: "img2", title: "Kathmundu tour", price: 85.0 },
+      { image: image3, alt: "img3", title: "Beautiful pokhara", price: 100.0 },
+      { image: image4, alt: "img4", title: "Annapurna region", price: 75.0 },
       {
         image: image5,
         alt: "img5",
         title: "Chitwan national park",
-        price: 105.00,
+        price: 105.0,
       },
-      { image: image6, alt: "img6", title: "Langtang region", price: 105.00 },
+      { image: image6, alt: "img6", title: "Langtang region", price: 105.0 },
     ],
     malaysia: [
-      { image: image2, alt: "img7", title: "Kathmundu tour", price: 85.00 },
-      { image: image2, alt: "img9", title: "Beautiful pokhara", price: 100.00 },
-      { image: image4, alt: "img10", title: "Annapurna region", price: 75.00 },
-      { image: image6, alt: "img6", title: "Langtang region", price: 105.00 },
+      { image: image2, alt: "img7", title: "Kathmundu tour", price: 85.0 },
+      { image: image2, alt: "img9", title: "Beautiful pokhara", price: 100.0 },
+      { image: image4, alt: "img10", title: "Annapurna region", price: 75.0 },
+      { image: image6, alt: "img6", title: "Langtang region", price: 105.0 },
     ],
     indonesia: [
-      { image: image3, alt: "img3", title: "Beautiful pokhara", price: 100.00 },
-      { image: image4, alt: "img4", title: "Annapurna region", price: 75.00 },
-      { image: image6, alt: "img", title: "Langtang region", price: 105.00 },
+      { image: image3, alt: "img3", title: "Beautiful pokhara", price: 100.0 },
+      { image: image4, alt: "img4", title: "Annapurna region", price: 75.0 },
+      { image: image6, alt: "img", title: "Langtang region", price: 105.0 },
     ],
     turkey: [
-      { image: image2, alt: "img2", title: "Kathmundu tour", price: 85.00 },
-      { image: image3, alt: "img3", title: "Beautiful pokhara", price: 100.00 },
-      { image: image4, alt: "img4", title: "Annapurna region", price: 75.00 },
+      { image: image2, alt: "img2", title: "Kathmundu tour", price: 85.0 },
+      { image: image3, alt: "img3", title: "Beautiful pokhara", price: 100.0 },
+      { image: image4, alt: "img4", title: "Annapurna region", price: 75.0 },
     ],
     china: [
-      { image: image4, alt: "img4", title: "Annapurna region", price: 75.00 },
-      { image: image6, alt: "img6", title: "Langtang region", price: 105.00 },
+      { image: image4, alt: "img4", title: "Annapurna region", price: 75.0 },
+      { image: image6, alt: "img6", title: "Langtang region", price: 105.0 },
     ],
     darjeeling: [
-      { image: image4, alt: "img4", title: "Annapurna region", price: 75.00 },
+      { image: image4, alt: "img4", title: "Annapurna region", price: 75.0 },
     ],
     italy: [
-      { image: image4, alt: "img4", title: "Annapurna region", price: 75.00 },
-      { image: image6, alt: "img6", title: "Langtang region", price: 105.00 },
+      { image: image4, alt: "img4", title: "Annapurna region", price: 75.0 },
+      { image: image6, alt: "img6", title: "Langtang region", price: 105.0 },
     ],
   };
 
@@ -91,7 +93,8 @@ const Destination = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="our-service-tab">
-                <ul class="nav nav-pills mb-3 justify-content-center"
+                <ul
+                  class="nav nav-pills mb-3 justify-content-center"
                   id="pills-tab"
                   role="tablist"
                 >
@@ -99,8 +102,9 @@ const Destination = () => {
                     <li class="nav-item" role="presentation">
                       <button
                         key={tabKey}
-                        className={`nav-link ${activeTab === tabKey ? "active" : ""
-                          }`}
+                        className={`nav-link ${
+                          activeTab === tabKey ? "active" : ""
+                        }`}
                         id={`pills-${tabKey}-tab`}
                         onClick={() => setActiveTab(tabKey)}
                         type="button"
@@ -120,8 +124,9 @@ const Destination = () => {
                 {Object.keys(destinationsData).map((tabKey) => (
                   <div
                     key={tabKey}
-                    className={`tab-pane fade ${activeTab === tabKey ? "show active" : ""
-                      }`}
+                    className={`tab-pane fade ${
+                      activeTab === tabKey ? "show active" : ""
+                    }`}
                     id={`pills-${tabKey}`}
                     role="tabpanel"
                     aria-labelledby={`pills-${tabKey}-tab`}
@@ -142,9 +147,9 @@ const Destination = () => {
               </div>
             </div>
           </div>
-        </div >
-      </section >
-    </div >
+        </div>
+      </section>
+    </div>
   );
 };
 

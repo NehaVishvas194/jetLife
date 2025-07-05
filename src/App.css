@@ -581,12 +581,12 @@ section {
 
 .range_plan i {
   background: var(--black-color);
-    font-size: 12px;
-    width: 30px !important;
-    height: 30px !important;
-    text-align: center;
-    border-radius: 50%;
-    padding: 5px;
+  font-size: 12px;
+  width: 30px !important;
+  height: 30px !important;
+  text-align: center;
+  border-radius: 50%;
+  padding: 5px;
   color: var(--main-color);
   display: inline-block;
 }
@@ -832,13 +832,13 @@ section {
 } */
 
 .multi_form_remove button {
-background-color: red;
-color: white;
-border: 0px;
-border-radius: 5px;
-padding: 5px 20px;
-font-size: 14px;
-font-weight: 600;
+  background-color: red;
+  color: white;
+  border: 0px;
+  border-radius: 5px;
+  padding: 5px 20px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 @media (max-width: 1399px) {
@@ -13224,7 +13224,12 @@ hr {
   justify-content: center;
   flex-wrap: wrap;
 }
-
+.stepper1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
 .step {
   display: flex;
   align-items: center;
@@ -13244,9 +13249,9 @@ hr {
   margin: 0 10px;
 }
 
-.step-pane {
+/* .step-pane {
   display: none;
-}
+} */
 
 .step-pane.active {
   display: block;
@@ -14142,27 +14147,83 @@ hr {
   color: #fff;
 }
 /* ------------------------surbhi(3-7-25)-------------------------- */
-.oneway_search_form{
+.oneway_search_form {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-.flight_Search_boxed:last-child{
+.flight_Search_boxed:last-child {
   border-right: unset;
 }
-section#explore_area1{
+section#explore_area1 {
   background-color: var(--black-color);
-    padding: 80px 0px !important;
-    margin-top: 80px;
+  padding: 80px 0px !important;
+  margin-top: 80px;
 }
-#explore_area1 .section_heading_center h2{
+#explore_area1 .section_heading_center h2 {
   color: #fff;
 }
-#explore_area1 .section_heading_center p{
+#explore_area1 .section_heading_center p {
   color: #fff;
 }
-#explore_area1 .our-service-tab .nav-link{
-  color:var(--paragraph-color) !important;
+#explore_area1 .our-service-tab .nav-link {
+  color: var(--paragraph-color) !important;
 }
-section#amazing_tour_place .section_heading_center p{
+section#amazing_tour_place .section_heading_center p {
   color: #fff;
+}
+/* ----------------------------------surbhi(4-7-25)--------------------------------- */
+.event-img {
+  height: 150px !important;
+}
+.event-img img {
+  border-radius: 5px !important;
+}
+.event-cont h6 {
+  color: var(--black-color);
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+.event-cont h2 {
+  font-size: 14px !important;
+  color: black;
+}
+.event-cont span {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--paragraph-color);
+}
+.event-loc span i {
+  color: var(--black-color);
+  margin-right: 5px;
+}
+.event-loc p {
+  font-size: 12px;
+}
+.flight-form {
+  margin-top: -100px !important;
+}
+#backBtn{
+  margin-right: 15px;
+}
+.post-featured-image{
+  margin-bottom: 5px;
+}
+.post-item-content .discount_tab {
+  position: absolute;
+  left: 25px;
+  top: 25px;
+  background:var(--black-color);
+  box-shadow: 4px 5px 12px rgb(0 0 0 / 10%);
+  border-radius: 5px;
+  color: white;
+  font-size: 12px;
+  padding: 3px 10px;
+  font-weight: 700;
+}
+.event-loc{
+  display: flex;
+  gap: 8px;
+}
+.event-main .detail-card{
+  height: 100%;
 }

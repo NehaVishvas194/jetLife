@@ -3,7 +3,9 @@ import { useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
-
+import { FaRegCheckCircle } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa6";
+import { MdOutlineCancel } from "react-icons/md";
 const FlightBookingDetails = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -60,27 +62,25 @@ const FlightBookingDetails = () => {
           </div>
         </div>
       </section>
-
       {/* <!-- main-section-booking --> */}
       <section className="section_padding" id="common_author_area">
         <div className="container">
           <div className="row">
             <div className="col-md-12 mb-5">
-              <div className="stepper" id="stepper">
+              <div className="stepper1">
                 {steps.map((label, index) => (
-                  <div key={index}>
+                  <div className="stepper" id="stepper" >
                     <div
-                      className={`step ${
-                        index === currentStep
-                          ? "active"
-                          : index < currentStep
+                      className={`step ${index === currentStep
+                        ? "active"
+                        : index < currentStep
                           ? "completed"
                           : ""
-                      }`}
+                        }`}
                     >
                       <div className="circle">
                         {index < currentStep ? (
-                          <i className="fi fi-rr-check"></i>
+                          <FaCheck />
                         ) : (
                           index + 1
                         )}
@@ -122,13 +122,13 @@ const FlightBookingDetails = () => {
                             <div className="features">
                               <p>
                                 <span>
-                                  <i className="fi fi-rr-check-circle"></i>
+                                  <FaRegCheckCircle />
                                 </span>
                                 Cheapest price
                               </p>
                               <p>
                                 <span style={{ color: "red" }}>
-                                  <i className="fi fi-rr-circle-xmark"></i>
+                                  <MdOutlineCancel />
                                 </span>
                                 No need for flexibility – you're sure about your
                                 plans
@@ -142,7 +142,7 @@ const FlightBookingDetails = () => {
                       </div>
                       <div className="col-md-4">
                         {/* <!-- Flexible Ticket --> */}
-                        <div className="card booking-card">
+                        <div className="card booking-card ">
                           <div className="card-body">
                             <h3>Flexible ticket</h3>
                             <div className="price">
@@ -151,21 +151,21 @@ const FlightBookingDetails = () => {
                             <div className="features">
                               <p>
                                 <span>
-                                  <i className="fi fi-rr-check-circle"></i>
+                                  <FaRegCheckCircle />
                                 </span>
                                 Change your flight time or date once, up to 24
                                 hours before departure time
                               </p>
                               <p>
                                 <span>
-                                  <i className="fi fi-rr-check-circle"></i>
+                                  <FaRegCheckCircle />
                                 </span>
                                 Travel with the same airline and route as
                                 originally booked
                               </p>
                               <p>
                                 <span>
-                                  <i className="fi fi-rr-check-circle"></i>
+                                  <FaRegCheckCircle />
                                 </span>
                                 No change fees – pay only the fare difference,
                                 if any
@@ -205,26 +205,26 @@ const FlightBookingDetails = () => {
                             <div className="features">
                               <p>
                                 <span>
-                                  <i className="fi fi-rr-check-circle"></i>
+                                  <FaRegCheckCircle />
                                 </span>
                                 Cancel up to 24 hours before departure – no
                                 questions asked
                               </p>
                               <p>
                                 <span>
-                                  <i className="fi fi-rr-check-circle"></i>
+                                  <FaRegCheckCircle />
                                 </span>
                                 Refund processed within 48 hours
                               </p>
                               <p>
                                 <span>
-                                  <i className="fi fi-rr-check-circle"></i>
+                                  <FaRegCheckCircle />
                                 </span>
                                 Refund includes ticket + extras
                               </p>
                               <p>
                                 <span>
-                                  <i className="fi fi-rr-check-circle"></i>
+                                  <FaRegCheckCircle />
                                 </span>
                                 Refund up to INR 210,000.00 per person
                               </p>
@@ -243,7 +243,6 @@ const FlightBookingDetails = () => {
                     </div>
                   </div>
                 )}
-
                 {currentStep === 1 && (
                   <div className="step-pane">
                     <div className="card booking-card">
@@ -283,11 +282,7 @@ const FlightBookingDetails = () => {
                             >
                               <div
                                 className="modal-dialog modal-lg"
-                                style={{
-                                  backgroundColor: "#fff",
-                                  padding: "20px",
-                                  borderRadius: "8px",
-                                }}
+                              
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 <div className="modal-content">
@@ -392,7 +387,7 @@ const FlightBookingDetails = () => {
                           <div className="col-md-8">
                             <div className="row">
                               <div className="col-md-12 mb-4">
-                                <div className="card">
+                                <div className="card p-0">
                                   <div className="card-header hdr-card">
                                     <h6>Contact Details</h6>
                                   </div>
@@ -433,7 +428,7 @@ const FlightBookingDetails = () => {
                                 </div>
                               </div>
                               <div className="col-md-12">
-                                <div className="card">
+                                <div className="card p-0">
                                   <div className="card-header hdr-card">
                                     <h6>Flight Details</h6>
                                   </div>
@@ -487,7 +482,7 @@ const FlightBookingDetails = () => {
                           </div>
                           {/* Baggage Details */}
                           <div className="col-md-4">
-                            <div className="card">
+                            <div className="card p-0">
                               <div className="card-header hdr-card">
                                 <h6>Baggage Details</h6>
                               </div>
@@ -540,7 +535,6 @@ const FlightBookingDetails = () => {
                     </div>
                   </div>
                 )}
-
                 {currentStep === 2 && (
                   <div className="step-pane">
                     <div className="row">
@@ -573,7 +567,6 @@ const FlightBookingDetails = () => {
                     </div>
                   </div>
                 )}
-
                 {currentStep === 3 && (
                   <div className="step-pane">
                     <div className="card booking-card">
@@ -735,7 +728,6 @@ const FlightBookingDetails = () => {
                     </div>
                   </div>
                 )}
-
                 {currentStep === 4 && (
                   <div className="step-pane">
                     <div className="card booking-card">
@@ -745,7 +737,7 @@ const FlightBookingDetails = () => {
                         </div>
                         <div className="row">
                           <div className="col-md-6">
-                            <div className="card">
+                            <div className="card p-0">
                               <div className="card-header hdr-card d-flex justify-content-between align-items-center">
                                 <h6>Flight Details</h6>
                                 <a href="">View Details</a>
@@ -779,7 +771,7 @@ const FlightBookingDetails = () => {
                               </p>
                             </div>
                             <div className="my-3">
-                              <div className="card">
+                              <div className="card p-0">
                                 <div className="card-header hdr-card">
                                   <h6>Contact Details</h6>
                                 </div>
@@ -790,7 +782,7 @@ const FlightBookingDetails = () => {
                               </div>
                             </div>
                             <div className="my-3">
-                              <div className="card">
+                              <div className="card p-0">
                                 <div className="card-header hdr-card">
                                   <h6>Traveler details</h6>
                                 </div>
@@ -801,7 +793,7 @@ const FlightBookingDetails = () => {
                               </div>
                             </div>
                             <div className="my-3">
-                              <div className="card">
+                              <div className="card p-0">
                                 <div className="card-header hdr-card">
                                   <h6>Flexibility and protection</h6>
                                 </div>
@@ -817,7 +809,7 @@ const FlightBookingDetails = () => {
                               </div>
                             </div>
                             <div className="my-3">
-                              <div className="card">
+                              <div className="card p-0">
                                 <div className="card-header hdr-card">
                                   <div className="">
                                     <h6>Your payment</h6>
@@ -888,14 +880,13 @@ const FlightBookingDetails = () => {
                             </div>
                             <div className="my-3">
                               <p>
-                                By clicking "pay now" you agree with the{" "}
-                                <a href="">terms and conditions</a> and
-                                <a href="">privacy policies</a> of JetLife
+                                By clicking pay now you agree with the{" "}
+                                <a href="">terms and conditions</a> and <a href="">privacy policies</a> of JetLife
                               </p>
                             </div>
                           </div>
                           <div className="col-md-6">
-                            <div className="card">
+                            <div className="card p-0">
                               <div className="card-header hdr-card d-flex justify-content-between align-items-center">
                                 <div className="">
                                   <h6>Baggage</h6>
@@ -957,7 +948,7 @@ const FlightBookingDetails = () => {
                               </p>
                             </div>
                             <div className="my-3">
-                              <div className="card">
+                              <div className="card p-0">
                                 <div className="card-header hdr-card">
                                   <h6>Price details</h6>
                                 </div>
