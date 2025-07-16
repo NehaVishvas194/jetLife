@@ -57,7 +57,7 @@ const Header = () => {
     axios
       .get(`${API_BASE_URL}/footer`)
       .then((response) => {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setData(response.data.data);
       })
       .catch((error) => {

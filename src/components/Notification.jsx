@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { MdClear } from "react-icons/md";
 import { FiClock } from "react-icons/fi";
 import BackToTopButton from "./BackToTop";
+import { FaAngleDoubleRight } from "react-icons/fa";
 
 const Notification = () => {
   return (
@@ -23,7 +24,7 @@ const Notification = () => {
                     </li>
                     <li>
                       <span>
-                        <i className="fas fa-circle"></i>
+                        <FaAngleDoubleRight />
                       </span>{" "}
                       Notification
                     </li>
@@ -38,7 +39,7 @@ const Notification = () => {
       <section className="section_padding" id="common_author_area">
         <div className="container">
           <div className="row mb-4 align-items-center">
-            <div className="col-md-6">
+            <div className="col-md-6 px-3">
               <h4>All Notification List</h4>
             </div>
             <div className="col-md-6 text-end">
@@ -126,7 +127,7 @@ const Notification = () => {
           </div>
         </div>
       </section>
-      <BackToTopButton/>
+      <BackToTopButton />
       <Footer />
     </div>
   );

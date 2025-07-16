@@ -1,10 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import image1 from "../../assets/img/amazing-place/am-place-1.png";
-// import image2 from "../../assets/img/amazing-place/am-place-2.png";
-// import image3 from "../../assets/img/amazing-place/am-place-3.png";
-// import image4 from "../../assets/img/amazing-place/am-place-4.png";
-// import image5 from "../../assets/img/amazing-place/am-place-5.png";
-// import image6 from "../../assets/img/amazing-place/am-place-6.png";
 import { FaStar } from "react-icons/fa6";
 import axios from "axios";
 import { API_BASE_URL } from "../../Url/BaseUrl";
@@ -41,7 +35,11 @@ const TopDestinationPhoto = () => {
             <div className="col-lg-6 col-md-6 col-sm-12 col-12">
               <div className="section_heading_center">
                 <h2>Top destinations</h2>
-                <p> Explore the most popular destinations around the world, handpicked just for your next unforgettable journey.</p>
+                <p>
+                  {" "}
+                  Explore the most popular destinations around the world,
+                  handpicked just for your next unforgettable journey.
+                </p>
               </div>
             </div>
           </div>
@@ -64,7 +62,7 @@ const TopDestinationPhoto = () => {
             >
               {data.map((curElm, i) => (
                 <SwiperSlide key={i}>
-                  <div className="col-md-12" >
+                  <div className="col-md-12">
                     <div className="amazing_place_boxed">
                       <a href="#!">
                         <div className="amazing_place_img">
@@ -75,14 +73,19 @@ const TopDestinationPhoto = () => {
                         </div>
                         <div className="amazing_place_box_content">
                           <div className="amazing_place_inner_content">
-                            <h3>China</h3>
+                            <h3>{curElm.location}</h3>
                             <div className="rating_outof">
-                              <FaStar style={{ color: "rgb(255, 202, 24)" }} />
-                              <FaStar style={{ color: "rgb(255, 202, 24)" }} />
-                              <FaStar style={{ color: "rgb(255, 202, 24)" }} />
-                              <FaStar style={{ color: "rgb(255, 202, 24)" }} />
-                              <FaStar style={{ color: "rgb(255, 202, 24)" }} />
-                              <span>50 Reviews</span>
+                              {[...Array(5)].map((_, index) => (
+                                <FaStar
+                                  key={index}
+                                  style={{
+                                    color:
+                                      index < curElm.rating
+                                        ? "rgb(255, 202, 24)"
+                                        : "#ccc",
+                                  }}
+                                />
+                              ))}
                             </div>
                             <p>{curElm.content}</p>
                           </div>
@@ -102,9 +105,11 @@ const TopDestinationPhoto = () => {
 
 export default TopDestinationPhoto;
 
-
-{/* Right Side Image or More Data */ }
-{/* <div className="col-lg-7">
+{
+  /* Right Side Image or More Data */
+}
+{
+  /* <div className="col-lg-7">
       <div className="amazing_place_boxed">
         <a href="#!">
           <div className="amazing_place_img padding_img">
@@ -130,4 +135,5 @@ export default TopDestinationPhoto;
           </div>
         </a>
       </div>
-    </div> */}
+    </div> */
+}

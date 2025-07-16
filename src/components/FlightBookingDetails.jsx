@@ -6,6 +6,9 @@ import { Link } from "react-router-dom";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
 import { MdOutlineCancel } from "react-icons/md";
+import { IoIosArrowForward } from "react-icons/io";
+import { FaAngleDoubleRight } from "react-icons/fa";
+
 const FlightBookingDetails = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -44,16 +47,16 @@ const FlightBookingDetails = () => {
             <div className="col-lg-12">
               <div className="common_bannner_text2">
                 <div>
-                  <h2>Booking Details</h2>
+                  <h2>Flight Booking</h2>
                   <ul>
                     <li>
                       <Link to="/">Home</Link>
                     </li>
                     <li>
                       <span>
-                        <i className="fas fa-circle"></i>
-                      </span>{" "}
-                      Booking Details
+                        <FaAngleDoubleRight />
+                      </span>
+                      Booking details
                     </li>
                   </ul>
                 </div>
@@ -69,21 +72,18 @@ const FlightBookingDetails = () => {
             <div className="col-md-12 mb-5">
               <div className="stepper1">
                 {steps.map((label, index) => (
-                  <div className="stepper" id="stepper" >
+                  <div className="stepper" id="stepper">
                     <div
-                      className={`step ${index === currentStep
-                        ? "active"
-                        : index < currentStep
+                      className={`step ${
+                        index === currentStep
+                          ? "active"
+                          : index < currentStep
                           ? "completed"
                           : ""
-                        }`}
+                      }`}
                     >
                       <div className="circle">
-                        {index < currentStep ? (
-                          <FaCheck />
-                        ) : (
-                          index + 1
-                        )}
+                        {index < currentStep ? <FaCheck /> : index + 1}
                       </div>
                       <div className="label">{label}</div>
                     </div>
@@ -282,7 +282,6 @@ const FlightBookingDetails = () => {
                             >
                               <div
                                 className="modal-dialog modal-lg"
-                              
                                 onClick={(e) => e.stopPropagation()}
                               >
                                 <div className="modal-content">
@@ -881,7 +880,8 @@ const FlightBookingDetails = () => {
                             <div className="my-3">
                               <p>
                                 By clicking pay now you agree with the{" "}
-                                <a href="">terms and conditions</a> and <a href="">privacy policies</a> of JetLife
+                                <a href="">terms and conditions</a> and{" "}
+                                <a href="">privacy policies</a> of JetLife
                               </p>
                             </div>
                           </div>

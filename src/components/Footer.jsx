@@ -22,7 +22,7 @@ const Footer = () => {
     axios
       .get(`${API_BASE_URL}/footer`)
       .then((response) => {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setData(response.data.data);
       })
       .catch((error) => {
@@ -95,6 +95,9 @@ const Footer = () => {
               </div>
               <div className="footer_link_area">
                 <ul>
+                  <li>
+                    <Link to="/">Home</Link>
+                  </li>
                   <li>
                     <Link to="/blog">Blogs</Link>
                   </li>

@@ -15,6 +15,9 @@ import BackToTopButton from "../BackToTop";
 import axios from "axios";
 import { API_BASE_URL } from "../../Url/BaseUrl";
 import { toast } from "react-toastify";
+import { FaAngleRight } from "react-icons/fa6";
+import { FaAngleDoubleRight } from "react-icons/fa";
+
 const About = () => {
   const [data, setData] = useState("");
   const [imagePath, setImagePath] = useState("");
@@ -79,7 +82,7 @@ const About = () => {
     axios
       .get(`${API_BASE_URL}/aboutus7`)
       .then((response) => {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setData4(response.data.data);
         setImagePath4(response.data.image_path);
       })
@@ -92,7 +95,7 @@ const About = () => {
     axios
       .get(`${API_BASE_URL}/aboutus8`)
       .then((response) => {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setData5(response.data.data);
         setImagePath5(response.data.image_path);
       })
@@ -135,8 +138,8 @@ const About = () => {
                     </li>
                     <li>
                       <span>
-                        <GoDotFill />
-                      </span>{" "}
+                        <FaAngleDoubleRight />
+                      </span>
                       {data.heading}
                     </li>
                   </ul>

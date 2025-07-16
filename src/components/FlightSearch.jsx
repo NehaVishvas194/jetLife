@@ -6,15 +6,12 @@ import {
   FaExchangeAlt,
 } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
-import { FaMinus, FaPlus, FaAngleRight } from "react-icons/fa6";
+import { FaMinus, FaPlus } from "react-icons/fa6";
 import Header from "./Header";
 import Footer from "./Footer";
 import Newsletter from "./home/Newsletter";
 import flightImg from "../assets/img/common/filght.svg";
-// import rightArrow from "../assets/img/icon/right_arrow.png";
 import { Link } from "react-router-dom";
-import { GoDotFill } from "react-icons/go";
-// import { useLocation } from "react-router-dom";
 import axios from "axios";
 import BackToTopButton from "./BackToTop";
 import { FaSuitcaseRolling } from "react-icons/fa";
@@ -22,7 +19,6 @@ import { FaClipboardList } from "react-icons/fa6";
 import { FaBagShopping } from "react-icons/fa6";
 import { BsFillInfoCircleFill } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
-// import { styled } from '@mui/material/styles';
 import routeImg from "../assets/img/route-flight.png";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { BiSolidPlane } from "react-icons/bi";
@@ -30,7 +26,9 @@ import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { MdOutlineFlight } from "react-icons/md";
+import { IoIosArrowForward } from "react-icons/io";
+import { FaAngleDoubleRight } from "react-icons/fa";
+import backgroundImage from "../assets/img/flight2.jpg";
 
 const FlightSearch = () => {
   const [airportList, setAirPortList] = useState([]);
@@ -52,11 +50,7 @@ const FlightSearch = () => {
   const [childAges, setChildAges] = useState([]);
   const [error, setError] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
-  // const location = useLocation();
-  // const searchResults = location.state?.searchResults || [];
-  // const [selectedFlight, setSelectedFlight] = useState(0);
   const [openDropdown, setOpenDropdown] = useState(null);
-  // const [open, setOpen] = useState(false);
   const [isPriceCollapsed, setIsPriceCollapsed] = useState(true);
   const [isPopularCollapsed, setIsPopularCollapsed] = useState(true);
   const [isPropertyCollapsed, setIsPropertyCollapsed] = useState(true);
@@ -156,7 +150,9 @@ const FlightSearch = () => {
         "session_id",
         response.data.AirSearchResponse.session_id
       );
-      console.log(response.data.AirSearchResponse.AirSearchResult.FareItineraries);
+      console.log(
+        response.data.AirSearchResponse.AirSearchResult.FareItineraries
+      );
     } catch (error) {
       console.log("Error Fetching Search List Data:", error);
     }
@@ -260,7 +256,10 @@ const FlightSearch = () => {
   };
 
   const addFlightSegment = () => {
-    setMultiCityData([...multiCityData, { from: "", to: "", date: getTodayDate() }]);
+    setMultiCityData([
+      ...multiCityData,
+      { from: "", to: "", date: getTodayDate() },
+    ]);
     setMultiFilteredList([...multiFilteredList, []]);
     setMultiFilteredToList([...multiFilteredToList, []]);
   };
@@ -491,22 +490,29 @@ const FlightSearch = () => {
     <>
       <Header />
       {/* <!-- Common Banner Area --> */}
-      <section id="common_banner">
+      <section id="common_banner_img"
+      style={{
+        backgroundImage:`url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        height: "100%",
+      }}>
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <div className="common_bannner_text">
+              <div className="common_bannner_text2">
                 <div>
-                  <h2>Flight search result</h2>
+                  <h2>Flight</h2>
                   <ul>
                     <li>
                       <Link to="/">Home</Link>
                     </li>
                     <li>
                       <span>
-                        <GoDotFill />
-                      </span>{" "}
-                      Flight search result
+                        <FaAngleDoubleRight />
+                      </span>
+                      Flight List
                     </li>
                   </ul>
                 </div>
@@ -518,6 +524,27 @@ const FlightSearch = () => {
       {/* <!-- Form Area --> */}
       <section id="theme_search_form" className="flight-form">
         <div className="container">
+          <div className="row">
+            <div className="col-md-12">
+              <div className="section_heading_center">
+                <h2>Flight Search</h2>
+              </div>
+              <div className="bestflight">
+                <div className="">
+                  <img src={routeImg} alt="img" />
+                </div>
+                <div className="">
+                  <h6>
+                    You're lucky! There are no better prices on nearby dates.
+                  </h6>
+                  <p>
+                    Latest prices found for your search – actual prices shown in
+                    next step
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="row">
             <div className="col-lg-12">
               <div className="card home-card">
@@ -574,7 +601,12 @@ const FlightSearch = () => {
                   </div>
                   <div className="tab-content" id="myTabContent1">
                     {/* one-way */}
-                    <div className="tab-pane fade show active" id="oneway_flight" role="tabpanel" aria-labelledby="oneway-tab">
+                    <div
+                      className="tab-pane fade show active"
+                      id="oneway_flight"
+                      role="tabpanel"
+                      aria-labelledby="oneway-tab"
+                    >
                       <form onSubmit={fetchAirportSearch}>
                         <div className="row mb-2 align-items-center">
                           <div className="col-md-11">
@@ -597,24 +629,21 @@ const FlightSearch = () => {
                                   </div>
                                   {fromInput.length > 0 && (
                                     <ul className="airportList_ul">
-                                      {filteredList.map(
-                                        (airport, index) => (
-                                          <li
-                                            className="airportList_li"
-                                            key={index}
-                                            onClick={() => {
-                                              setFromInput(
-                                                `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
-                                              );
-                                              setFilteredList([]);
-                                            }}
-                                          >
-                                            {airport.City} (
-                                            {airport.AirportCode}) -{" "}
-                                            {airport.AirportName}
-                                          </li>
-                                        )
-                                      )}
+                                      {filteredList.map((airport, index) => (
+                                        <li
+                                          className="airportList_li"
+                                          key={index}
+                                          onClick={() => {
+                                            setFromInput(
+                                              `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
+                                            );
+                                            setFilteredList([]);
+                                          }}
+                                        >
+                                          {airport.City} ({airport.AirportCode})
+                                          - {airport.AirportName}
+                                        </li>
+                                      ))}
 
                                       {filteredList.length === 0 && (
                                         <li
@@ -629,9 +658,7 @@ const FlightSearch = () => {
                                     </ul>
                                   )}
                                   <div className="">
-                                    <span>
-                                      Start typing to filter airports
-                                    </span>
+                                    <span>Start typing to filter airports</span>
                                   </div>
                                 </div>
                                 <div className="flight_Search_boxed">
@@ -650,28 +677,27 @@ const FlightSearch = () => {
                                     />
                                   </div>
                                   <div className="range_plan">
-                                    <i><FaExchangeAlt /></i>
+                                    <i>
+                                      <FaExchangeAlt />
+                                    </i>
                                   </div>
                                   {toInput.length > 0 && (
                                     <ul className="airportList_ul">
-                                      {filteredToList.map(
-                                        (airport, index) => (
-                                          <li
-                                            className="airportList_li"
-                                            key={index}
-                                            onClick={() => {
-                                              setToInput(
-                                                `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
-                                              );
-                                              setFilteredToList([]);
-                                            }}
-                                          >
-                                            {airport.City} (
-                                            {airport.AirportCode}) -{" "}
-                                            {airport.AirportName}
-                                          </li>
-                                        )
-                                      )}
+                                      {filteredToList.map((airport, index) => (
+                                        <li
+                                          className="airportList_li"
+                                          key={index}
+                                          onClick={() => {
+                                            setToInput(
+                                              `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
+                                            );
+                                            setFilteredToList([]);
+                                          }}
+                                        >
+                                          {airport.City} ({airport.AirportCode})
+                                          - {airport.AirportName}
+                                        </li>
+                                      ))}
                                       {filteredToList === 0 && (
                                         <li
                                           style={{
@@ -698,9 +724,7 @@ const FlightSearch = () => {
                                       value={journeyDate}
                                       onChange={handleDateChange}
                                       min={
-                                        new Date()
-                                          .toISOString()
-                                          .split("T")[0]
+                                        new Date().toISOString().split("T")[0]
                                       }
                                     />
                                     <span>
@@ -718,19 +742,36 @@ const FlightSearch = () => {
                                     <span>Travellers and class</span>
                                   </div>
                                   <div className="dropdown">
-                                    <button className="dropdown-toggle final-count" type="button" onClick={() => setShowDropdown(!showDropdown)}>
+                                    <button
+                                      className="dropdown-toggle final-count"
+                                      type="button"
+                                      onClick={() =>
+                                        setShowDropdown(!showDropdown)
+                                      }
+                                    >
                                       {totalPassengers} Passenger
                                       {totalPassengers !== 1 ? "s" : ""}
                                     </button>
                                     {showDropdown && (
-                                      <div className="dropdown-menu dropdown_passenger_info show" onClick={(e) => e.stopPropagation()}>
+                                      <div
+                                        className="dropdown-menu dropdown_passenger_info show"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
                                         <div className="dropdown-header hdr-drop">
                                           <h6>Select Travelers & Class</h6>
                                         </div>
                                         <div className="card travel-card">
                                           <div className="card-body">
                                             {error && (
-                                              <div style={{ color: "red", fontSize: "12px", marginBottom: "0px", }}>{error}</div>
+                                              <div
+                                                style={{
+                                                  color: "red",
+                                                  fontSize: "12px",
+                                                  marginBottom: "0px",
+                                                }}
+                                              >
+                                                {error}
+                                              </div>
                                             )}
                                             <div className="traveller-calulate-persons">
                                               <h6>Travelers</h6>
@@ -740,15 +781,36 @@ const FlightSearch = () => {
                                                   <div className="passengers-type">
                                                     <div className="text">
                                                       <div className="type-label">
-                                                        <p>Adult <span>(12+ yrs)</span></p>
+                                                        <p>
+                                                          Adult{" "}
+                                                          <span>(12+ yrs)</span>
+                                                        </p>
                                                       </div>
                                                     </div>
                                                     <div className="button-set">
-                                                      <button type="button" className="btn-subtract" onClick={() => handleDecrement("adult")}>
+                                                      <button
+                                                        type="button"
+                                                        className="btn-subtract"
+                                                        onClick={() =>
+                                                          handleDecrement(
+                                                            "adult"
+                                                          )
+                                                        }
+                                                      >
                                                         <FaMinus />
                                                       </button>
-                                                      <span className="count pcount">{adults}</span>
-                                                      <button type="button" className="btn-add" onClick={() => handleIncrement("adult")}>
+                                                      <span className="count pcount">
+                                                        {adults}
+                                                      </span>
+                                                      <button
+                                                        type="button"
+                                                        className="btn-add"
+                                                        onClick={() =>
+                                                          handleIncrement(
+                                                            "adult"
+                                                          )
+                                                        }
+                                                      >
                                                         <FaPlus />
                                                       </button>
                                                     </div>
@@ -759,15 +821,38 @@ const FlightSearch = () => {
                                                   <div className="passengers-type">
                                                     <div className="text">
                                                       <div className="type-label">
-                                                        <p>Children <span>(2-12 yrs)</span></p>
+                                                        <p>
+                                                          Children{" "}
+                                                          <span>
+                                                            (2-12 yrs)
+                                                          </span>
+                                                        </p>
                                                       </div>
                                                     </div>
                                                     <div className="button-set">
-                                                      <button type="button" className="btn-subtract-in" onClick={() => handleDecrement("child")}>
+                                                      <button
+                                                        type="button"
+                                                        className="btn-subtract-in"
+                                                        onClick={() =>
+                                                          handleDecrement(
+                                                            "child"
+                                                          )
+                                                        }
+                                                      >
                                                         <FaMinus />
                                                       </button>
-                                                      <span className="count pcount">{children}</span>
-                                                      <button type="button" className="btn-add-in" onClick={() => handleIncrement("child")}>
+                                                      <span className="count pcount">
+                                                        {children}
+                                                      </span>
+                                                      <button
+                                                        type="button"
+                                                        className="btn-add-in"
+                                                        onClick={() =>
+                                                          handleIncrement(
+                                                            "child"
+                                                          )
+                                                        }
+                                                      >
                                                         <FaPlus />
                                                       </button>
                                                     </div>
@@ -778,15 +863,38 @@ const FlightSearch = () => {
                                                   <div className="passengers-type">
                                                     <div className="text">
                                                       <div className="type-label">
-                                                        <p>Infant <span>(0-12 yrs)</span></p>
+                                                        <p>
+                                                          Infant{" "}
+                                                          <span>
+                                                            (0-12 yrs)
+                                                          </span>
+                                                        </p>
                                                       </div>
                                                     </div>
                                                     <div className="button-set">
-                                                      <button type="button" className="btn-subtract-in" onClick={() => handleDecrement("infant")}>
+                                                      <button
+                                                        type="button"
+                                                        className="btn-subtract-in"
+                                                        onClick={() =>
+                                                          handleDecrement(
+                                                            "infant"
+                                                          )
+                                                        }
+                                                      >
                                                         <FaMinus />
                                                       </button>
-                                                      <span className="count incount">{infants}</span>
-                                                      <button type="button" className="btn-add-in" onClick={() => handleIncrement("infant")}>
+                                                      <span className="count incount">
+                                                        {infants}
+                                                      </span>
+                                                      <button
+                                                        type="button"
+                                                        className="btn-add-in"
+                                                        onClick={() =>
+                                                          handleIncrement(
+                                                            "infant"
+                                                          )
+                                                        }
+                                                      >
                                                         <FaPlus />
                                                       </button>
                                                     </div>
@@ -797,13 +905,23 @@ const FlightSearch = () => {
                                             <div className="">
                                               <h6 className="mb-2">Classes</h6>
                                               <div className="class-options">
-                                                {["Economy", "Premium Economy", "Business", "First Class"].map((cls) => (
-                                                  <label className="class-radio" key={cls}>
+                                                {[
+                                                  "Economy",
+                                                  "Premium Economy",
+                                                  "Business",
+                                                  "First Class",
+                                                ].map((cls) => (
+                                                  <label
+                                                    className="class-radio"
+                                                    key={cls}
+                                                  >
                                                     <input
                                                       type="radio"
                                                       name="cabin"
                                                       value={cls}
-                                                      checked={selectedClass === cls}
+                                                      checked={
+                                                        selectedClass === cls
+                                                      }
                                                       onChange={handleChange}
                                                     />
                                                     <span className="custom-circle"></span>
@@ -811,7 +929,6 @@ const FlightSearch = () => {
                                                   </label>
                                                 ))}
                                               </div>
-
                                             </div>
                                           </div>
                                           {/* Child Age Selects */}
@@ -874,7 +991,12 @@ const FlightSearch = () => {
                       </form>
                     </div>
                     {/* return */}
-                    <div className="tab-pane fade" id="roundtrip" role="tabpanel" aria-labelledby="roundtrip-tab">
+                    <div
+                      className="tab-pane fade"
+                      id="roundtrip"
+                      role="tabpanel"
+                      aria-labelledby="roundtrip-tab"
+                    >
                       <form action="#!">
                         <div className="row mb-2 align-items-center">
                           <div className="col-md-11">
@@ -912,29 +1034,25 @@ const FlightSearch = () => {
                                         listStyle: "none",
                                       }}
                                     >
-                                      {filteredList2.map(
-                                        (airport, index) => (
-                                          <li
-                                            key={index}
-                                            onClick={() => {
-                                              setFromInput2(
-                                                `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
-                                              );
-                                              setFilteredList2([]);
-                                            }}
-                                            style={{
-                                              padding: "8px 12px",
-                                              cursor: "pointer",
-                                              borderBottom:
-                                                "1px solid #eee",
-                                            }}
-                                          >
-                                            {airport.City} (
-                                            {airport.AirportCode}) -{" "}
-                                            {airport.AirportName}
-                                          </li>
-                                        )
-                                      )}
+                                      {filteredList2.map((airport, index) => (
+                                        <li
+                                          key={index}
+                                          onClick={() => {
+                                            setFromInput2(
+                                              `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
+                                            );
+                                            setFilteredList2([]);
+                                          }}
+                                          style={{
+                                            padding: "8px 12px",
+                                            cursor: "pointer",
+                                            borderBottom: "1px solid #eee",
+                                          }}
+                                        >
+                                          {airport.City} ({airport.AirportCode})
+                                          - {airport.AirportName}
+                                        </li>
+                                      ))}
                                       {filteredList2.length === 0 && (
                                         <li
                                           style={{
@@ -967,7 +1085,9 @@ const FlightSearch = () => {
                                     />
                                   </div>
                                   <div className="range_plan">
-                                    <i><FaExchangeAlt /></i>
+                                    <i>
+                                      <FaExchangeAlt />
+                                    </i>
                                   </div>
                                   {toInput2.length > 0 && (
                                     <ul
@@ -986,28 +1106,25 @@ const FlightSearch = () => {
                                         listStyle: "none",
                                       }}
                                     >
-                                      {filteredToList2.map(
-                                        (airport, index) => (
-                                          <li
-                                            key={index}
-                                            onClick={() => {
-                                              setToInput2(
-                                                `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
-                                              );
-                                              setFilteredToList2([]);
-                                            }}
-                                            style={{
-                                              padding: "8px 12px",
-                                              cursor: "pointer",
-                                              borderBottom: "px solid #eee",
-                                            }}
-                                          >
-                                            {airport.City} (
-                                            {airport.AirportCode}) -{" "}
-                                            {airport.AirportName}
-                                          </li>
-                                        )
-                                      )}
+                                      {filteredToList2.map((airport, index) => (
+                                        <li
+                                          key={index}
+                                          onClick={() => {
+                                            setToInput2(
+                                              `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
+                                            );
+                                            setFilteredToList2([]);
+                                          }}
+                                          style={{
+                                            padding: "8px 12px",
+                                            cursor: "pointer",
+                                            borderBottom: "px solid #eee",
+                                          }}
+                                        >
+                                          {airport.City} ({airport.AirportCode})
+                                          - {airport.AirportName}
+                                        </li>
+                                      ))}
                                       {filteredToList2 === 0 && (
                                         <li
                                           style={{
@@ -1027,20 +1144,14 @@ const FlightSearch = () => {
                                 <div className="flight_Search_boxed date_flex_area">
                                   <div className="Journey_date">
                                     <span>Journey date</span>
-                                    <input
-                                      type="date"
-                                      value="2022-05-05"
-                                    />
+                                    <input type="date" value="2022-05-05" />
                                     <span>Thursday</span>
                                   </div>
                                 </div>
                                 <div className="flight_Search_boxed date_flex_area">
                                   <div className="Journey_date">
                                     <span>Return date</span>
-                                    <input
-                                      type="date"
-                                      value="2022-05-08"
-                                    />
+                                    <input type="date" value="2022-05-08" />
                                     <span>Saturday</span>
                                   </div>
                                 </div>
@@ -1049,8 +1160,21 @@ const FlightSearch = () => {
                                     <span>Travellers and class</span>
                                   </div>
                                   <div className="dropdown">
-                                    <button className="dropdown-toggle final-count" data-toggle="dropdown" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"> 0 Passenger </button>
-                                    <div className="dropdown-menu dropdown_passenger_info" aria-labelledby="dropdownMenuButton1">
+                                    <button
+                                      className="dropdown-toggle final-count"
+                                      data-toggle="dropdown"
+                                      type="button"
+                                      id="dropdownMenuButton1"
+                                      data-bs-toggle="dropdown"
+                                      aria-expanded="false"
+                                    >
+                                      {" "}
+                                      0 Passenger{" "}
+                                    </button>
+                                    <div
+                                      className="dropdown-menu dropdown_passenger_info"
+                                      aria-labelledby="dropdownMenuButton1"
+                                    >
                                       <div className="dropdown-header hdr-drop">
                                         <h6>Select Travelers & Class</h6>
                                       </div>
@@ -1064,15 +1188,32 @@ const FlightSearch = () => {
                                                 <div className="passengers-type">
                                                   <div className="text">
                                                     <div className="type-label">
-                                                      <p>Adult <span>(12+ yrs)</span></p>
+                                                      <p>
+                                                        Adult{" "}
+                                                        <span>(12+ yrs)</span>
+                                                      </p>
                                                     </div>
                                                   </div>
                                                   <div className="button-set">
-                                                    <button type="button" className="btn-subtract" onClick={() => handleDecrement("adult")}>
+                                                    <button
+                                                      type="button"
+                                                      className="btn-subtract"
+                                                      onClick={() =>
+                                                        handleDecrement("adult")
+                                                      }
+                                                    >
                                                       <FaMinus />
                                                     </button>
-                                                    <span className="count pcount">{adults}</span>
-                                                    <button type="button" className="btn-add" onClick={() => handleIncrement("adult")}>
+                                                    <span className="count pcount">
+                                                      {adults}
+                                                    </span>
+                                                    <button
+                                                      type="button"
+                                                      className="btn-add"
+                                                      onClick={() =>
+                                                        handleIncrement("adult")
+                                                      }
+                                                    >
                                                       <FaPlus />
                                                     </button>
                                                   </div>
@@ -1083,15 +1224,32 @@ const FlightSearch = () => {
                                                 <div className="passengers-type">
                                                   <div className="text">
                                                     <div className="type-label">
-                                                      <p>Children <span>(2-12 yrs)</span></p>
+                                                      <p>
+                                                        Children{" "}
+                                                        <span>(2-12 yrs)</span>
+                                                      </p>
                                                     </div>
                                                   </div>
                                                   <div className="button-set">
-                                                    <button type="button" className="btn-subtract-in" onClick={() => handleDecrement("child")}>
+                                                    <button
+                                                      type="button"
+                                                      className="btn-subtract-in"
+                                                      onClick={() =>
+                                                        handleDecrement("child")
+                                                      }
+                                                    >
                                                       <FaMinus />
                                                     </button>
-                                                    <span className="count pcount">{children}</span>
-                                                    <button type="button" className="btn-add-in" onClick={() => handleIncrement("child")}>
+                                                    <span className="count pcount">
+                                                      {children}
+                                                    </span>
+                                                    <button
+                                                      type="button"
+                                                      className="btn-add-in"
+                                                      onClick={() =>
+                                                        handleIncrement("child")
+                                                      }
+                                                    >
                                                       <FaPlus />
                                                     </button>
                                                   </div>
@@ -1102,15 +1260,36 @@ const FlightSearch = () => {
                                                 <div className="passengers-type">
                                                   <div className="text">
                                                     <div className="type-label">
-                                                      <p>Infant <span>(0-12 yrs)</span></p>
+                                                      <p>
+                                                        Infant{" "}
+                                                        <span>(0-12 yrs)</span>
+                                                      </p>
                                                     </div>
                                                   </div>
                                                   <div className="button-set">
-                                                    <button type="button" className="btn-subtract-in" onClick={() => handleDecrement("infant")}>
+                                                    <button
+                                                      type="button"
+                                                      className="btn-subtract-in"
+                                                      onClick={() =>
+                                                        handleDecrement(
+                                                          "infant"
+                                                        )
+                                                      }
+                                                    >
                                                       <FaMinus />
                                                     </button>
-                                                    <span className="count incount">{infants}</span>
-                                                    <button type="button" className="btn-add-in" onClick={() => handleIncrement("infant")}>
+                                                    <span className="count incount">
+                                                      {infants}
+                                                    </span>
+                                                    <button
+                                                      type="button"
+                                                      className="btn-add-in"
+                                                      onClick={() =>
+                                                        handleIncrement(
+                                                          "infant"
+                                                        )
+                                                      }
+                                                    >
                                                       <FaPlus />
                                                     </button>
                                                   </div>
@@ -1121,13 +1300,23 @@ const FlightSearch = () => {
                                           <div className="">
                                             <h6 className="mb-2">Classes</h6>
                                             <div className="class-options">
-                                              {["Economy", "Premium Economy", "Business", "First Class"].map((cls) => (
-                                                <label className="class-radio" key={cls}>
+                                              {[
+                                                "Economy",
+                                                "Premium Economy",
+                                                "Business",
+                                                "First Class",
+                                              ].map((cls) => (
+                                                <label
+                                                  className="class-radio"
+                                                  key={cls}
+                                                >
                                                   <input
                                                     type="radio"
                                                     name="cabin"
                                                     value={cls}
-                                                    checked={selectedClass === cls}
+                                                    checked={
+                                                      selectedClass === cls
+                                                    }
                                                     onChange={handleChange}
                                                   />
                                                   <span className="custom-circle"></span>
@@ -1162,7 +1351,12 @@ const FlightSearch = () => {
                       </form>
                     </div>
                     {/* multi-city */}
-                    <div className="tab-pane fade" id="multi_city" role="tabpanel" aria-labelledby="multi_city-tab">
+                    <div
+                      className="tab-pane fade"
+                      id="multi_city"
+                      role="tabpanel"
+                      aria-labelledby="multi_city-tab"
+                    >
                       <form action="#!">
                         {multiCityData.map((segment, index) => (
                           <div key={index}>
@@ -1178,27 +1372,52 @@ const FlightSearch = () => {
                                         </div>
                                       </div>
                                       <div className="">
-                                        <input type="text" placeholder="Leaving from..." value={segment.from} onChange={(e) => handleMultiInputChange(e, index, "from")} />
+                                        <input
+                                          type="text"
+                                          placeholder="Leaving from..."
+                                          value={segment.from}
+                                          onChange={(e) =>
+                                            handleMultiInputChange(
+                                              e,
+                                              index,
+                                              "from"
+                                            )
+                                          }
+                                        />
                                       </div>
-                                      {multiFilteredList[index]?.length >
-                                        0 && (
-                                          <ul className="airportList_ul">
-                                            {multiFilteredList[index].map(
-                                              (airport, i) => (
-                                                <li className="airportList_li" key={i} onClick={() => handleSelectAirport(airport, index, "from")}>
-                                                  {airport.City} (
-                                                  {airport.AirportCode}) -{" "}
-                                                  {airport.AirportName}
-                                                </li>
-                                              )
-                                            )}
-                                            {multiFilteredList === 0 && (
-                                              <li style={{ padding: "8px 12px", color: "gray", }}>
-                                                No result found
+                                      {multiFilteredList[index]?.length > 0 && (
+                                        <ul className="airportList_ul">
+                                          {multiFilteredList[index].map(
+                                            (airport, i) => (
+                                              <li
+                                                className="airportList_li"
+                                                key={i}
+                                                onClick={() =>
+                                                  handleSelectAirport(
+                                                    airport,
+                                                    index,
+                                                    "from"
+                                                  )
+                                                }
+                                              >
+                                                {airport.City} (
+                                                {airport.AirportCode}) -{" "}
+                                                {airport.AirportName}
                                               </li>
-                                            )}
-                                          </ul>
-                                        )}
+                                            )
+                                          )}
+                                          {multiFilteredList === 0 && (
+                                            <li
+                                              style={{
+                                                padding: "8px 12px",
+                                                color: "gray",
+                                              }}
+                                            >
+                                              No result found
+                                            </li>
+                                          )}
+                                        </ul>
+                                      )}
                                       <div className="">
                                         <span>Leaving from</span>
                                       </div>
@@ -1211,7 +1430,8 @@ const FlightSearch = () => {
                                         </div>
                                       </div>
                                       <div className="">
-                                        <input type="text"
+                                        <input
+                                          type="text"
                                           placeholder="Going to..."
                                           value={segment.to}
                                           onChange={(e) =>
@@ -1223,40 +1443,40 @@ const FlightSearch = () => {
                                           }
                                         />
                                       </div>
-                                      {multiFilteredToList[index]
-                                        ?.length > 0 && (
-                                          <ul className="airportList_ul">
-                                            {multiFilteredToList[index].map(
-                                              (airport, i) => (
-                                                <li
-                                                  className="airportList_li"
-                                                  key={i}
-                                                  onClick={() =>
-                                                    handleSelectAirport(
-                                                      airport,
-                                                      index,
-                                                      "to"
-                                                    )
-                                                  }
-                                                >
-                                                  {airport.City} (
-                                                  {airport.AirportCode}) -{" "}
-                                                  {airport.AirportName}
-                                                </li>
-                                              )
-                                            )}
-                                            {multiFilteredToList == 0 && (
+                                      {multiFilteredToList[index]?.length >
+                                        0 && (
+                                        <ul className="airportList_ul">
+                                          {multiFilteredToList[index].map(
+                                            (airport, i) => (
                                               <li
-                                                style={{
-                                                  padding: "8px 12px",
-                                                  color: "gray",
-                                                }}
+                                                className="airportList_li"
+                                                key={i}
+                                                onClick={() =>
+                                                  handleSelectAirport(
+                                                    airport,
+                                                    index,
+                                                    "to"
+                                                  )
+                                                }
                                               >
-                                                No result found
+                                                {airport.City} (
+                                                {airport.AirportCode}) -{" "}
+                                                {airport.AirportName}
                                               </li>
-                                            )}
-                                          </ul>
-                                        )}
+                                            )
+                                          )}
+                                          {multiFilteredToList == 0 && (
+                                            <li
+                                              style={{
+                                                padding: "8px 12px",
+                                                color: "gray",
+                                              }}
+                                            >
+                                              No result found
+                                            </li>
+                                          )}
+                                        </ul>
+                                      )}
                                       <div className="">
                                         <span>Going to</span>
                                       </div>
@@ -1274,22 +1494,16 @@ const FlightSearch = () => {
                                           value={segment.date}
                                           min={getTodayDate()}
                                           onChange={(e) =>
-                                            handleMultiDateChange(
-                                              e,
-                                              index
-                                            )
+                                            handleMultiDateChange(e, index)
                                           }
                                         />
                                         <span>
                                           {segment.date &&
                                             new Date(
                                               segment.date
-                                            ).toLocaleDateString(
-                                              "en-US",
-                                              {
-                                                weekday: "long",
-                                              }
-                                            )}
+                                            ).toLocaleDateString("en-US", {
+                                              weekday: "long",
+                                            })}
                                         </span>
                                       </div>
                                     </div>
@@ -1301,15 +1515,11 @@ const FlightSearch = () => {
                                             className="dropdown-toggle final-count"
                                             type="button"
                                             onClick={() =>
-                                              setShowDropdown(
-                                                !showDropdown
-                                              )
+                                              setShowDropdown(!showDropdown)
                                             }
                                           >
                                             {totalPassengers} Passenger
-                                            {totalPassengers !== 1
-                                              ? "s"
-                                              : ""}
+                                            {totalPassengers !== 1 ? "s" : ""}
                                           </button>
 
                                           {showDropdown && (
@@ -1327,8 +1537,7 @@ const FlightSearch = () => {
                                                       style={{
                                                         color: "red",
                                                         fontSize: "14px",
-                                                        marginBottom:
-                                                          "10px",
+                                                        marginBottom: "10px",
                                                       }}
                                                     >
                                                       {error}
@@ -1339,9 +1548,7 @@ const FlightSearch = () => {
                                                       <div className="text">
                                                         <div className="type-label">
                                                           <p>Adult</p>
-                                                          <span>
-                                                            12+ yrs
-                                                          </span>
+                                                          <span>12+ yrs</span>
                                                         </div>
                                                       </div>
                                                       <div className="button-set">
@@ -1381,8 +1588,7 @@ const FlightSearch = () => {
                                                             Children
                                                           </p>
                                                           <span>
-                                                            2 - Less than
-                                                            12 yrs
+                                                            2 - Less than 12 yrs
                                                           </span>
                                                         </div>
                                                       </div>
@@ -1426,9 +1632,7 @@ const FlightSearch = () => {
                                                       <select
                                                         className="form-control"
                                                         value={
-                                                          childAges[
-                                                          index
-                                                          ] || ""
+                                                          childAges[index] || ""
                                                         }
                                                         onChange={(e) =>
                                                           handleChildAgeChange(
@@ -1463,8 +1667,7 @@ const FlightSearch = () => {
                                                             Infant
                                                           </p>
                                                           <span>
-                                                            Less than 2
-                                                            yrs
+                                                            Less than 2 yrs
                                                           </span>
                                                         </div>
                                                       </div>
@@ -1511,9 +1714,7 @@ const FlightSearch = () => {
                                             </div>
                                           )}
                                         </div>
-                                        <span
-                                          onChange={handleClassChange}
-                                        >
+                                        <span onChange={handleClassChange}>
                                           {travelClass}
                                         </span>
                                       </div>
@@ -1535,9 +1736,7 @@ const FlightSearch = () => {
                                   {index > 1 && (
                                     <button
                                       type="button"
-                                      onClick={() =>
-                                        removeFlightSegment(index)
-                                      }
+                                      onClick={() => removeFlightSegment(index)}
                                     >
                                       Remove
                                     </button>
@@ -1561,109 +1760,88 @@ const FlightSearch = () => {
                     </div>
                   </div>
                 </div>
-              </div >
-            </div >
-          </div >
-        </div >
-      </section >
-      {/* <!-- Flight Search Areas --> */}
-      <section id="explore_area" className="section_padding">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="section_heading_center">
-                <h2>Flight Search</h2>
-              </div>
-              <div className="bestflight">
-                <div className="">
-                  <img src={routeImg} alt="img" />
-                </div>
-                <div className="">
-                  <h6>
-                    You're lucky! There are no better prices on nearby dates.
-                  </h6>
-                  <p>
-                    Latest prices found for your search – actual prices shown in
-                    next step
-                  </p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-12 mb-4 text-center">
-                  <h4>Choose type of Flights you are interested</h4>
-                </div>
-                <Slider {...setting} className="row">
-                  <div className="col-md-3 mb-4">
-                    <div className="card booking-card pull-up">
-                      <div className="card-body">
-                        <div className="card-contact">
-                          <div className="">
-                            <div className="clock-icon">
-                              <BiSolidPlane />
-                            </div>
-                          </div>
-                          <div className="info-contact">
-                            <h6>American Airline</h6>
-                            <p>216 Flights</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3 mb-4">
-                    <div className="card booking-card pull-up">
-                      <div className="card-body">
-                        <div className="card-contact">
-                          <div className="">
-                            <div className="clock-icon">
-                              <BiSolidPlane />
-                            </div>
-                          </div>
-                          <div className="info-contact">
-                            <h6>Delta Airlines</h6>
-                            <p>569 Flights</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3 mb-4">
-                    <div className="card booking-card pull-up">
-                      <div className="card-body">
-                        <div className="card-contact">
-                          <div className="">
-                            <div className="clock-icon">
-                              <BiSolidPlane />
-                            </div>
-                          </div>
-                          <div className="info-contact">
-                            <h6>Emirates</h6>
-                            <p>129 Flights</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-3 mb-4">
-                    <div className="card booking-card pull-up">
-                      <div className="card-body">
-                        <div className="card-contact">
-                          <div className="">
-                            <div className="clock-icon">
-                              <BiSolidPlane />
-                            </div>
-                          </div>
-                          <div className="info-contact">
-                            <h6>Qatar Airways</h6>
-                            <p>200 Flights</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Slider>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+      {/* <!-- Flight Search Areas --> */}
+      <section id="explore_area" className="section_padding pt-30">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-12 mb-4 text-center">
+              <h4>Choose type of Flights you are interested</h4>
+            </div>
+            <Slider {...setting} className="row">
+              <div className="col-md-3 mb-4">
+                <div className="card booking-card pull-up">
+                  <div className="card-body">
+                    <div className="card-contact">
+                      <div className="">
+                        <div className="clock-icon">
+                          <BiSolidPlane />
+                        </div>
+                      </div>
+                      <div className="info-contact">
+                        <h6>American Airline</h6>
+                        <p>216 Flights</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-3 mb-4">
+                <div className="card booking-card pull-up">
+                  <div className="card-body">
+                    <div className="card-contact">
+                      <div className="">
+                        <div className="clock-icon">
+                          <BiSolidPlane />
+                        </div>
+                      </div>
+                      <div className="info-contact">
+                        <h6>Delta Airlines</h6>
+                        <p>569 Flights</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-3 mb-4">
+                <div className="card booking-card pull-up">
+                  <div className="card-body">
+                    <div className="card-contact">
+                      <div className="">
+                        <div className="clock-icon">
+                          <BiSolidPlane />
+                        </div>
+                      </div>
+                      <div className="info-contact">
+                        <h6>Emirates</h6>
+                        <p>129 Flights</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-3 mb-4">
+                <div className="card booking-card pull-up">
+                  <div className="card-body">
+                    <div className="card-contact">
+                      <div className="">
+                        <div className="clock-icon">
+                          <BiSolidPlane />
+                        </div>
+                      </div>
+                      <div className="info-contact">
+                        <h6>Qatar Airways</h6>
+                        <p>200 Flights</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Slider>
           </div>
           <div className="row">
             <div className="col-md-3">
@@ -1682,8 +1860,9 @@ const FlightSearch = () => {
                       <div className="adjust-text">
                         <h6>Number of stops</h6>
                         <i
-                          className={`fas fa-chevron-${isPriceCollapsed ? "up" : "down"
-                            } toggle-icon`}
+                          className={`fas fa-chevron-${
+                            isPriceCollapsed ? "up" : "down"
+                          } toggle-icon`}
                         ></i>
                       </div>
                     </div>
@@ -1711,8 +1890,9 @@ const FlightSearch = () => {
                       <div className="adjust-text">
                         <h6>Airlines</h6>
                         <i
-                          className={`fas fa-chevron-${isPopularCollapsed ? "up" : "down"
-                            } toggle-icon`}
+                          className={`fas fa-chevron-${
+                            isPopularCollapsed ? "up" : "down"
+                          } toggle-icon`}
                         ></i>
                       </div>
                     </div>
@@ -1746,8 +1926,9 @@ const FlightSearch = () => {
                       <div className="adjust-text">
                         <h6>Flight times</h6>
                         <i
-                          className={`fas fa-chevron-${isPropertyCollapsed ? "up" : "down"
-                            } toggle-icon`}
+                          className={`fas fa-chevron-${
+                            isPropertyCollapsed ? "up" : "down"
+                          } toggle-icon`}
                         ></i>
                       </div>
                     </div>
@@ -1791,8 +1972,9 @@ const FlightSearch = () => {
                       <div className="adjust-text">
                         <h6>Duration</h6>
                         <i
-                          className={`fas fa-chevron-${isStarCollapsed ? "up" : "down"
-                            } toggle-icon`}
+                          className={`fas fa-chevron-${
+                            isStarCollapsed ? "up" : "down"
+                          } toggle-icon`}
                         ></i>
                       </div>
                     </div>
@@ -1946,10 +2128,11 @@ const FlightSearch = () => {
                                                 <BsFillInfoCircleFill />
                                               </h3>
                                               <div
-                                                className={`dropdown-list ${openDropdown === index
-                                                  ? "show"
-                                                  : ""
-                                                  }`}
+                                                className={`dropdown-list ${
+                                                  openDropdown === index
+                                                    ? "show"
+                                                    : ""
+                                                }`}
                                               >
                                                 <div className="list list-1">
                                                   <div className="price-hdr">
@@ -2093,7 +2276,7 @@ const FlightSearch = () => {
                                 onClick={() =>
                                   setCurrentPage((prev) =>
                                     prev <
-                                      Math.ceil(flightData.length / itemsPerPage)
+                                    Math.ceil(flightData.length / itemsPerPage)
                                       ? prev + 1
                                       : prev
                                   )
@@ -2135,5 +2318,4 @@ const FlightSearch = () => {
     </>
   );
 };
-
 export default FlightSearch;

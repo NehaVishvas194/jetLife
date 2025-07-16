@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { FaHotel, FaHelicopter } from "react-icons/fa";
-import { FaPlaneArrival, FaPlaneDeparture, FaExchangeAlt, } from "react-icons/fa";
+import {
+  FaPlaneArrival,
+  FaPlaneDeparture,
+  FaExchangeAlt,
+} from "react-icons/fa";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -102,7 +106,9 @@ const FormArea = () => {
         "session_id",
         response.data.AirSearchResponse.session_id
       );
-      console.log(response.data.AirSearchResponse.AirSearchResult.FareItineraries);
+      console.log(
+        response.data.AirSearchResponse.AirSearchResult.FareItineraries
+      );
     } catch (error) {
       console.log("Error Fetching Search List Data:", error);
     }
@@ -207,7 +213,10 @@ const FormArea = () => {
   };
 
   const addFlightSegment = () => {
-    setMultiCityData([...multiCityData, { from: "", to: "", date: getTodayDate() }]);
+    setMultiCityData([
+      ...multiCityData,
+      { from: "", to: "", date: getTodayDate() },
+    ]);
     setMultiFilteredList([...multiFilteredList, []]);
     setMultiFilteredToList([...multiFilteredToList, []]);
   };
@@ -284,7 +293,10 @@ const FormArea = () => {
                           aria-controls="flights"
                           aria-selected="true"
                         >
-                          <span className="tab-icon"><MdOutlineFlight /></span>Flights
+                          <span className="tab-icon">
+                            <MdOutlineFlight />
+                          </span>
+                          Flights
                         </button>
                       </li>
                       <li className="nav-item" role="presentation">
@@ -298,7 +310,10 @@ const FormArea = () => {
                           aria-controls="hotels"
                           aria-selected="false"
                         >
-                          <span className="tab-icon"><RiHotelFill /></span>Hotels
+                          <span className="tab-icon">
+                            <RiHotelFill />
+                          </span>
+                          Hotels
                         </button>
                       </li>
                       {/* <li className="nav-item" role="presentation">
@@ -349,7 +364,12 @@ const FormArea = () => {
                 </div>
                 <div className="card-body">
                   <div className="tab-content" id="myTabContent">
-                    <div className="tab-pane fade show active" id="flights" role="tabpanel" aria-labelledby="flights-tab">
+                    <div
+                      className="tab-pane fade show active"
+                      id="flights"
+                      role="tabpanel"
+                      aria-labelledby="flights-tab"
+                    >
                       <div className="row mb-3">
                         <div className="col-md-6">
                           <div className="flight_categories_search">
@@ -402,7 +422,12 @@ const FormArea = () => {
                       </div>
                       <div className="tab-content" id="myTabContent1">
                         {/* one-way */}
-                        <div className="tab-pane fade show active" id="oneway_flight" role="tabpanel" aria-labelledby="oneway-tab">
+                        <div
+                          className="tab-pane fade show active"
+                          id="oneway_flight"
+                          role="tabpanel"
+                          aria-labelledby="oneway-tab"
+                        >
                           <form onSubmit={fetchAirportSearch}>
                             <div className="row mb-2 align-items-center">
                               <div className="col-md-11">
@@ -478,7 +503,9 @@ const FormArea = () => {
                                         />
                                       </div>
                                       <div className="range_plan">
-                                        <i><FaExchangeAlt /></i>
+                                        <i>
+                                          <FaExchangeAlt />
+                                        </i>
                                       </div>
                                       {toInput.length > 0 && (
                                         <ul className="airportList_ul">
@@ -541,24 +568,46 @@ const FormArea = () => {
                                         </span>
                                       </div>
                                     </div>
-                                    <div className="flight_Search_boxed dropdown_passenger_area">
+                                    <div
+                                      className="flight_Search_boxed dropdown_passenger_area"
+                                      onClick={() =>
+                                        setShowDropdown(!showDropdown)
+                                      }
+                                    >
                                       <div className="">
                                         <span>Travellers and class</span>
                                       </div>
                                       <div className="dropdown">
-                                        <button className="dropdown-toggle final-count" type="button" onClick={() => setShowDropdown(!showDropdown)}>
+                                        <button
+                                          className="dropdown-toggle final-count"
+                                          type="button"
+                                          onClick={() =>
+                                            setShowDropdown(!showDropdown)
+                                          }
+                                        >
                                           {totalPassengers} Passenger
                                           {totalPassengers !== 1 ? "s" : ""}
                                         </button>
                                         {showDropdown && (
-                                          <div className="dropdown-menu dropdown_passenger_info show" onClick={(e) => e.stopPropagation()}>
+                                          <div
+                                            className="dropdown-menu dropdown_passenger_info show"
+                                            onClick={(e) => e.stopPropagation()}
+                                          >
                                             <div className="dropdown-header hdr-drop">
                                               <h6>Select Travelers & Class</h6>
                                             </div>
                                             <div className="card travel-card">
                                               <div className="card-body">
                                                 {error && (
-                                                  <div style={{ color: "red", fontSize: "12px", marginBottom: "0px", }}>{error}</div>
+                                                  <div
+                                                    style={{
+                                                      color: "red",
+                                                      fontSize: "12px",
+                                                      marginBottom: "0px",
+                                                    }}
+                                                  >
+                                                    {error}
+                                                  </div>
                                                 )}
                                                 <div className="traveller-calulate-persons">
                                                   <h6>Travelers</h6>
@@ -568,15 +617,38 @@ const FormArea = () => {
                                                       <div className="passengers-type">
                                                         <div className="text">
                                                           <div className="type-label">
-                                                            <p>Adult <span>(12+ yrs)</span></p>
+                                                            <p>
+                                                              Adult{" "}
+                                                              <span>
+                                                                (12+ yrs)
+                                                              </span>
+                                                            </p>
                                                           </div>
                                                         </div>
                                                         <div className="button-set">
-                                                          <button type="button" className="btn-subtract" onClick={() => handleDecrement("adult")}>
+                                                          <button
+                                                            type="button"
+                                                            className="btn-subtract"
+                                                            onClick={() =>
+                                                              handleDecrement(
+                                                                "adult"
+                                                              )
+                                                            }
+                                                          >
                                                             <FaMinus />
                                                           </button>
-                                                          <span className="count pcount">{adults}</span>
-                                                          <button type="button" className="btn-add" onClick={() => handleIncrement("adult")}>
+                                                          <span className="count pcount">
+                                                            {adults}
+                                                          </span>
+                                                          <button
+                                                            type="button"
+                                                            className="btn-add"
+                                                            onClick={() =>
+                                                              handleIncrement(
+                                                                "adult"
+                                                              )
+                                                            }
+                                                          >
                                                             <FaPlus />
                                                           </button>
                                                         </div>
@@ -587,15 +659,38 @@ const FormArea = () => {
                                                       <div className="passengers-type">
                                                         <div className="text">
                                                           <div className="type-label">
-                                                            <p>Children <span>(2-12 yrs)</span></p>
+                                                            <p>
+                                                              Children{" "}
+                                                              <span>
+                                                                (2-12 yrs)
+                                                              </span>
+                                                            </p>
                                                           </div>
                                                         </div>
                                                         <div className="button-set">
-                                                          <button type="button" className="btn-subtract-in" onClick={() => handleDecrement("child")}>
+                                                          <button
+                                                            type="button"
+                                                            className="btn-subtract-in"
+                                                            onClick={() =>
+                                                              handleDecrement(
+                                                                "child"
+                                                              )
+                                                            }
+                                                          >
                                                             <FaMinus />
                                                           </button>
-                                                          <span className="count pcount">{children}</span>
-                                                          <button type="button" className="btn-add-in" onClick={() => handleIncrement("child")}>
+                                                          <span className="count pcount">
+                                                            {children}
+                                                          </span>
+                                                          <button
+                                                            type="button"
+                                                            className="btn-add-in"
+                                                            onClick={() =>
+                                                              handleIncrement(
+                                                                "child"
+                                                              )
+                                                            }
+                                                          >
                                                             <FaPlus />
                                                           </button>
                                                         </div>
@@ -606,15 +701,38 @@ const FormArea = () => {
                                                       <div className="passengers-type">
                                                         <div className="text">
                                                           <div className="type-label">
-                                                            <p>Infant <span>(0-12 yrs)</span></p>
+                                                            <p>
+                                                              Infant{" "}
+                                                              <span>
+                                                                (0-12 yrs)
+                                                              </span>
+                                                            </p>
                                                           </div>
                                                         </div>
                                                         <div className="button-set">
-                                                          <button type="button" className="btn-subtract-in" onClick={() => handleDecrement("infant")}>
+                                                          <button
+                                                            type="button"
+                                                            className="btn-subtract-in"
+                                                            onClick={() =>
+                                                              handleDecrement(
+                                                                "infant"
+                                                              )
+                                                            }
+                                                          >
                                                             <FaMinus />
                                                           </button>
-                                                          <span className="count incount">{infants}</span>
-                                                          <button type="button" className="btn-add-in" onClick={() => handleIncrement("infant")}>
+                                                          <span className="count incount">
+                                                            {infants}
+                                                          </span>
+                                                          <button
+                                                            type="button"
+                                                            className="btn-add-in"
+                                                            onClick={() =>
+                                                              handleIncrement(
+                                                                "infant"
+                                                              )
+                                                            }
+                                                          >
                                                             <FaPlus />
                                                           </button>
                                                         </div>
@@ -623,23 +741,37 @@ const FormArea = () => {
                                                   </div>
                                                 </div>
                                                 <div className="">
-                                                  <h6 className="mb-2">Classes</h6>
+                                                  <h6 className="mb-2">
+                                                    Classes
+                                                  </h6>
                                                   <div className="class-options">
-                                                    {["Economy", "Premium Economy", "Business", "First Class"].map((cls) => (
-                                                      <label className="class-radio" key={cls}>
+                                                    {[
+                                                      "Economy",
+                                                      "Premium Economy",
+                                                      "Business",
+                                                      "First Class",
+                                                    ].map((cls) => (
+                                                      <label
+                                                        className="class-radio"
+                                                        key={cls}
+                                                      >
                                                         <input
                                                           type="radio"
                                                           name="cabin"
                                                           value={cls}
-                                                          checked={selectedClass === cls}
-                                                          onChange={handleChange}
+                                                          checked={
+                                                            selectedClass ===
+                                                            cls
+                                                          }
+                                                          onChange={
+                                                            handleChange
+                                                          }
                                                         />
                                                         <span className="custom-circle"></span>
                                                         <span>{cls}</span>
                                                       </label>
                                                     ))}
                                                   </div>
-
                                                 </div>
                                               </div>
                                               {/* Child Age Selects */}
@@ -702,7 +834,12 @@ const FormArea = () => {
                           </form>
                         </div>
                         {/* return */}
-                        <div className="tab-pane fade" id="roundtrip" role="tabpanel" aria-labelledby="roundtrip-tab">
+                        <div
+                          className="tab-pane fade"
+                          id="roundtrip"
+                          role="tabpanel"
+                          aria-labelledby="roundtrip-tab"
+                        >
                           <form action="#!">
                             <div className="row mb-2 align-items-center">
                               <div className="col-md-11">
@@ -776,7 +913,9 @@ const FormArea = () => {
                                         </ul>
                                       )}
                                       <div className="">
-                                        <span>Start typing to filter airports</span>
+                                        <span>
+                                          Start typing to filter airports
+                                        </span>
                                       </div>
                                     </div>
                                     <div className="flight_Search_boxed">
@@ -795,7 +934,9 @@ const FormArea = () => {
                                         />
                                       </div>
                                       <div className="range_plan">
-                                        <i><FaExchangeAlt /></i>
+                                        <i>
+                                          <FaExchangeAlt />
+                                        </i>
                                       </div>
                                       {toInput2.length > 0 && (
                                         <ul
@@ -855,20 +996,14 @@ const FormArea = () => {
                                     <div className="flight_Search_boxed date_flex_area">
                                       <div className="Journey_date">
                                         <span>Journey date</span>
-                                        <input
-                                          type="date"
-                                          value="2022-05-05"
-                                        />
+                                        <input type="date" value="2022-05-05" />
                                         <span>Thursday</span>
                                       </div>
                                     </div>
                                     <div className="flight_Search_boxed date_flex_area">
                                       <div className="Journey_date">
                                         <span>Return date</span>
-                                        <input
-                                          type="date"
-                                          value="2022-05-08"
-                                        />
+                                        <input type="date" value="2022-05-08" />
                                         <span>Saturday</span>
                                       </div>
                                     </div>
@@ -877,8 +1012,21 @@ const FormArea = () => {
                                         <span>Travellers and class</span>
                                       </div>
                                       <div className="dropdown">
-                                        <button className="dropdown-toggle final-count" data-toggle="dropdown" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"> 0 Passenger </button>
-                                        <div className="dropdown-menu dropdown_passenger_info" aria-labelledby="dropdownMenuButton1">
+                                        <button
+                                          className="dropdown-toggle final-count"
+                                          data-toggle="dropdown"
+                                          type="button"
+                                          id="dropdownMenuButton1"
+                                          data-bs-toggle="dropdown"
+                                          aria-expanded="false"
+                                        >
+                                          {" "}
+                                          0 Passenger{" "}
+                                        </button>
+                                        <div
+                                          className="dropdown-menu dropdown_passenger_info"
+                                          aria-labelledby="dropdownMenuButton1"
+                                        >
                                           <div className="dropdown-header hdr-drop">
                                             <h6>Select Travelers & Class</h6>
                                           </div>
@@ -892,15 +1040,38 @@ const FormArea = () => {
                                                     <div className="passengers-type">
                                                       <div className="text">
                                                         <div className="type-label">
-                                                          <p>Adult <span>(12+ yrs)</span></p>
+                                                          <p>
+                                                            Adult{" "}
+                                                            <span>
+                                                              (12+ yrs)
+                                                            </span>
+                                                          </p>
                                                         </div>
                                                       </div>
                                                       <div className="button-set">
-                                                        <button type="button" className="btn-subtract" onClick={() => handleDecrement("adult")}>
+                                                        <button
+                                                          type="button"
+                                                          className="btn-subtract"
+                                                          onClick={() =>
+                                                            handleDecrement(
+                                                              "adult"
+                                                            )
+                                                          }
+                                                        >
                                                           <FaMinus />
                                                         </button>
-                                                        <span className="count pcount">{adults}</span>
-                                                        <button type="button" className="btn-add" onClick={() => handleIncrement("adult")}>
+                                                        <span className="count pcount">
+                                                          {adults}
+                                                        </span>
+                                                        <button
+                                                          type="button"
+                                                          className="btn-add"
+                                                          onClick={() =>
+                                                            handleIncrement(
+                                                              "adult"
+                                                            )
+                                                          }
+                                                        >
                                                           <FaPlus />
                                                         </button>
                                                       </div>
@@ -911,15 +1082,38 @@ const FormArea = () => {
                                                     <div className="passengers-type">
                                                       <div className="text">
                                                         <div className="type-label">
-                                                          <p>Children <span>(2-12 yrs)</span></p>
+                                                          <p>
+                                                            Children{" "}
+                                                            <span>
+                                                              (2-12 yrs)
+                                                            </span>
+                                                          </p>
                                                         </div>
                                                       </div>
                                                       <div className="button-set">
-                                                        <button type="button" className="btn-subtract-in" onClick={() => handleDecrement("child")}>
+                                                        <button
+                                                          type="button"
+                                                          className="btn-subtract-in"
+                                                          onClick={() =>
+                                                            handleDecrement(
+                                                              "child"
+                                                            )
+                                                          }
+                                                        >
                                                           <FaMinus />
                                                         </button>
-                                                        <span className="count pcount">{children}</span>
-                                                        <button type="button" className="btn-add-in" onClick={() => handleIncrement("child")}>
+                                                        <span className="count pcount">
+                                                          {children}
+                                                        </span>
+                                                        <button
+                                                          type="button"
+                                                          className="btn-add-in"
+                                                          onClick={() =>
+                                                            handleIncrement(
+                                                              "child"
+                                                            )
+                                                          }
+                                                        >
                                                           <FaPlus />
                                                         </button>
                                                       </div>
@@ -930,15 +1124,38 @@ const FormArea = () => {
                                                     <div className="passengers-type">
                                                       <div className="text">
                                                         <div className="type-label">
-                                                          <p>Infant <span>(0-12 yrs)</span></p>
+                                                          <p>
+                                                            Infant{" "}
+                                                            <span>
+                                                              (0-12 yrs)
+                                                            </span>
+                                                          </p>
                                                         </div>
                                                       </div>
                                                       <div className="button-set">
-                                                        <button type="button" className="btn-subtract-in" onClick={() => handleDecrement("infant")}>
+                                                        <button
+                                                          type="button"
+                                                          className="btn-subtract-in"
+                                                          onClick={() =>
+                                                            handleDecrement(
+                                                              "infant"
+                                                            )
+                                                          }
+                                                        >
                                                           <FaMinus />
                                                         </button>
-                                                        <span className="count incount">{infants}</span>
-                                                        <button type="button" className="btn-add-in" onClick={() => handleIncrement("infant")}>
+                                                        <span className="count incount">
+                                                          {infants}
+                                                        </span>
+                                                        <button
+                                                          type="button"
+                                                          className="btn-add-in"
+                                                          onClick={() =>
+                                                            handleIncrement(
+                                                              "infant"
+                                                            )
+                                                          }
+                                                        >
                                                           <FaPlus />
                                                         </button>
                                                       </div>
@@ -947,15 +1164,27 @@ const FormArea = () => {
                                                 </div>
                                               </div>
                                               <div className="">
-                                                <h6 className="mb-2">Classes</h6>
+                                                <h6 className="mb-2">
+                                                  Classes
+                                                </h6>
                                                 <div className="class-options">
-                                                  {["Economy", "Premium Economy", "Business", "First Class"].map((cls) => (
-                                                    <label className="class-radio" key={cls}>
+                                                  {[
+                                                    "Economy",
+                                                    "Premium Economy",
+                                                    "Business",
+                                                    "First Class",
+                                                  ].map((cls) => (
+                                                    <label
+                                                      className="class-radio"
+                                                      key={cls}
+                                                    >
                                                       <input
                                                         type="radio"
                                                         name="cabin"
                                                         value={cls}
-                                                        checked={selectedClass === cls}
+                                                        checked={
+                                                          selectedClass === cls
+                                                        }
                                                         onChange={handleChange}
                                                       />
                                                       <span className="custom-circle"></span>
@@ -990,7 +1219,12 @@ const FormArea = () => {
                           </form>
                         </div>
                         {/* multi-city */}
-                        <div className="tab-pane fade" id="multi_city" role="tabpanel" aria-labelledby="multi_city-tab">
+                        <div
+                          className="tab-pane fade"
+                          id="multi_city"
+                          role="tabpanel"
+                          aria-labelledby="multi_city-tab"
+                        >
                           <form action="#!">
                             {multiCityData.map((segment, index) => (
                               <div key={index}>
@@ -1006,27 +1240,53 @@ const FormArea = () => {
                                             </div>
                                           </div>
                                           <div className="">
-                                            <input type="text" placeholder="Leaving from..." value={segment.from} onChange={(e) => handleMultiInputChange(e, index, "from")} />
+                                            <input
+                                              type="text"
+                                              placeholder="Leaving from..."
+                                              value={segment.from}
+                                              onChange={(e) =>
+                                                handleMultiInputChange(
+                                                  e,
+                                                  index,
+                                                  "from"
+                                                )
+                                              }
+                                            />
                                           </div>
                                           {multiFilteredList[index]?.length >
                                             0 && (
-                                              <ul className="airportList_ul">
-                                                {multiFilteredList[index].map(
-                                                  (airport, i) => (
-                                                    <li className="airportList_li" key={i} onClick={() => handleSelectAirport(airport, index, "from")}>
-                                                      {airport.City} (
-                                                      {airport.AirportCode}) -{" "}
-                                                      {airport.AirportName}
-                                                    </li>
-                                                  )
-                                                )}
-                                                {multiFilteredList === 0 && (
-                                                  <li style={{ padding: "8px 12px", color: "gray", }}>
-                                                    No result found
+                                            <ul className="airportList_ul">
+                                              {multiFilteredList[index].map(
+                                                (airport, i) => (
+                                                  <li
+                                                    className="airportList_li"
+                                                    key={i}
+                                                    onClick={() =>
+                                                      handleSelectAirport(
+                                                        airport,
+                                                        index,
+                                                        "from"
+                                                      )
+                                                    }
+                                                  >
+                                                    {airport.City} (
+                                                    {airport.AirportCode}) -{" "}
+                                                    {airport.AirportName}
                                                   </li>
-                                                )}
-                                              </ul>
-                                            )}
+                                                )
+                                              )}
+                                              {multiFilteredList === 0 && (
+                                                <li
+                                                  style={{
+                                                    padding: "8px 12px",
+                                                    color: "gray",
+                                                  }}
+                                                >
+                                                  No result found
+                                                </li>
+                                              )}
+                                            </ul>
+                                          )}
                                           <div className="">
                                             <span>Leaving from</span>
                                           </div>
@@ -1039,7 +1299,8 @@ const FormArea = () => {
                                             </div>
                                           </div>
                                           <div className="">
-                                            <input type="text"
+                                            <input
+                                              type="text"
                                               placeholder="Going to..."
                                               value={segment.to}
                                               onChange={(e) =>
@@ -1051,40 +1312,40 @@ const FormArea = () => {
                                               }
                                             />
                                           </div>
-                                          {multiFilteredToList[index]
-                                            ?.length > 0 && (
-                                              <ul className="airportList_ul">
-                                                {multiFilteredToList[index].map(
-                                                  (airport, i) => (
-                                                    <li
-                                                      className="airportList_li"
-                                                      key={i}
-                                                      onClick={() =>
-                                                        handleSelectAirport(
-                                                          airport,
-                                                          index,
-                                                          "to"
-                                                        )
-                                                      }
-                                                    >
-                                                      {airport.City} (
-                                                      {airport.AirportCode}) -{" "}
-                                                      {airport.AirportName}
-                                                    </li>
-                                                  )
-                                                )}
-                                                {multiFilteredToList == 0 && (
+                                          {multiFilteredToList[index]?.length >
+                                            0 && (
+                                            <ul className="airportList_ul">
+                                              {multiFilteredToList[index].map(
+                                                (airport, i) => (
                                                   <li
-                                                    style={{
-                                                      padding: "8px 12px",
-                                                      color: "gray",
-                                                    }}
+                                                    className="airportList_li"
+                                                    key={i}
+                                                    onClick={() =>
+                                                      handleSelectAirport(
+                                                        airport,
+                                                        index,
+                                                        "to"
+                                                      )
+                                                    }
                                                   >
-                                                    No result found
+                                                    {airport.City} (
+                                                    {airport.AirportCode}) -{" "}
+                                                    {airport.AirportName}
                                                   </li>
-                                                )}
-                                              </ul>
-                                            )}
+                                                )
+                                              )}
+                                              {multiFilteredToList == 0 && (
+                                                <li
+                                                  style={{
+                                                    padding: "8px 12px",
+                                                    color: "gray",
+                                                  }}
+                                                >
+                                                  No result found
+                                                </li>
+                                              )}
+                                            </ul>
+                                          )}
                                           <div className="">
                                             <span>Going to</span>
                                           </div>
@@ -1102,22 +1363,16 @@ const FormArea = () => {
                                               value={segment.date}
                                               min={getTodayDate()}
                                               onChange={(e) =>
-                                                handleMultiDateChange(
-                                                  e,
-                                                  index
-                                                )
+                                                handleMultiDateChange(e, index)
                                               }
                                             />
                                             <span>
                                               {segment.date &&
                                                 new Date(
                                                   segment.date
-                                                ).toLocaleDateString(
-                                                  "en-US",
-                                                  {
-                                                    weekday: "long",
-                                                  }
-                                                )}
+                                                ).toLocaleDateString("en-US", {
+                                                  weekday: "long",
+                                                })}
                                             </span>
                                           </div>
                                         </div>
@@ -1129,9 +1384,7 @@ const FormArea = () => {
                                                 className="dropdown-toggle final-count"
                                                 type="button"
                                                 onClick={() =>
-                                                  setShowDropdown(
-                                                    !showDropdown
-                                                  )
+                                                  setShowDropdown(!showDropdown)
                                                 }
                                               >
                                                 {totalPassengers} Passenger
@@ -1209,8 +1462,8 @@ const FormArea = () => {
                                                                 Children
                                                               </p>
                                                               <span>
-                                                                2 - Less than
-                                                                12 yrs
+                                                                2 - Less than 12
+                                                                yrs
                                                               </span>
                                                             </div>
                                                           </div>
@@ -1255,7 +1508,7 @@ const FormArea = () => {
                                                             className="form-control"
                                                             value={
                                                               childAges[
-                                                              index
+                                                                index
                                                               ] || ""
                                                             }
                                                             onChange={(e) =>
@@ -1291,8 +1544,7 @@ const FormArea = () => {
                                                                 Infant
                                                               </p>
                                                               <span>
-                                                                Less than 2
-                                                                yrs
+                                                                Less than 2 yrs
                                                               </span>
                                                             </div>
                                                           </div>
@@ -1339,9 +1591,7 @@ const FormArea = () => {
                                                 </div>
                                               )}
                                             </div>
-                                            <span
-                                              onChange={handleClassChange}
-                                            >
+                                            <span onChange={handleClassChange}>
                                               {travelClass}
                                             </span>
                                           </div>
@@ -1389,7 +1639,12 @@ const FormArea = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="tab-pane fade" id="hotels" role="tabpanel" aria-labelledby="hotels-tab">
+                    <div
+                      className="tab-pane fade"
+                      id="hotels"
+                      role="tabpanel"
+                      aria-labelledby="hotels-tab"
+                    >
                       <HotelForm />
                     </div>
                     {/* <div className="tab-pane fade" id="bus" role="tabpanel" aria-labelledby="bus-tab">
@@ -1397,16 +1652,17 @@ const FormArea = () => {
                         </div> */}
                   </div>
                 </div>
-              </div >
-            </div >
-          </div >
-        </div >
-      </section >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 };
 export default FormArea;
-{/* <div className="col-md-6 text-end">
+{
+  /* <div className="col-md-6 text-end">
     <div className="form-group">
       <select
         id="travelClass"
@@ -1425,8 +1681,10 @@ export default FormArea;
         </option>
       </select>
     </div>
-  </div> */}
-{/* <div className="row">
+  </div> */
+}
+{
+  /* <div className="row">
 <div className="col-lg-3 col-md-6 col-sm-12 col-12">
 <div className="flight_Search_boxed">
 <p>From</p>
@@ -1785,4 +2043,5 @@ Select Destination airport...{" "}
 </span>
 </div>
 </div>
-</div> */}
+</div> */
+}

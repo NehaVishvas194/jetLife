@@ -31,14 +31,18 @@ import News from "./components/News";
 import TravelDetails from "./components/TravelDetails";
 import Events from "./components/Events";
 import DestinationDetails from "./components/home/DestinationDetails";
+import HotelBookingDetails from "./components/HotelBookingDetails";
+import BlogDetails from "./components/BlogDetails";
+import EventDetails from "./components/EventDetails";
+import NewsDetails from "./components/NewsDetails";
 
-console.log("date:-27-06-2025", "time:-05:28");
+console.log("date:-11-07-2025", "time:-02:01");
 
 function App() {
   useEffect(() => {
     AOS.init({
-      duration: 2000, // 2s
-      once: true, // only animate once
+      duration: 2000,
+      once: true,
     });
   }, []);
 
@@ -63,14 +67,21 @@ function App() {
           <Route path="/help" element={<Help />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/blog_details/:id" element={<BlogDetails />} />
           <Route path="/news" element={<News />} />
+          <Route path="/news_details/:id" element={<NewsDetails/> } />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/my_booking" element={<MyBooking />} />
           <Route path="/notification" element={<Notification />} />
           <Route path="/travel_details" element={<TravelDetails />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/event_details/:id" element={<EventDetails />} />
           <Route path="/destination_details" element={<DestinationDetails />} />
+          <Route
+            path="/hotel_booking_details"
+            element={<HotelBookingDetails />}
+          />
         </Routes>
         <ToastContainer />
       </BrowserRouter>

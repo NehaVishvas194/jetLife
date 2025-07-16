@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../Url/BaseUrl";
 import { useState } from "react";
+import { FaAngleDoubleRight } from "react-icons/fa";
+import { MdDateRange } from "react-icons/md";
+import { LuAlarmClock } from "react-icons/lu";
 
 const News = () => {
   const [data, setData] = useState([]);
@@ -47,14 +50,16 @@ const News = () => {
     <div>
       <Header />
       {/* <!-- Common Banner Area --> */}
-      <section id="common_banner_img"
-      style={{
-        backgroundImage:`url(${bannerImage}/${banner?.image})`,
-        backgroundSize:"cover",
-        backgroundPosition:"center",
-        backgroundRepeat:"no-repeat",
-        height:"100%"
-      }}>
+      <section
+        id="common_banner_img"
+        style={{
+          backgroundImage: `url(${bannerImage}/${banner?.image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height: "100%",
+        }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
@@ -67,7 +72,7 @@ const News = () => {
                     </li>
                     <li>
                       <span>
-                        <i className="fas fa-circle"></i>
+                        <FaAngleDoubleRight />
                       </span>{" "}
                       {banner.heading}
                     </li>
@@ -83,10 +88,10 @@ const News = () => {
         <div className="container">
           <div className="row">
             {data.map((cur, index) => (
-              <div className="col-lg-4 col-md-6" key={index}>
+              <div className="col-lg-3 col-md-6" key={index}>
                 <div className="post-item">
-                  <div className="post-featured-image">
-                    <Link to="#">
+                  <div className="post-featured-image mb-0">
+                    <Link to={`/news_details/${cur.id}`}>
                       <div className="image-anime">
                         <img src={`${imagePath}/${cur?.image}`} alt="" />
                       </div>
@@ -94,245 +99,33 @@ const News = () => {
                   </div>
                   <div className="post-item-body">
                     <div className="post-item-content">
-                      <div className="d-flex align-items-center mb-2">
-                        <h6 style={{ color: "#123b67" }} className="me-2">
-                          {cur.heading}
-                        </h6>{" "}
-                        |<h6 className="mx-2">{cur.created_at}</h6> |
-                        <h6 className="ms-2">{cur.created_at_time}</h6>
+                      <div className="d-flex justify-content-between mb-2">
+                        <div className="create-range">
+                          <span><MdDateRange /></span>
+                          <p>{cur.created_at}</p>
+                        </div>
+                        <div className="create-range">
+                          <span><LuAlarmClock /></span>
+                          <p>{cur.created_at_time}</p>
+                        </div>
                       </div>
-                      <h2>
-                        <a href="">{cur.content}</a>
-                      </h2>
+                      <div className="news-content">
+                        <h5>{cur.heading}</h5>{" "}
+                        <p>{cur.content}</p>
+                      </div>
                     </div>
                     <div className="post-item-btn">
-                      <a href="#" className="btn btn_theme btn_md">
+                      <Link to={`/news_details/${cur.id}`} className="btn btn_theme btn_md">
                         learn more
                         <span>
                           <i className="fa-solid fa-arrow-right ms-2"></i>
                         </span>
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
               </div>
             ))}
-            {/* <div className="col-lg-4 col-md-6">
-              <div className="post-item">
-                <div className="post-featured-image">
-                  <Link to="#">
-                    <div className="image-anime">
-                      <img src={news1} alt="" />
-                    </div>
-                  </Link>
-                </div>
-                <div className="post-item-body">
-                  <div className="post-item-content">
-                    <div className="d-flex align-items-center mb-2">
-                      <h6 style={{ color: "#123b67" }} className="me-2">
-                        Agency
-                      </h6>{" "}
-                      |<h6 className="mx-2">14th May 2025</h6> |
-                      <h6 className="ms-2">07:30 AM</h6>
-                    </div>
-                    <h2>
-                      <a href="">
-                        The Role of Environmental Labs in Climate Change
-                        Monitoring
-                      </a>
-                    </h2>
-                  </div>
-                  <div className="post-item-btn">
-                    <a href="#" className="btn btn_theme btn_md">
-                      learn more
-                      <span>
-                        <i className="fa-solid fa-arrow-right ms-2"></i>
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="post-item">
-                <div className="post-featured-image">
-                  <a href="#">
-                    <div className="image-anime">
-                      <img src={news2} alt="" />
-                    </div>
-                  </a>
-                </div>
-                <div className="post-item-body">
-                  <div className="post-item-content">
-                    <div className="d-flex align-items-center mb-2">
-                      <h6 style={{ color: "#123b67" }} className="me-2">
-                        Agency
-                      </h6>{" "}
-                      |<h6 className="mx-2">14th May 2025</h6> |
-                      <h6 className="ms-2">07:30 AM</h6>
-                    </div>
-                    <h2>
-                      <a href="">
-                        The Role of Environmental Labs in Climate Change
-                        Monitoring
-                      </a>
-                    </h2>
-                  </div>
-                  <div className="post-item-btn">
-                    <a href="#" className="btn btn_theme btn_md">
-                      learn more
-                      <span>
-                        <i className="fa-solid fa-arrow-right ms-2"></i>
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="post-item">
-                <div className="post-featured-image">
-                  <a href="#">
-                    <div className="image-anime">
-                      <img src={news3} alt="" />
-                    </div>
-                  </a>
-                </div>
-                <div className="post-item-body">
-                  <div className="post-item-content">
-                    <div className="d-flex align-items-center mb-2">
-                      <h6 style={{ color: "#123b67" }} className="me-2">
-                        Agency
-                      </h6>{" "}
-                      |<h6 className="mx-2">14th May 2025</h6> |
-                      <h6 className="ms-2">07:30 AM</h6>
-                    </div>
-                    <h2>
-                      <a href="">
-                        The Role of Environmental Labs in Climate Change
-                        Monitoring
-                      </a>
-                    </h2>
-                  </div>
-                  <div className="post-item-btn">
-                    <a href="#" className="btn btn_theme btn_md">
-                      learn more
-                      <span>
-                        <i className="fa-solid fa-arrow-right ms-2"></i>
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="post-item">
-                <div className="post-featured-image">
-                  <a href="#">
-                    <div className="image-anime">
-                      <img src={news4} alt="" />
-                    </div>
-                  </a>
-                </div>
-                <div className="post-item-body">
-                  <div className="post-item-content">
-                    <div className="d-flex align-items-center mb-2">
-                      <h6 style={{ color: "#123b67" }} className="me-2">
-                        Agency
-                      </h6>{" "}
-                      |<h6 className="mx-2">14th May 2025</h6> |
-                      <h6 className="ms-2">07:30 AM</h6>
-                    </div>
-                    <h2>
-                      <a href="">
-                        The Role of Environmental Labs in Climate Change
-                        Monitoring
-                      </a>
-                    </h2>
-                  </div>
-                  <div className="post-item-btn">
-                    <a href="#" className="btn btn_theme btn_md">
-                      learn more
-                      <span>
-                        <i className="fa-solid fa-arrow-right ms-2"></i>
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="post-item">
-                <div className="post-featured-image">
-                  <a href="#">
-                    <div className="image-anime">
-                      <img src={news5} alt="" />
-                    </div>
-                  </a>
-                </div>
-                <div className="post-item-body">
-                  <div className="post-item-content">
-                    <div className="d-flex align-items-center mb-2">
-                      <h6 style={{ color: "#123b67" }} className="me-2">
-                        Agency
-                      </h6>{" "}
-                      |<h6 className="mx-2">14th May 2025</h6> |
-                      <h6 className="ms-2">07:30 AM</h6>
-                    </div>
-                    <h2>
-                      <a href="">
-                        The Role of Environmental Labs in Climate Change
-                        Monitoring
-                      </a>
-                    </h2>
-                  </div>
-                  <div className="post-item-btn">
-                    <a href="#" className="btn btn_theme btn_md">
-                      learn more
-                      <span>
-                        <i className="fa-solid fa-arrow-right ms-2"></i>
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="post-item">
-                <div className="post-featured-image">
-                  <a href="#">
-                    <div className="image-anime">
-                      <img src={news6} alt="" />
-                    </div>
-                  </a>
-                </div>
-                <div className="post-item-body">
-                  <div className="post-item-content">
-                    <div className="d-flex align-items-center mb-2">
-                      <h6 style={{ color: "#123b67" }} className="me-2">
-                        Agency
-                      </h6>{" "}
-                      |<h6 className="mx-2">14th May 2025</h6> |
-                      <h6 className="ms-2">07:30 AM</h6>
-                    </div>
-                    <h2>
-                      <a href="">
-                        The Role of Environmental Labs in Climate Change
-                        Monitoring
-                      </a>
-                    </h2>
-                  </div>
-                  <div className="post-item-btn">
-                    <a href="#" className="btn btn_theme btn_md">
-                      learn more
-                      <span>
-                        <i className="fa-solid fa-arrow-right ms-2"></i>
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div> */}
           </div>
         </div>
       </section>

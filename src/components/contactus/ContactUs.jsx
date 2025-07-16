@@ -12,6 +12,7 @@ import { MdLocalPhone } from "react-icons/md";
 import axios from "axios";
 import { API_BASE_URL } from "../../Url/BaseUrl";
 import { API_IMAGE_URL } from "../../Url/BaseUrl";
+import { FaAngleDoubleRight } from "react-icons/fa";
 
 const ContactUs = () => {
   const [firstName, setFirstName] = useState("");
@@ -124,7 +125,7 @@ const ContactUs = () => {
                     </li>
                     <li>
                       <span>
-                        <GoDotFill />
+                        <FaAngleDoubleRight />
                       </span>
                       Contact
                     </li>

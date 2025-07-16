@@ -7,6 +7,7 @@ import "swiper/css/autoplay";
 import "animate.css";
 import axios from "axios";
 import { API_BASE_URL } from "../Url/BaseUrl";
+import { Link } from "react-router-dom";
 
 const HomeBanner = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -25,7 +26,6 @@ const HomeBanner = () => {
         console.log(error);
       });
   };
-
   useEffect(() => {
     fetchBanner();
   }, []);
@@ -33,10 +33,10 @@ const HomeBanner = () => {
   return (
     <section id="home_six_banner">
       <Swiper
-        // modules={[Navigation, Autoplay]}
-        // autoplay={{ delay: 3000, disableOnInteraction: false }}
-        // slidesPerView={1}
-        // loop={true}
+        modules={[Navigation, Autoplay]}
+        autoplay={{ delay: 3000, disableOnInteraction: false }}
+        slidesPerView={1}
+        loop={true}
         // navigation={true}
         onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
         className="home_six_banner_slider_wrapper"
@@ -64,7 +64,9 @@ const HomeBanner = () => {
                     >
                       <h1 className="slider-sttle">{bann.heading}</h1>
                       <p className="slider-pararp">{bann.content}</p>
-                      <a href="" className="btn btn_theme btn_md">Contact Us</a>
+                      <Link to="/contactUs" className="btn btn_theme btn_md">
+                        Contact Us
+                      </Link>
                     </div>
                   </div>
                 </div>

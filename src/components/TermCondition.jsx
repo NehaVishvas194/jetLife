@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../Url/BaseUrl";
 import { toast } from "react-toastify";
+import { FaAngleDoubleRight } from "react-icons/fa";
 
 const TermCondition = () => {
   const [data, setData] = useState("");
@@ -39,7 +40,7 @@ const TermCondition = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          height:"100%"
+          height: "100%",
         }}
       >
         <div className="container">
@@ -54,8 +55,8 @@ const TermCondition = () => {
                     </li>
                     <li>
                       <span>
-                        <i className="fas fa-circle"></i>
-                      </span>{" "}
+                        <FaAngleDoubleRight />
+                      </span>
                       {data.title}
                     </li>
                   </ul>

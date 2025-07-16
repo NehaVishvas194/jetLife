@@ -92,8 +92,8 @@ h4 {
 }
 
 h5 {
-  font-size: 18px;
-  font-weight: 400;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 h6 {
@@ -196,7 +196,7 @@ section {
 .section_heading_center h2 {
   position: relative;
   padding-bottom: 15px;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
 }
 
 .section_heading_center h2:after {
@@ -2900,16 +2900,14 @@ section {
   width: 100%;
 }
 
-/* =========================
-       Tour Search Page
-=========================*/
 /* --Common Banner-- */
 #common_banner {
   background-image: url("../src/assets/img/common/bannerInner.jpg");
-  /* padding: 250px 0 72px 0; */
   background-repeat: no-repeat;
   background-size: cover;
   height: 100%;
+  background-blend-mode: overlay;
+  background-color: #00000054;
 }
 
 .common_bannner_text {
@@ -2917,51 +2915,33 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  padding: 200px 0 240px 0;
+  padding: 120px 0px;
+  margin-top: 130px;
 }
 
 .common_bannner_text h2 {
   color: var(--white-color);
-  font-weight: 400;
+  font-weight: 600;
+  font-size: 35px;
 }
 
 .common_bannner_text ul {
   padding-top: 20px;
+  display: flex;
 }
 
 .common_bannner_text ul li {
-  display: inline-block;
   color: var(--white-color);
   padding-left: 12px;
-}
-
-.common_bannner_text ul li:first-child {
-  padding-left: 0px;
-}
-
-.common_bannner_text ul li span {
-  padding-right: 5px;
-}
-
-.common_bannner_text ul li span i {
-  color: var(--white-color);
-  font-size: 7px;
-  position: relative;
-  top: -2px;
-  left: -3px;
+  font-weight: 600;
 }
 
 .common_bannner_text ul li a {
-  color: #ffffff91;
-}
-
-.common_bannner_text ul li a {
-  color: #ffffff91;
+  color: var(--main-color);
 }
 
 .common_bannner_text ul li a:hover {
-  color: var(--main-color);
+  color: var(--black-color);
 }
 
 /* --Search Form-- */
@@ -12561,6 +12541,9 @@ input[type="range"]::-moz-range-thumb {
 .term-para li {
   list-style: inside;
   margin-bottom: 10px;
+  font-size: medium;
+  color: var(--paragraph-color);
+  /* font-weight: 400; */
 }
 
 #our_partners .partner_slider_area img {
@@ -12643,11 +12626,15 @@ input[type="range"]::-moz-range-thumb {
 .common_bannner_text2 ul li {
   display: inline-block;
   color: var(--white-color);
-  padding-left: 20px;
+  padding-left: 5px;
+  /* padding-right: 5px; */
 }
 
 .common_bannner_text2 ul li:first-child {
   padding-left: 0px;
+}
+.common_bannner_text2 ul li svg {
+  color: var(--main-color);
 }
 
 .common_bannner_text2 ul li span {
@@ -12663,11 +12650,8 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .common_bannner_text2 ul li a {
-  color: #ffffff91;
-}
-
-.common_bannner_text2 ul li a {
-  color: #ffffff91;
+  /* color: #ffffff91; */
+  color: #fff;
 }
 
 .common_bannner_text2 ul li a:hover {
@@ -13068,7 +13052,7 @@ hr {
   width: 30px;
   padding: 2px;
   text-align: center;
-  border-radius: 5px;
+  border-radius: 50%;
   color: var(--black-color);
 }
 .main-noti-cont h6 {
@@ -13390,7 +13374,7 @@ hr {
   padding: 15px 15px 0px;
 }
 .hrd-modal button {
-  font-size: 14px;
+  font-size: 12px;
 }
 .btn-close:focus {
   box-shadow: none !important;
@@ -13620,7 +13604,7 @@ hr {
   border-radius: 15px;
 }
 .post-item-body {
-  padding: 20px;
+  padding: 15px;
 }
 .post-featured-image a {
   cursor: none;
@@ -14200,19 +14184,19 @@ section#amazing_tour_place .section_heading_center p {
   font-size: 12px;
 }
 .flight-form {
-  margin-top: -100px !important;
+  margin-top: 80px !important;
 }
-#backBtn{
+#backBtn {
   margin-right: 15px;
 }
-.post-featured-image{
+.post-featured-image {
   margin-bottom: 5px;
 }
 .post-item-content .discount_tab {
   position: absolute;
   left: 25px;
   top: 25px;
-  background:var(--black-color);
+  background: var(--black-color);
   box-shadow: 4px 5px 12px rgb(0 0 0 / 10%);
   border-radius: 5px;
   color: white;
@@ -14220,10 +14204,342 @@ section#amazing_tour_place .section_heading_center p {
   padding: 3px 10px;
   font-weight: 700;
 }
-.event-loc{
+.event-loc {
   display: flex;
   gap: 8px;
 }
-.event-main .detail-card{
+.event-main .detail-card {
   height: 100%;
+}
+/* -------------------------------surbhi(7-5-25)--------------------------------- */
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+.price-hd span {
+  font-size: 16px;
+  margin-right: 5px;
+  color: var(--black-color);
+}
+.price-hd h2 {
+  color: var(--paragraph-color);
+  font-weight: 500;
+  font-size: 28px;
+}
+.include .list {
+  padding-left: 20px;
+}
+.include .list li {
+  color: var(--paragraph-color);
+  font-size: 14px;
+  list-style-type: disc;
+    margin-bottom: 8px;
+}
+.include {
+  border-right: 1px solid #ccc;
+  padding-right: 20px;
+}
+.exclude .list {
+  padding-left: 20px;
+}
+.exclude .list li {
+  color: var(--paragraph-color);
+  font-size: 14px;
+  list-style-type: disc;
+    margin-bottom: 8px;
+}
+
+.custom-accordion-item {
+  background-color: #f1f3f5;
+  border-radius: 5px;
+  margin-top: 15px;
+  overflow: hidden;
+  border: 1px solid #ccc;
+}
+
+.custom-accordion-header {
+  background-color: #e2e6ea;
+  padding: 10px 20px;
+  width: 100%;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.custom-accordion-header.collapsed .arrow {
+  transform: rotate(180deg);
+}
+
+.custom-accordion-body {
+  background-color: #fff;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.custom-accordion-body ul {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.custom-accordion-body ul li {
+  margin-bottom: 8px;
+  list-style-type: disc;
+  font-size: 14px;
+    color: var(--paragraph-color);
+}
+
+.arrow {
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+.tour-list-card .list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 16px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(75, 80, 81, 0.3);
+}
+.tour-list-card .package-img {
+  height: 100px;
+  width: 50vh;
+}
+.tour-list-card .package-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tour-list-card .package-content {
+  padding: 0;
+}
+.package-content .area-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary-title);
+  margin-bottom: 2px;
+}
+.package-content .location {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 4px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-size: 16px;
+  color: var(--black-color);
+  margin-bottom: 0px;
+}
+.package-content .location .name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--black-color);
+  line-height: 1.8;
+}
+.package-content .price-review {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 20px;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.package-content .price-review .light-pera {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--black-color);
+}
+.package-content .price-review .pera {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--paragraph-color);
+}
+.package-content .price-review .rating {
+  color: #cf6c18;
+  font-size: 16px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 5px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.package-content .price-review .rating .pera {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--paragraph-color);
+}
+.hotel-form {
+  margin-top: 80px !important;
+}
+.pt-30 {
+  padding-top: 35px;
+}
+.check-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin: 10px 0px 0px;
+}
+
+.check-section {
+  flex: 1;
+}
+
+.check-section strong {
+  display: block;
+  color: #212529;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.divider {
+  width: 1px;
+  height: 50px;
+  background-color: #ccc;
+  margin: 0 20px;
+}
+.delux-room ul li {
+  list-style-type: disc;
+  color: var(--paragraph-color);
+}
+.delux-room ul {
+  padding-left: 20px;
+}
+.price-table tbody tr td {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--paragraph-color);
+}
+.price-table tbody tr td:last-child {
+  text-align: end;
+}
+.code-coupon {
+  border: 2px dashed var(--main-color);
+  padding: 10px;
+  margin-bottom: 15px;
+}
+.form-check-label p {
+  font-size: 12px;
+}
+/* ------------------------------surbhi(8-7-25)--------------------------------- */
+.blog-details .blog-image {
+  position: relative;
+  display: block;
+  z-index: 1;
+  height: 450px;
+}
+.blog-details .blog-image::before {
+    content: "";
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #141414 105.28%);
+    left: 0;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 10px;
+    z-index: 2;
+}
+.blog-image img{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.travel-badge{
+      background-color: red;
+    border-radius: 5px;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 500;
+}
+.date-range{
+  color: var(--paragraph-color);
+  font-size: 14px;
+  font-weight: 600;
+  padding-right: 10px;
+}
+.date-range svg{
+  margin-right: 5px;
+}
+.blog-content a span{
+  color:#000;
+  font-weight: 600;
+  font-size: 14px;
+}
+.blog-2-img{
+  height: 250px !important;
+}
+.travel-badge1{
+      background-color:var(--main-color);
+    border-radius: 5px;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 500;
+}
+.social-icon svg{
+  color: var(--black-color);
+  font-size: 12px;
+}
+.text-gray-6{
+  font-size: 14px;
+}
+.blog-user-image img{
+  width: 130px;
+  height: 130px;
+  border-radius: 5px;
+  max-width: 130px;
+}
+.blog-user-image{
+  width: 130px;
+}
+.about-author p{
+  font-size: 14px;
+}
+.tips-para p{
+  font-size: 14px;
+}
+.blog-user .user{
+  color: var(--black-color);
+}
+.blog-user .pera{
+font-size: 14px;
+font-weight: 600;
+}
+.create-range{
+  display: flex;
+}
+.create-range p{
+  font-size: 14px;
+}
+.create-range svg{
+  margin-right: 5px;
+  font-size: 14px;
+  color: var(--black-color);
+}
+.news-content h5{
+  font-size: 14px;
+  color: var(--black-color);
+}
+.news-content p{
+  font-size: 14px;
 }

@@ -8,6 +8,7 @@ import BackToTopButton from "./BackToTop";
 import axios from "axios";
 import { API_BASE_URL } from "../Url/BaseUrl";
 import { toast } from "react-toastify";
+import { FaAngleDoubleRight } from "react-icons/fa";
 
 const PrivacyPolicy = () => {
   const [data, setData] = useState("");
@@ -59,7 +60,7 @@ const PrivacyPolicy = () => {
                     </li>
                     <li>
                       <span>
-                        <GoDotFill />
+                        <FaAngleDoubleRight />
                       </span>
                       {data.title}
                     </li>

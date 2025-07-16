@@ -1,10 +1,10 @@
 import Header from "./Header";
 import Footer from "./Footer";
-import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
 import Newsletter from "./home/Newsletter";
 import BackToTopButton from "./BackToTop";
 import { FaMinus, FaPlus } from "react-icons/fa6";
+import { FaAngleDoubleRight } from "react-icons/fa";
 
 const FAQPage = () => {
   return (
@@ -18,24 +18,24 @@ const FAQPage = () => {
               <div className="common_bannner_text2">
                 <div>
                   <h2>Faq</h2>
-                <ul>
-                  <li>
-                    <Link to="/">Home</Link>
-                  </li>
-                  <li>
-                    <span>
-                      <GoDotFill />
-                    </span>
-                    Faq
-                  </li>
-                </ul>
+                  <ul>
+                    <li>
+                      <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                      <span>
+                        <FaAngleDoubleRight />
+                      </span>
+                      Faq
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-
+      {/* <!-- Help section start --> */}
       <section className="faq-wrap style1 pt-50 pb-100">
         <div className="container">
           <div className="row">

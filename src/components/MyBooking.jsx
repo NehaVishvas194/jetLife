@@ -9,6 +9,7 @@ import routeImg from "../assets/img/aerospace.png";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import hotelImg from "../assets/img/hotel.png";
 import { RxCrossCircled } from "react-icons/rx";
+import { FaAngleDoubleRight } from "react-icons/fa";
 
 const tabs = document.querySelectorAll(".tab");
 const MyBooking = () => {
@@ -30,7 +31,7 @@ const MyBooking = () => {
                     </li>
                     <li>
                       <span>
-                        <i className="fas fa-circle"></i>
+                        <FaAngleDoubleRight />
                       </span>{" "}
                       My Booking
                     </li>
@@ -105,19 +106,29 @@ const MyBooking = () => {
             </div>
             <div className="col-md-9">
               <div className="tab-content" id="v-pills-tabContent">
-                <div className="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">
+                <div
+                  className="tab-pane fade show active"
+                  id="v-pills-home"
+                  role="tabpanel"
+                  aria-labelledby="v-pills-home-tab"
+                  tabindex="0"
+                >
                   <div className="card booking-card">
                     <div className="card-body">
                       <div className="tab">
                         <div className="tab__list">
                           <div
-                            className={`tab__item flight-tab ${activeTab === "flight" ? "is--active" : ""}`}
+                            className={`tab__item flight-tab ${
+                              activeTab === "flight" ? "is--active" : ""
+                            }`}
                             onClick={() => setActiveTab("flight")}
                           >
                             <IoIosAirplane /> Flight Booking
                           </div>
                           <div
-                            className={`tab__item flight-tab ${activeTab === "hotel" ? "is--active" : ""}`}
+                            className={`tab__item flight-tab ${
+                              activeTab === "hotel" ? "is--active" : ""
+                            }`}
                             onClick={() => setActiveTab("hotel")}
                           >
                             <RiHotelFill /> Hotel Booking
@@ -125,7 +136,11 @@ const MyBooking = () => {
                         </div>
 
                         <div className="tab__content">
-                          <div className={`tab__content-item ${activeTab === "flight" ? "is--active" : ""}`}>
+                          <div
+                            className={`tab__content-item ${
+                              activeTab === "flight" ? "is--active" : ""
+                            }`}
+                          >
                             {/* FLIGHT CONTENT */}
                             <div className="card p-0">
                               <div className="card-body">
@@ -146,16 +161,32 @@ const MyBooking = () => {
                                 </div>
                                 <div className="det-data">
                                   <div className="other">
-                                    <p><strong>From:</strong> New Delhi (DEL)</p>
-                                    <div className="flightLine"><div></div><div></div></div>
-                                    <p><strong>To:</strong> Mumbai (Mum)</p>
+                                    <p>
+                                      <strong>From:</strong> New Delhi (DEL)
+                                    </p>
+                                    <div className="flightLine">
+                                      <div></div>
+                                      <div></div>
+                                    </div>
+                                    <p>
+                                      <strong>To:</strong> Mumbai (Mum)
+                                    </p>
                                   </div>
-                                  <p>Baggage Info | e-Ticket | Invoice | <span><FaRegCircleCheck /> Confirmed</span></p>
+                                  <p>
+                                    Baggage Info | e-Ticket | Invoice |{" "}
+                                    <span>
+                                      <FaRegCircleCheck /> Confirmed
+                                    </span>
+                                  </p>
                                 </div>
                               </div>
                             </div>
                           </div>
-                          <div className={`tab__content-item ${activeTab === "hotel" ? "is--active" : ""}`}>
+                          <div
+                            className={`tab__content-item ${
+                              activeTab === "hotel" ? "is--active" : ""
+                            }`}
+                          >
                             {/* hotel-content */}
                             <div className="card p-0">
                               <div className="card-body">
@@ -176,11 +207,24 @@ const MyBooking = () => {
                                 </div>
                                 <div className="det-data">
                                   <div className="other">
-                                    <p><strong>Check-in:</strong> 24 Jun 2025</p>
-                                    <div className="flightLine"><div></div><div></div></div>
-                                    <p><strong>Check-out:</strong> 25 Jun 2025</p>
+                                    <p>
+                                      <strong>Check-in:</strong> 24 Jun 2025
+                                    </p>
+                                    <div className="flightLine">
+                                      <div></div>
+                                      <div></div>
+                                    </div>
+                                    <p>
+                                      <strong>Check-out:</strong> 25 Jun 2025
+                                    </p>
                                   </div>
-                                  <p>Booking Details | Room Type: Deluxe Sea View | Guests: 2 Adults, 1 Child | <span className="unverify"><RxCrossCircled /> Cancelled</span></p>
+                                  <p>
+                                    Booking Details | Room Type: Deluxe Sea View
+                                    | Guests: 2 Adults, 1 Child |{" "}
+                                    <span className="unverify">
+                                      <RxCrossCircled /> Cancelled
+                                    </span>
+                                  </p>
                                 </div>
                               </div>
                             </div>
@@ -190,7 +234,13 @@ const MyBooking = () => {
                     </div>
                   </div>
                 </div>
-                <div className="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">
+                <div
+                  className="tab-pane fade"
+                  id="v-pills-profile"
+                  role="tabpanel"
+                  aria-labelledby="v-pills-profile-tab"
+                  tabindex="0"
+                >
                   <div className="card booking-card">
                     <div className="card-body">
                       <div className="tab">
@@ -214,12 +264,20 @@ const MyBooking = () => {
                     </div>
                   </div>
                 </div>
-                <div className="tab-pane fade" id="v-pills-disabled" role="tabpanel" aria-labelledby="v-pills-disabled-tab" tabindex="0">...</div>
+                <div
+                  className="tab-pane fade"
+                  id="v-pills-disabled"
+                  role="tabpanel"
+                  aria-labelledby="v-pills-disabled-tab"
+                  tabindex="0"
+                >
+                  ...
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </section >
+      </section>
       <Footer />
     </>
   );

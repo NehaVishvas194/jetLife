@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
-import { FaHotel } from "react-icons/fa";
 import HotelForm from "./formTabs/HotelForm";
 import Header from "./Header";
 import Newsletter from "./home/Newsletter";
 import { Link } from "react-router-dom";
-import { GoDotFill } from "react-icons/go";
+import { IoIosArrowForward } from "react-icons/io";
 import Footer from "./Footer";
 import BackToTopButton from "./BackToTop";
 import Img1 from "../assets/img/apartment/apartment-7.png";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { FaHotel } from "react-icons/fa6";
+import { FaAngleDoubleRight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import backgroundImage from "../assets/img/hotel1.jpg";
 
 const HotelSearch = () => {
-  // const [multiFromInput, setMultiFromInput] = useState([]);
-  // const [multiToInput, setMultiToInput] = useState([]);
-
   const [journeyDate, setJourneyDate] = useState("");
   const getTodayDate = () => new Date().toISOString().split("T")[0];
   const [isPriceCollapsed, setIsPriceCollapsed] = useState(true);
@@ -40,26 +43,74 @@ const HotelSearch = () => {
     setJourneyDate(today);
   }, []);
 
+  const setting = {
+    dots: false,
+    arrows: true,
+    infinite: true,
+    autoHeight: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2500,
+    spaceBetween: 30,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 780,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  };
+
+  const navigate = useNavigate();
+
+  const bookingTab = () => {
+    navigate("/travel_details");
+  };
+
   return (
     <>
       <Header />
       {/* <!-- Common Banner Area --> */}
-      <section id="common_banner">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="common_bannner_text">
+      <section
+        id="common_banner_img"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "top",
+          backgroundRepeat: "no-repeat",
+          height: "100%",
+        }}
+      >
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12">
+              <div className="common_bannner_text2">
                 <div>
-                  <h2>Hotel search result</h2>
+                  <h2>Hotel</h2>
                   <ul>
                     <li>
                       <Link to="/">Home</Link>
                     </li>
                     <li>
                       <span>
-                        <GoDotFill />
-                      </span>{" "}
-                      Hotel search result
+                        <FaAngleDoubleRight />
+                      </span>
+                      Hotel List
                     </li>
                   </ul>
                 </div>
@@ -68,35 +119,98 @@ const HotelSearch = () => {
           </div>
         </div>
       </section>
-
       {/* Form Area section */}
-      <section id="theme_search_form">
+      <section id="theme_search_form" className="hotel-form">
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <div className="theme_search_form_area">
-                <div className="theme_search_form_tabbtn">
-                  
-                </div>
-                <div className="tab-content" id="myTabContent">
-                  <div
-                    className="tab-pane fade show active"
-                    id="hotels"
-                    role="tabpanel"
-                    aria-labelledby="hotels-tab"
-                  >
-                    <HotelForm />
-                  </div>
+              <div className="card home-card">
+                <div className="card-body">
+                  <HotelForm />
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      {/* <!-- main-section-booking --> */}
-      <section className="section_padding" id="common_author_area">
+      {/* <!-- main-section--> */}
+      <section className="section_padding pt-30" id="common_author_area">
         <div className="container">
+          <div className="row">
+            <div className="col-md-12 mb-4 text-center">
+              <h4>Choose type of Hotels you are interested</h4>
+            </div>
+            <Slider {...setting} className="row">
+              <div className="col-md-3 mb-4">
+                <div className="card booking-card pull-up">
+                  <div className="card-body">
+                    <div className="card-contact">
+                      <div className="">
+                        <div className="clock-icon">
+                          <FaHotel />
+                        </div>
+                      </div>
+                      <div className="info-contact">
+                        <h6>Apartments</h6>
+                        <p>569 Hotels</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-3 mb-4">
+                <div className="card booking-card pull-up">
+                  <div className="card-body">
+                    <div className="card-contact">
+                      <div className="">
+                        <div className="clock-icon">
+                          <FaHotel />
+                        </div>
+                      </div>
+                      <div className="info-contact">
+                        <h6>Villas</h6>
+                        <p>129 Hotels</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-3 mb-4">
+                <div className="card booking-card pull-up">
+                  <div className="card-body">
+                    <div className="card-contact">
+                      <div className="">
+                        <div className="clock-icon">
+                          <FaHotel />
+                        </div>
+                      </div>
+                      <div className="info-contact">
+                        <h6>5 Star Hotels</h6>
+                        <p>600 Hotels</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-3 mb-4">
+                <div className="card booking-card pull-up">
+                  <div className="card-body">
+                    <div className="card-contact">
+                      <div className="">
+                        <div className="clock-icon">
+                          <FaHotel />
+                        </div>
+                      </div>
+                      <div className="info-contact">
+                        <h6>3 Start Hotels</h6>
+                        <p>200 Hotels</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Slider>
+          </div>
           <div className="row">
             <div className="col-md-3">
               <div className="card booking-card">
@@ -371,7 +485,7 @@ const HotelSearch = () => {
                   </div>
                 </div>
                 <div className="col-md-12 mb-4">
-                  <div className="card booking-card">
+                  <div className="card booking-card" onClick={bookingTab}>
                     <div className="card-body">
                       <div className="row">
                         <div className="col-md-4">
@@ -440,7 +554,7 @@ const HotelSearch = () => {
                   </div>
                 </div>
                 <div className="col-md-12 mb-4">
-                  <div className="card booking-card">
+                  <div className="card booking-card" onClick={bookingTab}>
                     <div className="card-body">
                       <div className="row">
                         <div className="col-md-4">
@@ -509,7 +623,7 @@ const HotelSearch = () => {
                   </div>
                 </div>
                 <div className="col-md-12 mb-4">
-                  <div className="card booking-card">
+                  <div className="card booking-card" onClick={bookingTab}>
                     <div className="card-body">
                       <div className="row">
                         <div className="col-md-4">
@@ -578,7 +692,7 @@ const HotelSearch = () => {
                   </div>
                 </div>
                 <div className="col-md-12 mb-4">
-                  <div className="card booking-card">
+                  <div className="card booking-card" onClick={bookingTab}>
                     <div className="card-body">
                       <div className="row">
                         <div className="col-md-4">
@@ -647,7 +761,7 @@ const HotelSearch = () => {
                   </div>
                 </div>
                 <div className="col-md-12 mb-4">
-                  <div className="card booking-card">
+                  <div className="card booking-card" onClick={bookingTab}>
                     <div className="card-body">
                       <div className="row">
                         <div className="col-md-4">

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Newsletter from "./home/Newsletter";
-import { GoDotFill } from "react-icons/go";
 import { Link } from "react-router-dom";
 import BackToTopButton from "./BackToTop";
 // import image1 from "../assets/img/common/small_banner.png";
@@ -13,6 +12,7 @@ import { API_IMAGE_URL } from "../Url/BaseUrl";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import PhoneInput from "react-phone-input-2";
+import { FaAngleDoubleRight } from "react-icons/fa";
 
 const AccountPage = () => {
   const [fname, setFname] = useState("");
@@ -45,7 +45,7 @@ const AccountPage = () => {
         if (response.data.success === true) {
           const userData = response.data.data;
           const baseImagePath = response.data.image_path;
-          const imageName = userData.image || "default_image.jpeg";
+          const imageName = userData.image;
           const fullImageUrl = `${baseImagePath}/${imageName}`;
           setProfileImage(fullImageUrl);
           setFname(`${userData.first_name} ${userData.last_name}`);
@@ -96,9 +96,9 @@ const AccountPage = () => {
           toast.success("Profile updated successfully!", {
             autoClose: 1000,
           });
-          // const baseImagePath = response.data.image_path;
+          const baseImagePath = response.data.image_path;
           const updatedImageName = response.data.data.image;
-          const updatedImageURL = `${API_IMAGE_URL}/${updatedImageName}`;
+          const updatedImageURL = `${baseImagePath}/${updatedImageName}`;
           setProfileImage(updatedImageURL);
           localStorage.setItem("Image", updatedImageURL);
           localStorage.setItem("FirstName", firstName);
@@ -168,15 +168,8 @@ const AccountPage = () => {
                 <div>
                   <h2>Account</h2>
                   <ul>
-                    <li>
-                      <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                      <span>
-                        <GoDotFill />
-                      </span>
-                      Account
-                    </li>
+                    <li><Link to="/">Home</Link></li>
+                    <li><span><FaAngleDoubleRight /></span>Account Details</li>
                   </ul>
                 </div>
               </div>

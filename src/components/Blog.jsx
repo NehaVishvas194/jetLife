@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
 import { Link } from "react-router-dom";
-import profile from "../assets/img/profile.png";
+// import profile from "../assets/img/profile.png";
 import axios from "axios";
 import { API_BASE_URL } from "../Url/BaseUrl";
+import { FaAngleDoubleRight } from "react-icons/fa";
 
 const Blog = () => {
   const [bannerdata, setBannerData] = useState("");
@@ -41,7 +42,7 @@ const Blog = () => {
   useEffect(() => {
     fetchBanner();
     fetchBlogData();
-  });
+  },[]);
 
   return (
     <div>
@@ -69,7 +70,7 @@ const Blog = () => {
                     </li>
                     <li>
                       <span>
-                        <i className="fas fa-circle"></i>
+                        <FaAngleDoubleRight />
                       </span>{" "}
                       {bannerdata.heading}
                     </li>
@@ -87,16 +88,19 @@ const Blog = () => {
             {blogData.map((curelm, e) => (
               <div className="col-xl-4 col-md-6" key={e}>
                 <div className="blog-item mb-4">
-                  <Link to="#" className="blog-img">
+                  <Link to={`/blog_details/${curelm.id}`} className="blog-img">
                     <img src={`${blogImage}/${curelm?.image}`} alt="img" />
                   </Link>
-                  <span className="badge">{curelm.heading}</span>
+                  {/* <span className="badge">{curelm.heading}</span> */}
                   <div className="blog-info text-center">
                     <div className="blog-cnt">
                       <div className="d-inline-flex align-items-center border-end pe-3 me-3">
-                        <a href="javascript:void(0);" className="pro-name">
+                        <Link
+                          to={`/blog_details/${curelm.id}`}
+                          className="pro-name"
+                        >
                           <p>{curelm.title}</p>
-                        </a>
+                        </Link>
                       </div>
                       <p>
                         <i className="fas fa-calendar-alt me-2"></i>
@@ -104,7 +108,9 @@ const Blog = () => {
                       </p>
                     </div>
                     <h5>
-                      <a href="#">{curelm?.content}</a>
+                      <Link to={`/blog_details/${curelm.id}`}>
+                        {curelm?.content}
+                      </Link>
                     </h5>
                   </div>
                 </div>

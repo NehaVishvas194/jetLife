@@ -24,6 +24,7 @@ import hotel2 from "../assets/img/hotel/hotel-list-1.png";
 import hotel3 from "../assets/img/hotel/hotel-list-5.png";
 import hotel4 from "../assets/img/hotel/hotel-list-3.png";
 import hotel5 from "../assets/img/hotel/hotel-list-4.png";
+import { FaAngleDoubleRight } from "react-icons/fa";
 
 const TravelsDetails = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -31,7 +32,7 @@ const TravelsDetails = () => {
   const [counts, setCounts] = useState({
     adults: 0,
     infants: 0,
-    children: 0
+    children: 0,
   });
 
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
@@ -43,7 +44,7 @@ const TravelsDetails = () => {
   const decrease = (type) => {
     setCounts((prev) => ({
       ...prev,
-      [type]: prev[type] > 0 ? prev[type] - 1 : 0
+      [type]: prev[type] > 0 ? prev[type] - 1 : 0,
     }));
   };
   return (
@@ -63,8 +64,8 @@ const TravelsDetails = () => {
                     </li>
                     <li>
                       <span>
-                        <i className="fas fa-circle"></i>
-                      </span>{" "}
+                        <FaAngleDoubleRight />
+                      </span>
                       View Details
                     </li>
                   </ul>
@@ -149,7 +150,8 @@ const TravelsDetails = () => {
                         src={src}
                         alt={`Slide ${index}`}
                         onError={(e) => {
-                          e.target.src = "https://via.placeholder.com/600x400?text=Not+Found";
+                          e.target.src =
+                            "https://via.placeholder.com/600x400?text=Not+Found";
                         }}
                       />
                     </SwiperSlide>
@@ -171,7 +173,8 @@ const TravelsDetails = () => {
                         src={src}
                         alt={`Slide ${index}`}
                         onError={(e) => {
-                          e.target.src = "https://via.placeholder.com/600x400?text=Not+Found";
+                          e.target.src =
+                            "https://via.placeholder.com/600x400?text=Not+Found";
                         }}
                       />
                     </SwiperSlide>
@@ -180,26 +183,42 @@ const TravelsDetails = () => {
               </div>
               <div className="detail-dscrp">
                 <h6>Description</h6>
-                <p>Hotel Plaza Athenee is an excellent choice for travellers visiting Coimbatore, offering a budget friendly environment alongside many helpful amenities designed to enhance your stay. The rooms offer a flat screen TV and air conditioning and getting online is possible, as free internet access is available, allowing you to rest and refresh with ease.</p>
+                <p>
+                  Hotel Plaza Athenee is an excellent choice for travellers
+                  visiting Coimbatore, offering a budget friendly environment
+                  alongside many helpful amenities designed to enhance your
+                  stay. The rooms offer a flat screen TV and air conditioning
+                  and getting online is possible, as free internet access is
+                  available, allowing you to rest and refresh with ease.
+                </p>
               </div>
               <div className="detail-dscrp">
                 <h6>Highlights</h6>
                 <div className="highlight-main">
                   <div className="d-flex align-items-center">
                     <PiShootingStar />
-                    <span>Spacious Rooms: Comfortable accommodations with contemporary furnishings and high-quality bedding.</span>
+                    <span>
+                      Spacious Rooms: Comfortable accommodations with
+                      contemporary furnishings and high-quality bedding.
+                    </span>
                   </div>
                 </div>
                 <div className="highlight-main">
                   <div className="d-flex align-items-center">
                     <PiShootingStar />
-                    <span>Destination Unlocked: Programs that encourage exploration of local culture and attractions.</span>
+                    <span>
+                      Destination Unlocked: Programs that encourage exploration
+                      of local culture and attractions.
+                    </span>
                   </div>
                 </div>
                 <div className="highlight-main">
                   <div className="d-flex align-items-center">
                     <PiShootingStar />
-                    <span>Sophisticated Décor: Modern and artistic interiors with a touch of elegance.</span>
+                    <span>
+                      Sophisticated Décor: Modern and artistic interiors with a
+                      touch of elegance.
+                    </span>
                   </div>
                 </div>
               </div>
@@ -209,7 +228,9 @@ const TravelsDetails = () => {
                   <div className="col-md-6">
                     <div class="review-main">
                       <h3>Customer Reviews & Ratings</h3>
-                      <div class="rating-value">4.9 <span class="rating-sub">/ 5.0</span></div>
+                      <div class="rating-value">
+                        4.9 <span class="rating-sub">/ 5.0</span>
+                      </div>
                       <div class="stars">★★★★★</div>
                       <p class="review-count">Based On 2,459 Reviews</p>
                     </div>
@@ -235,7 +256,7 @@ const TravelsDetails = () => {
                           <div class="rating-row">
                             <div class="rating-label">3 Star Ratings</div>
                             <div class="rating-bar">
-                              <div class="rating-fill" ></div>
+                              <div class="rating-fill"></div>
                             </div>
                             <div class="rating-count">600</div>
                           </div>
@@ -265,7 +286,9 @@ const TravelsDetails = () => {
                 <div className="card-body">
                   <div className="start-form">
                     <h6>Starts From</h6>
-                    <p>$500<span>/ Night</span></p>
+                    <p>
+                      $500<span>/ Night</span>
+                    </p>
                   </div>
                   <div className="check-in-detail">
                     <div className="field-set">
@@ -287,9 +310,9 @@ const TravelsDetails = () => {
                       <div className="icre-main">
                         <span className="label">Adults</span>
                         <div className="counter">
-                          <button onClick={() => decrease('adults')}>-</button>
+                          <button onClick={() => decrease("adults")}>-</button>
                           <span>{formatNumber(counts.adults)}</span>
-                          <button onClick={() => increase('adults')}>+</button>
+                          <button onClick={() => increase("adults")}>+</button>
                         </div>
                       </div>
                       <div className="icre-main">
@@ -297,9 +320,9 @@ const TravelsDetails = () => {
                           Infants <span className="age"></span>
                         </span>
                         <div className="counter">
-                          <button onClick={() => decrease('infants')}>-</button>
+                          <button onClick={() => decrease("infants")}>-</button>
                           <span>{formatNumber(counts.infants)}</span>
-                          <button onClick={() => increase('infants')}>+</button>
+                          <button onClick={() => increase("infants")}>+</button>
                         </div>
                       </div>
                       <div className="icre-main">
@@ -307,15 +330,26 @@ const TravelsDetails = () => {
                           Children <span className="age"></span>
                         </span>
                         <div className="counter">
-                          <button onClick={() => decrease('children')}>-</button>
+                          <button onClick={() => decrease("children")}>
+                            -
+                          </button>
                           <span>{formatNumber(counts.children)}</span>
-                          <button onClick={() => increase('children')}>+</button>
+                          <button onClick={() => increase("children")}>
+                            +
+                          </button>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="">
-                    <button type="button" className="btn btn_theme btn_md w-100">Book Now</button>
+                    <Link to="/hotel_booking_details">
+                      <button
+                        type="button"
+                        className="btn btn_theme btn_md w-100"
+                      >
+                        Book Now
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -1,17 +1,22 @@
 import Header from "./Header";
 import Footer from "./Footer";
 import Newsletter from "./home/Newsletter";
-import { GoDotFill } from "react-icons/go";
 import { IoSearch } from "react-icons/io5";
 import { Link } from "react-router-dom";
 // import Img1 from "..//img/currency.png";
-import { MdFlight,MdOutlineAccountCircle,MdOutlinePrivacyTip ,MdOutlineSecurity  } from "react-icons/md";
+import {
+  MdFlight,
+  MdOutlineAccountCircle,
+  MdOutlinePrivacyTip,
+  MdOutlineSecurity,
+} from "react-icons/md";
 import { RiRefund2Line } from "react-icons/ri";
 import { TbPackages } from "react-icons/tb";
 import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
 import { IoCarSport } from "react-icons/io5";
 import { RiHotelLine } from "react-icons/ri";
 import BackToTopButton from "./BackToTop";
+import { FaAngleDoubleRight } from "react-icons/fa";
 
 const Help = () => {
   return (
@@ -25,23 +30,24 @@ const Help = () => {
               <div className="common_bannner_text2">
                 <div>
                   <h2>Help Center</h2>
-                <ul>
-                  <li>
-                    <Link to="/">Home</Link>
-                  </li>
-                  <li>
-                    <span>
-                      <GoDotFill />
-                    </span>
-                    Help Center
-                  </li>
-                </ul>
+                  <ul>
+                    <li>
+                      <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                      <span>
+                        <FaAngleDoubleRight />
+                      </span>
+                      Help Center
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+
       {/* <!-- Help section start --> */}
       <section className="help_section">
         <div className="container">
@@ -53,8 +59,12 @@ const Help = () => {
             </div>
             <div className="col-md-7">
               <div className="Search_support">
-                <form action="" >
-                  <input type="search" placeholder="How can be Help..."  className="form-control"/>
+                <form action="">
+                  <input
+                    type="search"
+                    placeholder="How can be Help..."
+                    className="form-control"
+                  />
                   <i>
                     <IoSearch />
                   </i>
@@ -203,7 +213,7 @@ const Help = () => {
               >
                 <div className="support_sec_inner">
                   <div className="support_sec_icon">
-                    <MdOutlinePrivacyTip  />
+                    <MdOutlinePrivacyTip />
                   </div>
                   <div className="support_sec_info">
                     <h3>
@@ -220,7 +230,7 @@ const Help = () => {
               >
                 <div className="support_sec_inner">
                   <div className="support_sec_icon">
-                    <MdOutlineSecurity  />
+                    <MdOutlineSecurity />
                   </div>
                   <div className="support_sec_info">
                     <h3>
@@ -235,7 +245,7 @@ const Help = () => {
       </section>
       {/* <!-- Help section end  --> */}
       <Newsletter />
-      <BackToTopButton/>
+      <BackToTopButton />
       <Footer />
     </div>
   );
