@@ -5,13 +5,14 @@ import "swiper/css";
 import "swiper/css/autoplay";
 import axios from "axios";
 import { API_BASE_URL } from "../../Url/BaseUrl";
+import { useNavigate } from "react-router-dom";
 
 const SpecialOffer = () => {
   const [activeTab, setActiveTab] = useState(null);
   const [offers, setOffers] = useState([]);
   const [offerImagePath, setOfferImagePath] = useState("");
   const [categoryList, setCategoryList] = useState([]);
-
+  const navigate = useNavigate();
   // Fetch category list
   const fetchCategory = async () => {
     try {
@@ -119,6 +120,10 @@ const SpecialOffer = () => {
                                 <img
                                   src={`${offerImagePath}/${offer.image}`}
                                   alt="offer"
+                                  style={{
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => navigate("/offer_details")}
                                 />
                               </div>
                               <div className="specialCard__content">

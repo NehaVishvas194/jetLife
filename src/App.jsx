@@ -35,6 +35,7 @@ import HotelBookingDetails from "./components/HotelBookingDetails";
 import BlogDetails from "./components/BlogDetails";
 import EventDetails from "./components/EventDetails";
 import NewsDetails from "./components/NewsDetails";
+import OfferDetails from "./components/home/OfferDetails";
 
 console.log("date:-11-07-2025", "time:-02:01");
 
@@ -69,7 +70,7 @@ function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog_details/:id" element={<BlogDetails />} />
           <Route path="/news" element={<News />} />
-          <Route path="/news_details/:id" element={<NewsDetails/> } />
+          <Route path="/news_details/:id" element={<NewsDetails />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/my_booking" element={<MyBooking />} />
@@ -77,6 +78,7 @@ function App() {
           <Route path="/travel_details" element={<TravelDetails />} />
           <Route path="/events" element={<Events />} />
           <Route path="/event_details/:id" element={<EventDetails />} />
+          <Route path="/offer_details" element={<OfferDetails />} />
           <Route path="/destination_details" element={<DestinationDetails />} />
           <Route
             path="/hotel_booking_details"
