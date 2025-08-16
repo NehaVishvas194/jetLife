@@ -3,14 +3,14 @@ import Header from "./Header";
 import Footer from "./Footer";
 import BackToTopButton from "./BackToTop";
 import { Link, useParams } from "react-router-dom";
-// import blog1 from "../assets/img/blog/blog-01.jpg";
 import { FaAngleDoubleRight } from "react-icons/fa";
 import { MdDateRange } from "react-icons/md";
 import { BsCalendar2DateFill } from "react-icons/bs";
-import { FaLocationDot } from "react-icons/fa6";
 import { FaClock } from "react-icons/fa6";
 import axios from "axios";
 import { API_BASE_URL } from "../Url/BaseUrl";
+// import { FaLocationDot } from "react-icons/fa6";
+// import blog1 from "../assets/img/blog/blog-01.jpg";
 
 const NewsDetails = () => {
   const [banner, setBanner] = useState("");

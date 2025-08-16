@@ -10,10 +10,12 @@ const Login = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmitNormalUser = (e) => {
+  const handleSubmitNormalUser = async (e) => {
     e.preventDefault();
+    setLoading(true);
     if (!name) {
       toast.error("Please enter name!", {
         position: "top-right",
@@ -30,44 +32,47 @@ const Login = () => {
       return;
     }
 
-    axios
-      .post(`${API_BASE_URL}/login`, {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/login`, {
         email: name,
         password: password,
         user_type: 1,
-      })
-      .then((response) => {
-        console.log(response);
-        if (response.data.success === true) {
-          const fname = response.data.data.first_name;
-          const lname = response.data.data.last_name;
-          const email = response.data.data.email;
-          const token = response.data.data.token;
-          const id = response.data.data.user_id;
-          const image = response.data.data.image;
-          localStorage.setItem("FirstName", fname);
-          localStorage.setItem("LastName", lname);
-          localStorage.setItem("Email", email);
-          localStorage.setItem("Token", token);
-          localStorage.setItem("Id", id);
-          localStorage.setItem("Image", image);
-          toast.success(response.data.message);
-          navigate("/");
-        }
-      })
-      .catch((error) => {
-        const errorMsg =
-          error.response?.data?.message || "Something went wrong!";
-        console.error(errorMsg);
-        toast.error(errorMsg, {
-          autoClose: 1000,
-          theme: "colored",
-        });
       });
+      console.log(response);
+      if (response.data.success === true) {
+        const fname = response.data.data.first_name;
+        const lname = response.data.data.last_name;
+        const email = response.data.data.email;
+        const token = response.data.data.token;
+        const id = response.data.data.user_id;
+        const image = response.data.data.image;
+        localStorage.setItem("FirstName", fname);
+        localStorage.setItem("LastName", lname);
+        localStorage.setItem("Email", email);
+        localStorage.setItem("Token", token);
+        localStorage.setItem("Id", id);
+        localStorage.setItem("Image", image);
+        toast.success(response.data.message);
+        navigate("/");
+      }
+    } catch (error) {
+      const errorMsg = error.response?.data?.message || "Something went wrong!";
+      console.error(errorMsg);
+      toast.error(errorMsg, {
+        autoClose: 1000,
+        theme: "colored",
+      });
+    } finally {
+      setLoading(false);
+    }
+    console.log(name);
+    console.log(password);
   };
 
-  const handleSubmitCorporateUser = (e) => {
+  const handleSubmitCorporateUser = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     if (!name) {
       toast.error("Please enter name!", {
         position: "top-right",
@@ -83,37 +88,37 @@ const Login = () => {
       });
       return;
     }
-    axios
-      .post(`${API_BASE_URL}/login`, {
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/login`, {
         email: name,
         password: password,
         user_type: 2,
-      })
-      .then((response) => {
-        console.log(response);
-        if (response.data.success === true) {
-          const fname = response.data.data.first_name;
-          const lname = response.data.data.last_name;
-          const email = response.data.data.email;
-          const token = response.data.data.token;
-          const id = response.data.data.user_id;
-          localStorage.setItem("FirstName", fname);
-          localStorage.setItem("LastName", lname);
-          localStorage.setItem("Email", email);
-          localStorage.setItem("Token", token);
-          localStorage.setItem("Id", id);
-          toast.success(response.data.message);
-          navigate("/");
-        }
-      })
-      .catch((error) => {
-        const errorMsg = error.response?.data?.msg || "Something went wrong!";
-        console.error(errorMsg);
-        toast.error(errorMsg, {
-          autoClose: 1000,
-          theme: "colored",
-        });
       });
+      if (response.data.success === true) {
+        const fname = response.data.data.first_name;
+        const lname = response.data.data.last_name;
+        const email = response.data.data.email;
+        const token = response.data.data.token;
+        const id = response.data.data.user_id;
+        localStorage.setItem("FirstName", fname);
+        localStorage.setItem("LastName", lname);
+        localStorage.setItem("Email", email);
+        localStorage.setItem("Token", token);
+        localStorage.setItem("Id", id);
+        toast.success(response.data.message);
+        navigate("/");
+      }
+    } catch (error) {
+      const errorMsg = error.response?.data?.message || "Something went wrong!";
+      console.error(errorMsg);
+      toast.error(errorMsg, {
+        autoClose: 1000,
+        theme: "colored",
+      });
+    } finally {
+      setLoading(false);
+    }
     console.log(name);
     console.log(password);
   };
@@ -166,6 +171,9 @@ const Login = () => {
                             <p>
                               Don't have an account?{" "}
                               <Link to="/register">Register now</Link>
+                            </p>
+                            <p>
+                              Back To Home Page? <Link to="/">Home</Link>
                             </p>
                           </div>
                         </div>
@@ -272,7 +280,7 @@ const Login = () => {
                             className="btn btn_theme btn_md w-100"
                             onClick={handleSubmitNormalUser}
                           >
-                            Log in
+                            {loading ? "Login..." : "Login"}
                           </button>
                         </div>
                       </form>
@@ -333,7 +341,7 @@ const Login = () => {
                             className="btn btn_theme btn_md w-100"
                             onClick={handleSubmitCorporateUser}
                           >
-                            Log in
+                            {loading ? "Login..." : "Login"}
                           </button>
                         </div>
                       </form>

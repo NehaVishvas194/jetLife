@@ -34,7 +34,7 @@ const TopDestinationPhoto = () => {
           <div className="row justify-content-center mb-4">
             <div className="col-lg-6 col-md-6 col-sm-12 col-12">
               <div className="section_heading_center">
-                <h2>Top destinations</h2>
+                <h2>Top Destinations</h2>
                 <p>
                   {" "}
                   Explore the most popular destinations around the world,
@@ -67,13 +67,13 @@ const TopDestinationPhoto = () => {
                       <a href="#!">
                         <div className="amazing_place_img">
                           <img
-                            src={`${imageData}/${curElm?.image}`}
+                            src={`${imageData}/${curElm.image}`}
                             alt="img1"
                           />
                         </div>
                         <div className="amazing_place_box_content">
                           <div className="amazing_place_inner_content">
-                            <h3>{curElm.location}</h3>
+                            <h3>{curElm.name}</h3>
                             <div className="rating_outof">
                               {[...Array(5)].map((_, index) => (
                                 <FaStar
@@ -87,7 +87,7 @@ const TopDestinationPhoto = () => {
                                 />
                               ))}
                             </div>
-                            <p>{curElm.content}</p>
+                            <p>{curElm.content?.slice(0, 100)}...</p>
                           </div>
                         </div>
                       </a>

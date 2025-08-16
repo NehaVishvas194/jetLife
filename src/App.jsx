@@ -37,7 +37,7 @@ import EventDetails from "./components/EventDetails";
 import NewsDetails from "./components/NewsDetails";
 import OfferDetails from "./components/home/OfferDetails";
 
-console.log("date:-11-07-2025", "time:-02:01");
+console.log("date:-02-08-2025", "time:-12:15");
 
 function App() {
   useEffect(() => {
@@ -78,8 +78,8 @@ function App() {
           <Route path="/travel_details" element={<TravelDetails />} />
           <Route path="/events" element={<Events />} />
           <Route path="/event_details/:id" element={<EventDetails />} />
-          <Route path="/offer_details" element={<OfferDetails />} />
-          <Route path="/destination_details" element={<DestinationDetails />} />
+          <Route path="/offer_details/:id" element={<OfferDetails />} />
+          <Route path="/destination_details/:id" element={<DestinationDetails />} />
           <Route
             path="/hotel_booking_details"
             element={<HotelBookingDetails />}

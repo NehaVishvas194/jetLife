@@ -10,6 +10,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/material.css";
 
 const Register = () => {
+  // Normal User
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,11 +19,9 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [phoneCode, setPhoneCode] = useState("");
-
-  // const [countryCodes, setCountryCodes] = useState([]);
   const [fullPhone, setFullPhone] = useState("");
-  // const [mobile, setMobile] = useState("");
-
+  const [loading, setLoading] = useState(false);
+  // Corporate User
   const [C_firstName, setCFirstName] = useState("");
   const [C_lastName, setCLastName] = useState("");
   const [C_email, setCEmail] = useState("");
@@ -54,9 +53,7 @@ const Register = () => {
       toast.error("Please enter a valid phone number");
       return;
     }
-
     const phoneNumber = fullPhone.slice(phoneCode.replace("+", "").length);
-
     if (!password) {
       toast.error("Please enter password!");
       return;
@@ -337,7 +334,9 @@ const Register = () => {
                           </div>
                           <div className="col-md-6">
                             <div className="field-set">
-                              <label>Phone Number <span>*</span></label>
+                              <label>
+                                Phone Number <span>*</span>
+                              </label>
                               <PhoneInput
                                 country={"in"}
                                 value={fullPhone}
@@ -492,7 +491,9 @@ const Register = () => {
                           </div>
                           <div className="col-md-6">
                             <div className="field-set">
-                              <label>Phone Number<span>*</span></label>
+                              <label>
+                                Phone Number<span>*</span>
+                              </label>
                               <PhoneInput
                                 country={"in"}
                                 value={C_fullPhone}
@@ -500,7 +501,6 @@ const Register = () => {
                                   setCFullPhone(value);
                                   setCPhoneCode(`+${data.dialCode}`);
                                 }}
-                  
                               />
                             </div>
                           </div>

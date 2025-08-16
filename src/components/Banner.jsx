@@ -51,6 +51,7 @@ const HomeBanner = () => {
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
               }}
+              loading="lazy"
             >
               <div className="container">
                 <div className="row">

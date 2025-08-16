@@ -89,7 +89,7 @@ const Footer = () => {
                 </div>
               </div>
             </div>
-            <div className="col-lg-2 offset-lg-1 col-md-6 col-sm-6 col-12">
+            <div className="col-lg-2 col-md-4 col-sm-6 col-12">
               <div className="footer_heading_area">
                 <h5>About Company</h5>
               </div>

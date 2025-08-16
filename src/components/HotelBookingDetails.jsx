@@ -321,9 +321,6 @@ const HotelBookingDetails = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="detail-dscrp">
-                    <h5>Guest Details</h5>
-                  </div>
                 </div>
               </div>
             </div>
@@ -359,6 +356,11 @@ const HotelBookingDetails = () => {
                           </tr>
                         </tbody>
                       </table>
+                      <div classname="">
+                        <button className="btn btn_theme btn_md w-100" type="button">
+                      Pay Now
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -367,46 +369,6 @@ const HotelBookingDetails = () => {
                     <div className="card-body">
                       <div className="filter-hd">
                         <h6>Coupon Codes</h6>
-                      </div>
-                      <div className="code-coupon">
-                        <div class="form-check mt-2">
-                          <input
-                            class="form-check-input"
-                            type="radio"
-                            name="flexRadioDefault"
-                            id="flexRadioDefault1"
-                          />
-                          <label
-                            class="form-check-label"
-                            for="flexRadioDefault1"
-                          >
-                            <div className="d-flex justify-content-between">
-                              <h6>MMTDEAL</h6>
-                              <h6>₹ 717</h6>
-                            </div>
-                            <p> Great Discounts for You. Get INR717 Off</p>
-                          </label>
-                        </div>
-                      </div>
-                      <div className="code-coupon">
-                        <div class="form-check mt-2">
-                          <input
-                            class="form-check-input"
-                            type="radio"
-                            name="flexRadioDefault"
-                            id="flexRadioDefault1"
-                          />
-                          <label
-                            class="form-check-label"
-                            for="flexRadioDefault1"
-                          >
-                            <div className="d-flex justify-content-between">
-                              <h6>MMTDEAL</h6>
-                              <h6>₹ 717</h6>
-                            </div>
-                            <p> Great Discounts for You. Get INR717 Off</p>
-                          </label>
-                        </div>
                       </div>
                       <div className="code-coupon">
                         <div class="form-check mt-2">

@@ -13,6 +13,7 @@ const SpecialOffer = () => {
   const [offerImagePath, setOfferImagePath] = useState("");
   const [categoryList, setCategoryList] = useState([]);
   const navigate = useNavigate();
+
   // Fetch category list
   const fetchCategory = async () => {
     try {
@@ -33,9 +34,9 @@ const SpecialOffer = () => {
   // Fetch offers for given category ID
   const fetchOffers = async (categoryId) => {
     try {
-      const response = await axios.get(
-        `${API_BASE_URL}/special/offer?category_id=${categoryId}`
-      );
+      const response = await axios.post(`${API_BASE_URL}/category/list/offer`, {
+        category_id: categoryId,
+      });
       if (response.data.success) {
         setOffers(response.data.data);
         setOfferImagePath(response.data.image_path);
@@ -59,7 +60,6 @@ const SpecialOffer = () => {
             </div>
           </div>
         </div>
-
         <div className="row justify-content-center">
           <div className="col-lg-12">
             <div className="our-service-tab">
@@ -90,7 +90,6 @@ const SpecialOffer = () => {
                 ))}
               </ul>
             </div>
-
             <div className="tab-content" id="pills-tabContent">
               <div className="tab-pane fade show active">
                 <div className="row mb-5">
@@ -99,7 +98,7 @@ const SpecialOffer = () => {
                       key={activeTab}
                       modules={[Autoplay]}
                       spaceBetween={20}
-                      slidesPerView={4}
+                      slidesPerView={3}
                       loop={true}
                       autoplay={{
                         delay: 2000,
@@ -108,33 +107,50 @@ const SpecialOffer = () => {
                       breakpoints={{
                         320: { slidesPerView: 1 },
                         640: { slidesPerView: 2 },
-                        768: { slidesPerView: 3 },
-                        1024: { slidesPerView: 4 },
+                        768: { slidesPerView: 2 },
+                        1024: { slidesPerView: 3 },
                       }}
                     >
                       {offers.map((offer) => (
                         <SwiperSlide key={offer.id}>
-                          <div className="col-xl-12 col-lg-6 col-md-6">
-                            <div className="specialCard">
-                              <div className="specialCard__image">
-                                <img
-                                  src={`${offerImagePath}/${offer.image}`}
-                                  alt="offer"
-                                  style={{
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={() => navigate("/offer_details")}
-                                />
-                              </div>
-                              <div className="specialCard__content">
-                                <div className="specialCard__subtitle">
-                                  {offer.content}
+                          <div className="card p-0">
+                            <div className="card-body">
+                              <div className="specialCard">
+                                <div className="specialCard__image">
+                                  <img
+                                    src={`${offerImagePath}/${offer.image}`}
+                                    alt="offer"
+                                  />
                                 </div>
-                                <h3 className="specialCard__title">
-                                  Special Offer
-                                </h3>
-                                <div className="specialCard__text">
-                                  On Your Booking
+                                <div className="specialCard__content">
+                                  <h5 className="specialCard__subtitle">
+                                    {offer ? (
+                                      <p
+                                        className="text-gray-6"
+                                        dangerouslySetInnerHTML={{
+                                          __html: offer.content
+                                            ?.slice(0, 150)
+                                            .replace(/\r\n/g, "<br/>")
+                                            .replace(/\n/g, "<br/>"),
+                                        }}
+                                      />
+                                    ) : (
+                                      <p>Loading Api Data...</p>
+                                    )}
+                                  </h5>
+                                  {/* <span className="line"></span> */}
+                                  <span className="code">
+                                    Coupan Code:{offer.coupan}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    class="btn btn_theme btn_md"
+                                    onClick={() =>
+                                      navigate(`/offer_details/${offer.id}`)
+                                    }
+                                  >
+                                    Book Now
+                                  </button>
                                 </div>
                               </div>
                             </div>

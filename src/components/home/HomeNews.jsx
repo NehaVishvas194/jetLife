@@ -38,7 +38,7 @@ const HomeNews = () => {
           <div className="row">
             <div className="col-lg-12 col-md-12 col-sm-12 col-12">
               <div className="section_heading_center">
-                <h2>Latest travel news</h2>
+                <h2>Latest Travel News</h2>
               </div>
             </div>
           </div>
@@ -49,10 +49,10 @@ const HomeNews = () => {
               slidesPerView={4}
               loop={true}
               navigation={true}
-              autoplay={{
-                delay: 2500,
-                disableOnInteraction: false,
-              }}
+              // autoplay={{
+              //   delay: 2500,
+              //   disableOnInteraction: false,
+              // }}
               breakpoints={{
                 320: { slidesPerView: 1 },
                 640: { slidesPerView: 2 },
@@ -82,7 +82,7 @@ const HomeNews = () => {
                             <h6 className="ms-2">07:30 AM</h6>
                           </div>
                           <h2>
-                            <Link to="/news">{news.content}</Link>
+                            <Link to="/news">{news.content?.slice(0,60)}...</Link>
                           </h2>
                         </div>
                       </div>

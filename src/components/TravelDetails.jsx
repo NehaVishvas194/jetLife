@@ -157,7 +157,6 @@ const TravelsDetails = () => {
                     </SwiperSlide>
                   ))}
                 </Swiper>
-
                 <Swiper
                   onSwiper={setThumbsSwiper}
                   spaceBetween={20}
@@ -224,18 +223,26 @@ const TravelsDetails = () => {
               </div>
               <div className="detail-dscrp">
                 <h6>Rating & Review</h6>
-                <div className="row">
+                <div className="row mt-3">
                   <div className="col-md-6">
                     <div class="review-main">
-                      <h3>Customer Reviews & Ratings</h3>
+                      <h5>Customer Reviews & Ratings</h5>
                       <div class="rating-value">
-                        4.9 <span class="rating-sub">/ 5.0</span>
+                        <p>4.9<span class="rating-sub">/ 5.0</span></p>
                       </div>
-                      <div class="stars">★★★★★</div>
+                      <div className="rating-high1">
+                        <div className="d-flex align-items-center justify-content-center">
+                          <IoStar className="star" />
+                          <IoStar className="star" />
+                          <IoStar className="star" />
+                          <IoStar className="star" />
+                          <IoStar className="star" />
+                        </div>
+                      </div>
                       <p class="review-count">Based On 2,459 Reviews</p>
                     </div>
                   </div>
-                  <div className="col-md-6">
+                  {/* <div className="col-md-6">
                     <div className="card detail-dscrp p-0">
                       <div className="card-body">
                         <div class="">
@@ -277,7 +284,7 @@ const TravelsDetails = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -345,8 +352,7 @@ const TravelsDetails = () => {
                     <Link to="/hotel_booking_details">
                       <button
                         type="button"
-                        className="btn btn_theme btn_md w-100"
-                      >
+                        className="btn btn_theme btn_md w-100">
                         Book Now
                       </button>
                     </Link>

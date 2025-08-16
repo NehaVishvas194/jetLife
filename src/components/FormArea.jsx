@@ -316,7 +316,7 @@ const FormArea = () => {
                           Hotels
                         </button>
                       </li>
-                      {/* <li className="nav-item" role="presentation">
+                      <li className="nav-item" role="presentation">
                         <button
                           className="nav-link tab-btn"
                           id="bus-tab"
@@ -327,7 +327,10 @@ const FormArea = () => {
                           aria-controls="bus"
                           aria-selected="false"
                         >
-                          <span className="tab-icon"><FaCarSide /></span>Cars
+                          <span className="tab-icon">
+                            <FaCarSide />
+                          </span>
+                          Cars
                         </button>
                       </li>
                       <li className="nav-item" role="presentation">
@@ -342,7 +345,10 @@ const FormArea = () => {
                           aria-selected="false"
                         >
                           {" "}
-                          <span className="tab-icon"><FaHelicopter /></span>Private Charters
+                          <span className="tab-icon">
+                            <FaHelicopter />
+                          </span>
+                          Private Charters
                         </button>
                       </li>
                       <li className="nav-item" role="presentation">
@@ -356,9 +362,12 @@ const FormArea = () => {
                           aria-controls="bus"
                           aria-selected="false"
                         >
-                          <span className="tab-icon"><MdRestaurantMenu /></span>Concierge{" "}
+                          <span className="tab-icon">
+                            <MdRestaurantMenu />
+                          </span>
+                          Concierge{" "}
                         </button>
-                      </li> */}
+                      </li>
                     </ul>
                   </div>
                 </div>
