@@ -49,7 +49,7 @@ const Destination = () => {
           setCountryList(response.data.data);
 
           const defaultCountry = response.data.data[0];
-          console.log(response.data.data);
+          // console.log(response.data.data);
           setActiveTab(defaultCountry.nicename);
           fetchDestination(defaultCountry.id);
         }

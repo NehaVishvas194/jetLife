@@ -9,7 +9,7 @@ const Imagination = () => {
     axios
       .get(`${API_BASE_URL}/home/pages1`)
       .then((response) => {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setData(response.data.data);
         setImagePath(response.data.image_path);
       })

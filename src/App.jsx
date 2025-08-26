@@ -37,7 +37,7 @@ import EventDetails from "./components/EventDetails";
 import NewsDetails from "./components/NewsDetails";
 import OfferDetails from "./components/home/OfferDetails";
 
-console.log("date:-02-08-2025", "time:-12:15");
+console.log("date:-21-08-2025", "time:-21:35");
 
 function App() {
   useEffect(() => {

@@ -26,9 +26,10 @@ import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { IoIosArrowForward } from "react-icons/io";
+// import { IoIosArrowForward } from "react-icons/io";
 import { FaAngleDoubleRight } from "react-icons/fa";
 import backgroundImage from "../assets/img/flight2.jpg";
+import { useLocation } from "react-router-dom";
 
 const FlightSearch = () => {
   const [airportList, setAirPortList] = useState([]);
@@ -40,10 +41,17 @@ const FlightSearch = () => {
   const [filteredList2, setFilteredList2] = useState([]);
   const [toInput2, setToInput2] = useState("");
   const [filteredToList2, setFilteredToList2] = useState([]);
+  const [fromSelected, setFromSelected] = useState(false);
+  const [toSelected, setToSelected] = useState(false);
+  const [fromSelected2, setFromSelected2] = useState(false);
+  const [toSelected2, setToSelected2] = useState(false);
   const [multiFilteredList, setMultiFilteredList] = useState([]);
   const [multiFilteredToList, setMultiFilteredToList] = useState([]);
-  const [travelClass, setTravelClass] = useState("Economy");
+  const [multiSelectedFrom, setMultiSelectedFrom] = useState([]);
+  const [multiSelectedTo, setMultiSelectedTo] = useState([]);
+  const [travelClass, setTravelClass] = useState("ECONOMY");
   const [journeyDate, setJourneyDate] = useState("");
+  const [journeyDate2, setJourneyDate2] = useState("");
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [infants, setInfants] = useState(0);
@@ -55,10 +63,11 @@ const FlightSearch = () => {
   const [isPopularCollapsed, setIsPopularCollapsed] = useState(true);
   const [isPropertyCollapsed, setIsPropertyCollapsed] = useState(true);
   const [isStarCollapsed, setIsStarCollapsed] = useState(true);
+  const [apiFlights, setApiFlights] = useState([]);
   const [openIndex, setOpenIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedClass, setSelectedClass] = useState("Economy");
-  const itemsPerPage = 4;
+  // const [selectedClass, setSelectedClass] = useState("Economy");
+  const itemsPerPage = 5;
   const getTodayDate = () => new Date().toISOString().split("T")[0];
   const [multiCityData, setMultiCityData] = useState([
     { from: "", to: "", date: getTodayDate() },
@@ -91,29 +100,41 @@ const FlightSearch = () => {
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     setJourneyDate(today);
+    setJourneyDate2(today);
   }, []);
 
   const handleDateChange = (e) => {
     setJourneyDate(e.target.value);
   };
-  const handleChange = (e) => {
-    setSelectedClass(e.target.value);
+  const handleDateChange2 = (e) => {
+    setJourneyDate2(e.target.value);
   };
+  // const handleChange = (e) => {
+  //   setSelectedClass(e.target.value);
+  // };
 
+  // Flight airportList api
   useEffect(() => {
-    // Flight airportList api
     const fetchAirportList = async () => {
       try {
-        const response = await axios.post("/api/airport_list", {
-          user_id: "jetlifeglobal_testAPI",
-          user_password: "jetlifeglobalTest@2025",
-          access: "Test",
-          ip_address: "192.168.1.28",
+        const authToken = localStorage.getItem("authToken");
+        if (!authToken) {
+          console.error("No auth token available, cannot fetch airports");
+          return;
+        }
+        const data = {
+          language_code: "EN",
+        };
+        const response = await axios.post("/api/rest/flight/v2/airport", data, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
         });
-        console.log(response.data);
-        setAirPortList(response.data);
+        console.log("Flight Airport Response:", response.data);
+        setAirPortList(response.data.result || []);
       } catch (error) {
-        console.log("Error Fetching Airport List Data:", error);
+        console.log("Error Fetching Flight Airport:", error);
       }
     };
     fetchAirportList();
@@ -123,89 +144,129 @@ const FlightSearch = () => {
   const fetchAirportSearch = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/availability", {
-        user_id: "jetlifeglobal_testAPI",
-        user_password: "jetlifeglobalTest@2025",
-        access: "Test",
-        ip_address: "192.168.1.28",
-        requiredCurrency: "USD",
-        journeyType: "OneWay",
-        OriginDestinationInfo: [
-          {
-            departureDate: journeyDate,
-            airportOriginCode: fromInput,
-            airportDestinationCode: toInput,
+      const authToken = localStorage.getItem("authToken");
+      if (!authToken) {
+        console.error(
+          "Flight Search:-No auth token available, cannot fetch airport data"
+        );
+        return;
+      }
+      const searchData = {
+        from_destination: {
+          city: true,
+          code: fromInput,
+        },
+        to_destination: {
+          city: true,
+          code: toInput,
+        },
+        departure_date: journeyDate,
+        pax_list: [{ type: "ADULT", count: adults }],
+        accept_pending: true,
+        cabin_type: travelClass,
+      };
+      const response = await axios.post(
+        "/api/rest/flight/v2/search",
+        searchData,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
           },
-        ],
-        class: travelClass,
-        adults: adults,
-        childs: children,
-        infants: infants,
-      });
-      console.log(
-        "Navigating to searchFlight with data:",
-        response.data.AirSearchResponse.AirSearchResult.FareItineraries
+        }
       );
-      sessionStorage.setItem(
-        "session_id",
-        response.data.AirSearchResponse.session_id
-      );
-      console.log(
-        response.data.AirSearchResponse.AirSearchResult.FareItineraries
-      );
+
+      const flightsData = response.data?.result?.departure_flights || [];
+      setApiFlights(flightsData);
     } catch (error) {
       console.log("Error Fetching Search List Data:", error);
     }
   };
-  const handleToInputChange = (e) => {
-    const value = e.target.value;
-    setToInput(value);
 
-    const filtered = airportList.filter((airport) =>
-      `${airport.AirportCode} ${airport.AirportName} ${airport.City}`
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
-
-    setFilteredToList(filtered);
-  };
-
+  // OneWay filter data
   const handleInputChange = (e) => {
     const value = e.target.value;
     setFromInput(value);
+    setFromSelected(false);
 
     const filtered = airportList.filter((airport) =>
-      `${airport.AirportCode} ${airport.AirportName} ${airport.City}`
+      `${airport.city_code} ${airport.city_name} ${airport.country_name}`
         .toLowerCase()
         .includes(value.toLowerCase())
     );
     setFilteredList(filtered);
   };
 
+  const handleAirport = (airport) => {
+    setFromInput(
+      `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`
+    );
+    setFilteredList([]);
+    setFromSelected(true);
+  };
+
+  const handleToInputChange = (e) => {
+    const value = e.target.value;
+    setToInput(value);
+    setToSelected(false);
+
+    const filtered = airportList.filter((airport) =>
+      `${airport.city_code} ${airport.city_name} ${airport.country_name}`
+        .toLowerCase()
+        .includes(value.toLowerCase())
+    );
+    setFilteredToList(filtered);
+  };
+
+  const handleSelectToAirport = (airport) => {
+    setToInput(
+      `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`
+    );
+    setFilteredToList([]);
+    setToSelected(true);
+  };
+
   // Roundtrip filter data
   const handleInputChange2 = (e) => {
     const value = e.target.value;
     setFromInput2(value);
+    setFromSelected2(false);
 
     const filtered = airportList.filter((airport) =>
-      `${airport.AirportCode} ${airport.AirportName} ${airport.City}`
+      `${airport.city_code} ${airport.city_name} ${airport.country_name}`
         .toLowerCase()
         .includes(value.toLowerCase())
     );
     setFilteredList2(filtered);
   };
 
+  const handleSelectAirport2 = (airport) => {
+    setFromInput2(
+      `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`
+    );
+    setFilteredList2([]);
+    setFromSelected2(true);
+  };
+
   const handleToInputChange2 = (e) => {
     const value = e.target.value;
     setToInput2(value);
+    setToSelected2(false);
 
     const filtered = airportList.filter((airport) =>
-      `${airport.AirportCode} ${airport.AirportName} ${airport.City}`
+      `${airport.city_code} ${airport.city_name} ${airport.country_name}`
         .toLowerCase()
         .includes(value.toLowerCase())
     );
-
     setFilteredToList2(filtered);
+  };
+
+  const handleSelectToAirport2 = (airport) => {
+    setToInput2(
+      `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`
+    );
+    setFilteredToList2([]);
+    setToSelected2(true);
   };
 
   // Multi filter data
@@ -216,7 +277,7 @@ const FlightSearch = () => {
     setMultiCityData(updatedData);
 
     const filtered = airportList.filter((airport) =>
-      `${airport.AirportCode} ${airport.AirportName} ${airport.City}`
+      `${airport.city_code} ${airport.city_name} ${airport.country_name}`
         .toLowerCase()
         .includes(value.toLowerCase())
     );
@@ -225,15 +286,23 @@ const FlightSearch = () => {
       const updatedFiltered = [...multiFilteredList];
       updatedFiltered[index] = filtered;
       setMultiFilteredList(updatedFiltered);
+
+      const updatedSelected = [...multiSelectedFrom];
+      updatedSelected[index] = false;
+      setMultiSelectedFrom(updatedSelected);
     } else if (type === "to") {
       const updatedFiltered = [...multiFilteredToList];
       updatedFiltered[index] = filtered;
       setMultiFilteredToList(updatedFiltered);
+
+      const updatedSelected = [...multiSelectedTo];
+      updatedSelected[index] = false;
+      setMultiSelectedTo(updatedSelected);
     }
   };
 
   const handleSelectAirport = (airport, index, type) => {
-    const formatted = `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`;
+    const formatted = `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`;
     const updatedData = [...multiCityData];
     updatedData[index][type] = formatted;
     setMultiCityData(updatedData);
@@ -242,10 +311,18 @@ const FlightSearch = () => {
       const updatedFiltered = [...multiFilteredList];
       updatedFiltered[index] = [];
       setMultiFilteredList(updatedFiltered);
+
+      const updatedSelected = [...multiSelectedFrom];
+      updatedSelected[index] = true;
+      setMultiSelectedFrom(updatedSelected);
     } else {
       const updatedFiltered = [...multiFilteredToList];
       updatedFiltered[index] = [];
       setMultiFilteredToList(updatedFiltered);
+
+      const updatedSelected = [...multiSelectedTo];
+      updatedSelected[index] = true;
+      setMultiSelectedTo(updatedSelected);
     }
   };
 
@@ -305,117 +382,92 @@ const FlightSearch = () => {
     if (type === "infant" && infants > 0) setInfants(infants - 1);
   };
 
-  const handleChildAgeChange = (index, value) => {
-    const updatedAges = [...childAges];
-    updatedAges[index] = value;
-    setChildAges(updatedAges);
-  };
+  // const handleChildAgeChange = (index, value) => {
+  //   const updatedAges = [...childAges];
+  //   updatedAges[index] = value;
+  //   setChildAges(updatedAges);
+  // };
 
-  const handleDone = () => {
-    setShowDropdown(false);
-  };
-  const flightData = [
-    {
-      fromCity: "New York",
-      fromAirport: "JFK",
-      toCity: "London",
-      toAirport: "LCY",
-      duration: "01h 05m",
-      price: "$7,560",
-      discount: "*20% OFF",
-      note: "*Eco value",
-      time: "05:20pm",
-      date: "Jun 17",
-    },
-    {
-      fromCity: "New York",
-      fromAirport: "JFK",
-      toCity: "London",
-      toAirport: "LCY",
-      duration: "01h 05m",
-      price: "$7,560",
-      discount: "*20% OFF",
-      note: "*Eco value",
-      time: "05:20pm",
-      date: "Jun 17",
-    },
-    {
-      fromCity: "New York",
-      fromAirport: "JFK",
-      toCity: "London",
-      toAirport: "LCY",
-      duration: "01h 05m",
-      price: "$7,560",
-      discount: "*20% OFF",
-      note: "*Eco value",
-      time: "05:20pm",
-      date: "Jun 17",
-    },
-    {
-      fromCity: "New York",
-      fromAirport: "JFK",
-      toCity: "London",
-      toAirport: "LCY",
-      duration: "01h 05m",
-      price: "$7,560",
-      discount: "*20% OFF",
-      note: "*Eco value",
-      time: "05:20pm",
-      date: "Jun 17",
-    },
-    {
-      fromCity: "New York",
-      fromAirport: "JFK",
-      toCity: "London",
-      toAirport: "LCY",
-      duration: "01h 05m",
-      price: "$7,560",
-      discount: "*20% OFF",
-      note: "*Eco value",
-      time: "05:20pm",
-      date: "Jun 17",
-    },
-  ];
+  // const handleDone = () => {
+  //   setShowDropdown(false);
+  // };
 
   // tab-section
-  const tabs = document.querySelectorAll(".tab");
+  // const tabs = document.querySelectorAll(".tab");
 
-  function tabify(tab) {
-    const tabList = tab.querySelector(".tab__list");
+  // function tabify(tab) {
+  //   const tabList = tab.querySelector(".tab__list");
 
-    if (tabList) {
-      const tabItems = [...tabList.children];
-      const tabContent = tab.querySelector(".tab__content");
-      const tabContentItems = [...tabContent.children];
-      let tabIndex = 0;
+  //   if (tabList) {
+  //     const tabItems = [...tabList.children];
+  //     const tabContent = tab.querySelector(".tab__content");
+  //     const tabContentItems = [...tabContent.children];
+  //     let tabIndex = 0;
 
-      tabIndex = tabItems.findIndex((item, index) => {
-        return [...item.classList].indexOf("is--active") > -1;
-      });
+  //     tabIndex = tabItems.findIndex((item, index) => {
+  //       return [...item.classList].indexOf("is--active") > -1;
+  //     });
 
-      tabIndex > -1 ? (tabIndex = tabIndex) : (tabIndex = 0);
+  //     tabIndex > -1 ? (tabIndex = tabIndex) : (tabIndex = 0);
 
-      function setTab(index) {
-        tabItems.forEach((x, index) => x.classList.remove("is--active"));
-        tabContentItems.forEach((x, index) => x.classList.remove("is--active"));
+  //     function setTab(index) {
+  //       tabItems.forEach((x, index) => x.classList.remove("is--active"));
+  //       tabContentItems.forEach((x, index) => x.classList.remove("is--active"));
 
-        tabItems[index].classList.add("is--active");
-        tabContentItems[index].classList.add("is--active");
-      }
+  //       tabItems[index].classList.add("is--active");
+  //       tabContentItems[index].classList.add("is--active");
+  //     }
 
-      tabItems.forEach((x, index) =>
-        x.addEventListener("click", () => setTab(index))
-      );
-      setTab(tabIndex);
-      tab.querySelectorAll(".tab").forEach((tabContent) => tabify(tabContent));
+  //     tabItems.forEach((x, index) =>
+  //       x.addEventListener("click", () => setTab(index))
+  //     );
+  //     setTab(tabIndex);
+  //     tab.querySelectorAll(".tab").forEach((tabContent) => tabify(tabContent));
+  //   }
+  // }
+  // tabs.forEach(tabify);
+
+  const location = useLocation();
+  const locationFlights = location.state?.flights || [];
+
+  useEffect(() => {
+    if (locationFlights.length > 0) {
+      setApiFlights(locationFlights);
     }
-  }
+  }, [locationFlights]);
 
-  tabs.forEach(tabify);
+  const mappedFlights = apiFlights.map((f) => {
+    const leg = f.legs[0];
+    const fare = f.fares[0]?.fare_info?.fare_detail;
+    const baggage = leg?.baggages[0];
 
+    return {
+      airline: leg.airline_info?.carrier_name || "Unknown Airline",
+      flightNumber: leg.flight_number,
+      fromAirport: `${leg.departure_info?.airport_name} (${leg.departure_info?.city_name})`,
+      fromCity: leg.departure_info?.city_name,
+      fromDetails: `${leg.departure_info?.airport_code} - ${leg.departure_info?.airport_name}, ${leg.departure_info?.city_name}`,
+      departureTime: leg.departure_info?.date,
+      toAirport: `${leg.arrival_info?.airport_name} (${leg.arrival_info?.city_name})`,
+      toCity: leg.arrival_info?.city_name,
+      toDetails: `${leg.arrival_info?.airport_code} - ${leg.arrival_info?.airport_name}, ${leg.arrival_info?.city_name}`,
+      arrivalTime: leg.arrival_info?.date,
+      duration: `${leg.time_info?.flight_time_hour}h ${leg.time_info?.flight_time_minute}m`,
+      baggerAmount: baggage?.amount,
+      baggerType: baggage?.type,
+      price: `${fare?.currency_code} ${fare?.price_info?.total_fare}`,
+      flightFare: `${fare?.currency_code} ${fare?.price_info?.base_fare}`,
+      serviceFare: `${fare?.currency_code} ${fare?.price_info?.service_fee}`,
+      airlineTex: `${fare?.currency_code} ${fare?.price_info?.tax}`,
+      airlineCommission: `${fare?.currency_code} ${fare?.price_info?.agency_commission}`,
+    };
+  });
+  const totalFlights = mappedFlights.length;
+
+  const totalPages = Math.ceil(mappedFlights.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedData = flightData.slice(startIndex, endIndex);
+  const paginatedData = mappedFlights.slice(startIndex, endIndex);
 
   const setting = {
     dots: false,
@@ -490,14 +542,16 @@ const FlightSearch = () => {
     <>
       <Header />
       {/* <!-- Common Banner Area --> */}
-      <section id="common_banner_img"
-      style={{
-        backgroundImage:`url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        height: "100%",
-      }}>
+      <section
+        id="common_banner_img"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height: "100%",
+        }}
+      >
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
@@ -629,23 +683,21 @@ const FlightSearch = () => {
                                   </div>
                                   {fromInput.length > 0 && (
                                     <ul className="airportList_ul">
-                                      {filteredList.map((airport, index) => (
-                                        <li
-                                          className="airportList_li"
-                                          key={index}
-                                          onClick={() => {
-                                            setFromInput(
-                                              `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
-                                            );
-                                            setFilteredList([]);
-                                          }}
-                                        >
-                                          {airport.City} ({airport.AirportCode})
-                                          - {airport.AirportName}
-                                        </li>
-                                      ))}
-
-                                      {filteredList.length === 0 && (
+                                      {filteredList.length > 0 ? (
+                                        filteredList.map((airport, index) => (
+                                          <li
+                                            key={index}
+                                            className="airportList_li"
+                                            onClick={() =>
+                                              handleAirport(airport)
+                                            }
+                                          >
+                                            {airport.city_name} (
+                                            {airport.city_code}) -{" "}
+                                            {airport.country_name}
+                                          </li>
+                                        ))
+                                      ) : !fromSelected ? (
                                         <li
                                           style={{
                                             padding: "8px 12px",
@@ -654,9 +706,10 @@ const FlightSearch = () => {
                                         >
                                           No results found
                                         </li>
-                                      )}
+                                      ) : null}
                                     </ul>
                                   )}
+
                                   <div className="">
                                     <span>Start typing to filter airports</span>
                                   </div>
@@ -683,31 +736,30 @@ const FlightSearch = () => {
                                   </div>
                                   {toInput.length > 0 && (
                                     <ul className="airportList_ul">
-                                      {filteredToList.map((airport, index) => (
-                                        <li
-                                          className="airportList_li"
-                                          key={index}
-                                          onClick={() => {
-                                            setToInput(
-                                              `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
-                                            );
-                                            setFilteredToList([]);
-                                          }}
-                                        >
-                                          {airport.City} ({airport.AirportCode})
-                                          - {airport.AirportName}
-                                        </li>
-                                      ))}
-                                      {filteredToList === 0 && (
+                                      {filteredToList.length > 0 ? (
+                                        filteredToList.map((airport, index) => (
+                                          <li
+                                            key={index}
+                                            className="airportList_li"
+                                            onClick={() =>
+                                              handleSelectToAirport(airport)
+                                            }
+                                          >
+                                            {airport.city_name} (
+                                            {airport.city_code}) -{" "}
+                                            {airport.country_name}
+                                          </li>
+                                        ))
+                                      ) : !toSelected ? (
                                         <li
                                           style={{
                                             padding: "8px 12px",
                                             color: "gray",
                                           }}
                                         >
-                                          No result found
+                                          No results found
                                         </li>
-                                      )}
+                                      ) : null}
                                     </ul>
                                   )}
                                   <div className="">
@@ -717,7 +769,7 @@ const FlightSearch = () => {
                                 <div className="flight_Search_boxed date_flex_area">
                                   <div className="Journey_date">
                                     <div className="">
-                                      <span>Departure</span>
+                                      <span>Journey date</span>
                                     </div>
                                     <input
                                       type="date"
@@ -737,7 +789,10 @@ const FlightSearch = () => {
                                     </span>
                                   </div>
                                 </div>
-                                <div className="flight_Search_boxed dropdown_passenger_area">
+                                <div
+                                  className="flight_Search_boxed dropdown_passenger_area"
+                                  onClick={() => setShowDropdown(!showDropdown)}
+                                >
                                   <div className="">
                                     <span>Travellers and class</span>
                                   </div>
@@ -906,10 +961,10 @@ const FlightSearch = () => {
                                               <h6 className="mb-2">Classes</h6>
                                               <div className="class-options">
                                                 {[
-                                                  "Economy",
-                                                  "Premium Economy",
-                                                  "Business",
-                                                  "First Class",
+                                                  "ECONOMY",
+                                                  "PREMIUM ECONOMY",
+                                                  "BUSINESS",
+                                                  "FIRST CLASS",
                                                 ].map((cls) => (
                                                   <label
                                                     className="class-radio"
@@ -920,9 +975,11 @@ const FlightSearch = () => {
                                                       name="cabin"
                                                       value={cls}
                                                       checked={
-                                                        selectedClass === cls
+                                                        travelClass === cls
                                                       }
-                                                      onChange={handleChange}
+                                                      onChange={
+                                                        handleClassChange
+                                                      }
                                                     />
                                                     <span className="custom-circle"></span>
                                                     <span>{cls}</span>
@@ -931,40 +988,6 @@ const FlightSearch = () => {
                                               </div>
                                             </div>
                                           </div>
-                                          {/* Child Age Selects */}
-                                          {/* {Array.from({
-                                                        length: children,
-                                                      }).map((_, index) => (
-                                                        <div key={index} className="mb-2 mt-2">
-                                                          <select className="form-control"
-                                                            value={ childAges[index] || "" }
-                                                            onChange={(e) =>
-                                                              handleChildAgeChange(
-                                                                index,
-                                                                e.target.value
-                                                              )
-                                                            }
-                                                          >
-                                                            <option value="">
-                                                              Select Age
-                                                            </option>
-                                                            {Array.from(
-                                                              { length: 11 },
-                                                              (_, i) => i + 2
-                                                            ).map((age) => (
-                                                              <option
-                                                                key={age}
-                                                                value={age}
-                                                              >
-                                                                {age}
-                                                              </option>
-                                                            ))}
-                                                          </select>
-                                                        </div>
-                                                      ))} */}
-                                          {/* <div className="cabin-selection mt-0">
-                                                  <button className="btn commonBtn" onClick={handleDone}>Done</button>
-                                                </div> */}
                                         </div>
                                       </div>
                                     )}
@@ -1018,42 +1041,26 @@ const FlightSearch = () => {
                                     />
                                   </div>
                                   {fromInput2.length > 0 && (
-                                    <ul
-                                      style={{
-                                        position: "absolute",
-                                        top: "100%",
-                                        left: 0,
-                                        right: 0,
-                                        maxHeight: "350px",
-                                        overflowY: "auto",
-                                        backgroundColor: "white",
-                                        border: "1px solid #ccc",
-                                        zIndex: 10,
-                                        padding: 0,
-                                        margin: 0,
-                                        listStyle: "none",
-                                      }}
-                                    >
-                                      {filteredList2.map((airport, index) => (
-                                        <li
-                                          key={index}
-                                          onClick={() => {
-                                            setFromInput2(
-                                              `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
-                                            );
-                                            setFilteredList2([]);
-                                          }}
-                                          style={{
-                                            padding: "8px 12px",
-                                            cursor: "pointer",
-                                            borderBottom: "1px solid #eee",
-                                          }}
-                                        >
-                                          {airport.City} ({airport.AirportCode})
-                                          - {airport.AirportName}
-                                        </li>
-                                      ))}
-                                      {filteredList2.length === 0 && (
+                                    <ul className="airportList_ul">
+                                      {filteredList2.length > 0 ? (
+                                        filteredList2.map((airport, index) => (
+                                          <li
+                                            key={index}
+                                            onClick={() =>
+                                              handleSelectAirport2(airport)
+                                            }
+                                            style={{
+                                              padding: "8px 12px",
+                                              cursor: "pointer",
+                                              borderBottom: "1px solid #eee",
+                                            }}
+                                          >
+                                            {airport.city_name} (
+                                            {airport.city_code}) -{" "}
+                                            {airport.country_name}
+                                          </li>
+                                        ))
+                                      ) : !fromSelected2 ? (
                                         <li
                                           style={{
                                             padding: "8px 12px",
@@ -1062,9 +1069,10 @@ const FlightSearch = () => {
                                         >
                                           No result found
                                         </li>
-                                      )}
+                                      ) : null}
                                     </ul>
                                   )}
+
                                   <div className="">
                                     <span>Start typing to filter airports</span>
                                   </div>
@@ -1090,42 +1098,28 @@ const FlightSearch = () => {
                                     </i>
                                   </div>
                                   {toInput2.length > 0 && (
-                                    <ul
-                                      style={{
-                                        position: "absolute",
-                                        top: "100%",
-                                        left: 0,
-                                        right: 0,
-                                        maxHeight: "350px",
-                                        overflow: "auto",
-                                        backgroundColor: "white",
-                                        border: "1px solid #ccc",
-                                        zIndex: 10,
-                                        padding: 0,
-                                        margin: 0,
-                                        listStyle: "none",
-                                      }}
-                                    >
-                                      {filteredToList2.map((airport, index) => (
-                                        <li
-                                          key={index}
-                                          onClick={() => {
-                                            setToInput2(
-                                              `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
-                                            );
-                                            setFilteredToList2([]);
-                                          }}
-                                          style={{
-                                            padding: "8px 12px",
-                                            cursor: "pointer",
-                                            borderBottom: "px solid #eee",
-                                          }}
-                                        >
-                                          {airport.City} ({airport.AirportCode})
-                                          - {airport.AirportName}
-                                        </li>
-                                      ))}
-                                      {filteredToList2 === 0 && (
+                                    <ul className="airportList_ul">
+                                      {filteredToList2.length > 0 ? (
+                                        filteredToList2.map(
+                                          (airport, index) => (
+                                            <li
+                                              key={index}
+                                              onClick={() =>
+                                                handleSelectToAirport2(airport)
+                                              }
+                                              style={{
+                                                padding: "8px 12px",
+                                                cursor: "pointer",
+                                                borderBottom: "1px solid #eee",
+                                              }}
+                                            >
+                                              {airport.city_name} (
+                                              {airport.city_code}) -{" "}
+                                              {airport.country_name}
+                                            </li>
+                                          )
+                                        )
+                                      ) : !toSelected2 ? (
                                         <li
                                           style={{
                                             padding: "8px 12px",
@@ -1134,9 +1128,10 @@ const FlightSearch = () => {
                                         >
                                           No result found
                                         </li>
-                                      )}
+                                      ) : null}
                                     </ul>
                                   )}
+
                                   <div className="">
                                     <span>Select Destination airport</span>
                                   </div>
@@ -1144,190 +1139,247 @@ const FlightSearch = () => {
                                 <div className="flight_Search_boxed date_flex_area">
                                   <div className="Journey_date">
                                     <span>Journey date</span>
-                                    <input type="date" value="2022-05-05" />
-                                    <span>Thursday</span>
+                                    <input
+                                      type="date"
+                                      value={journeyDate}
+                                      onChange={handleDateChange}
+                                      min={
+                                        new Date().toISOString().split("T")[0]
+                                      }
+                                    />
+                                    <span>
+                                      {journeyDate &&
+                                        new Date(
+                                          journeyDate
+                                        ).toLocaleDateString("en-US", {
+                                          weekday: "long",
+                                        })}
+                                    </span>
                                   </div>
                                 </div>
                                 <div className="flight_Search_boxed date_flex_area">
                                   <div className="Journey_date">
                                     <span>Return date</span>
-                                    <input type="date" value="2022-05-08" />
-                                    <span>Saturday</span>
+                                    <input
+                                      type="date"
+                                      value={journeyDate2}
+                                      onChange={handleDateChange2}
+                                      min={
+                                        new Date().toISOString().split("T")[0]
+                                      }
+                                    />
+                                    <span>
+                                      {journeyDate2 &&
+                                        new Date(
+                                          journeyDate2
+                                        ).toLocaleDateString("en-US", {
+                                          weekday: "long",
+                                        })}
+                                    </span>
                                   </div>
                                 </div>
-                                <div className="flight_Search_boxed dropdown_passenger_area">
+                                <div
+                                  className="flight_Search_boxed dropdown_passenger_area"
+                                  onClick={() => setShowDropdown(!showDropdown)}
+                                >
                                   <div className="">
                                     <span>Travellers and class</span>
                                   </div>
                                   <div className="dropdown">
                                     <button
                                       className="dropdown-toggle final-count"
-                                      data-toggle="dropdown"
                                       type="button"
-                                      id="dropdownMenuButton1"
-                                      data-bs-toggle="dropdown"
-                                      aria-expanded="false"
+                                      onClick={() =>
+                                        setShowDropdown(!showDropdown)
+                                      }
                                     >
-                                      {" "}
-                                      0 Passenger{" "}
+                                      {totalPassengers} Passenger
+                                      {totalPassengers !== 1 ? "s" : ""}
                                     </button>
-                                    <div
-                                      className="dropdown-menu dropdown_passenger_info"
-                                      aria-labelledby="dropdownMenuButton1"
-                                    >
-                                      <div className="dropdown-header hdr-drop">
-                                        <h6>Select Travelers & Class</h6>
-                                      </div>
-                                      <div className="card travel-card">
-                                        <div className="card-body">
-                                          <div className="traveller-calulate-persons">
-                                            <h6>Travelers</h6>
-                                            <div className="passengers">
-                                              {/* Adult */}
-                                              <div className="passengers-types">
-                                                <div className="passengers-type">
-                                                  <div className="text">
-                                                    <div className="type-label">
-                                                      <p>
-                                                        Adult{" "}
-                                                        <span>(12+ yrs)</span>
-                                                      </p>
+                                    {showDropdown && (
+                                      <div
+                                        className="dropdown-menu dropdown_passenger_info show"
+                                        onClick={(e) => e.stopPropagation()}
+                                      >
+                                        <div className="dropdown-header hdr-drop">
+                                          <h6>Select Travelers & Class</h6>
+                                        </div>
+                                        <div className="card travel-card">
+                                          <div className="card-body">
+                                            {error && (
+                                              <div
+                                                style={{
+                                                  color: "red",
+                                                  fontSize: "12px",
+                                                  marginBottom: "0px",
+                                                }}
+                                              >
+                                                {error}
+                                              </div>
+                                            )}
+                                            <div className="traveller-calulate-persons">
+                                              <h6>Travelers</h6>
+                                              <div className="passengers">
+                                                {/* Adult */}
+                                                <div className="passengers-types">
+                                                  <div className="passengers-type">
+                                                    <div className="text">
+                                                      <div className="type-label">
+                                                        <p>
+                                                          Adult{" "}
+                                                          <span>(12+ yrs)</span>
+                                                        </p>
+                                                      </div>
                                                     </div>
-                                                  </div>
-                                                  <div className="button-set">
-                                                    <button
-                                                      type="button"
-                                                      className="btn-subtract"
-                                                      onClick={() =>
-                                                        handleDecrement("adult")
-                                                      }
-                                                    >
-                                                      <FaMinus />
-                                                    </button>
-                                                    <span className="count pcount">
-                                                      {adults}
-                                                    </span>
-                                                    <button
-                                                      type="button"
-                                                      className="btn-add"
-                                                      onClick={() =>
-                                                        handleIncrement("adult")
-                                                      }
-                                                    >
-                                                      <FaPlus />
-                                                    </button>
+                                                    <div className="button-set">
+                                                      <button
+                                                        type="button"
+                                                        className="btn-subtract"
+                                                        onClick={() =>
+                                                          handleDecrement(
+                                                            "adult"
+                                                          )
+                                                        }
+                                                      >
+                                                        <FaMinus />
+                                                      </button>
+                                                      <span className="count pcount">
+                                                        {adults}
+                                                      </span>
+                                                      <button
+                                                        type="button"
+                                                        className="btn-add"
+                                                        onClick={() =>
+                                                          handleIncrement(
+                                                            "adult"
+                                                          )
+                                                        }
+                                                      >
+                                                        <FaPlus />
+                                                      </button>
+                                                    </div>
                                                   </div>
                                                 </div>
-                                              </div>
-                                              {/* Children */}
-                                              <div className="passengers-types">
-                                                <div className="passengers-type">
-                                                  <div className="text">
-                                                    <div className="type-label">
-                                                      <p>
-                                                        Children{" "}
-                                                        <span>(2-12 yrs)</span>
-                                                      </p>
+                                                {/* Children */}
+                                                <div className="passengers-types">
+                                                  <div className="passengers-type">
+                                                    <div className="text">
+                                                      <div className="type-label">
+                                                        <p>
+                                                          Children{" "}
+                                                          <span>
+                                                            (2-12 yrs)
+                                                          </span>
+                                                        </p>
+                                                      </div>
                                                     </div>
-                                                  </div>
-                                                  <div className="button-set">
-                                                    <button
-                                                      type="button"
-                                                      className="btn-subtract-in"
-                                                      onClick={() =>
-                                                        handleDecrement("child")
-                                                      }
-                                                    >
-                                                      <FaMinus />
-                                                    </button>
-                                                    <span className="count pcount">
-                                                      {children}
-                                                    </span>
-                                                    <button
-                                                      type="button"
-                                                      className="btn-add-in"
-                                                      onClick={() =>
-                                                        handleIncrement("child")
-                                                      }
-                                                    >
-                                                      <FaPlus />
-                                                    </button>
+                                                    <div className="button-set">
+                                                      <button
+                                                        type="button"
+                                                        className="btn-subtract-in"
+                                                        onClick={() =>
+                                                          handleDecrement(
+                                                            "child"
+                                                          )
+                                                        }
+                                                      >
+                                                        <FaMinus />
+                                                      </button>
+                                                      <span className="count pcount">
+                                                        {children}
+                                                      </span>
+                                                      <button
+                                                        type="button"
+                                                        className="btn-add-in"
+                                                        onClick={() =>
+                                                          handleIncrement(
+                                                            "child"
+                                                          )
+                                                        }
+                                                      >
+                                                        <FaPlus />
+                                                      </button>
+                                                    </div>
                                                   </div>
                                                 </div>
-                                              </div>
-                                              {/* Infant */}
-                                              <div className="passengers-types">
-                                                <div className="passengers-type">
-                                                  <div className="text">
-                                                    <div className="type-label">
-                                                      <p>
-                                                        Infant{" "}
-                                                        <span>(0-12 yrs)</span>
-                                                      </p>
+                                                {/* Infant */}
+                                                <div className="passengers-types">
+                                                  <div className="passengers-type">
+                                                    <div className="text">
+                                                      <div className="type-label">
+                                                        <p>
+                                                          Infant{" "}
+                                                          <span>
+                                                            (0-12 yrs)
+                                                          </span>
+                                                        </p>
+                                                      </div>
                                                     </div>
-                                                  </div>
-                                                  <div className="button-set">
-                                                    <button
-                                                      type="button"
-                                                      className="btn-subtract-in"
-                                                      onClick={() =>
-                                                        handleDecrement(
-                                                          "infant"
-                                                        )
-                                                      }
-                                                    >
-                                                      <FaMinus />
-                                                    </button>
-                                                    <span className="count incount">
-                                                      {infants}
-                                                    </span>
-                                                    <button
-                                                      type="button"
-                                                      className="btn-add-in"
-                                                      onClick={() =>
-                                                        handleIncrement(
-                                                          "infant"
-                                                        )
-                                                      }
-                                                    >
-                                                      <FaPlus />
-                                                    </button>
+                                                    <div className="button-set">
+                                                      <button
+                                                        type="button"
+                                                        className="btn-subtract-in"
+                                                        onClick={() =>
+                                                          handleDecrement(
+                                                            "infant"
+                                                          )
+                                                        }
+                                                      >
+                                                        <FaMinus />
+                                                      </button>
+                                                      <span className="count incount">
+                                                        {infants}
+                                                      </span>
+                                                      <button
+                                                        type="button"
+                                                        className="btn-add-in"
+                                                        onClick={() =>
+                                                          handleIncrement(
+                                                            "infant"
+                                                          )
+                                                        }
+                                                      >
+                                                        <FaPlus />
+                                                      </button>
+                                                    </div>
                                                   </div>
                                                 </div>
                                               </div>
                                             </div>
-                                          </div>
-                                          <div className="">
-                                            <h6 className="mb-2">Classes</h6>
-                                            <div className="class-options">
-                                              {[
-                                                "Economy",
-                                                "Premium Economy",
-                                                "Business",
-                                                "First Class",
-                                              ].map((cls) => (
-                                                <label
-                                                  className="class-radio"
-                                                  key={cls}
-                                                >
-                                                  <input
-                                                    type="radio"
-                                                    name="cabin"
-                                                    value={cls}
-                                                    checked={
-                                                      selectedClass === cls
-                                                    }
-                                                    onChange={handleChange}
-                                                  />
-                                                  <span className="custom-circle"></span>
-                                                  <span>{cls}</span>
-                                                </label>
-                                              ))}
+                                            <div className="">
+                                              <h6 className="mb-2">Classes</h6>
+                                              <div className="class-options">
+                                                {[
+                                                  "ECONOMY",
+                                                  "PREMIUM ECONOMY",
+                                                  "BUSINESS",
+                                                  "FIRST CLASS",
+                                                ].map((cls) => (
+                                                  <label
+                                                    className="class-radio"
+                                                    key={cls}
+                                                  >
+                                                    <input
+                                                      type="radio"
+                                                      name="cabin"
+                                                      value={cls}
+                                                      checked={
+                                                        travelClass === cls
+                                                      }
+                                                      onChange={
+                                                        handleClassChange
+                                                      }
+                                                    />
+                                                    <span className="custom-circle"></span>
+                                                    <span>{cls}</span>
+                                                  </label>
+                                                ))}
+                                              </div>
                                             </div>
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
+                                    )}
                                   </div>
                                   <span onChange={handleClassChange}>
                                     {travelClass}
@@ -1385,28 +1437,30 @@ const FlightSearch = () => {
                                           }
                                         />
                                       </div>
-                                      {multiFilteredList[index]?.length > 0 && (
+                                      {segment.from.length > 0 && (
                                         <ul className="airportList_ul">
-                                          {multiFilteredList[index].map(
-                                            (airport, i) => (
-                                              <li
-                                                className="airportList_li"
-                                                key={i}
-                                                onClick={() =>
-                                                  handleSelectAirport(
-                                                    airport,
-                                                    index,
-                                                    "from"
-                                                  )
-                                                }
-                                              >
-                                                {airport.City} (
-                                                {airport.AirportCode}) -{" "}
-                                                {airport.AirportName}
-                                              </li>
+                                          {multiFilteredList[index]?.length >
+                                          0 ? (
+                                            multiFilteredList[index].map(
+                                              (airport, i) => (
+                                                <li
+                                                  key={i}
+                                                  className="airportList_li"
+                                                  onClick={() =>
+                                                    handleSelectAirport(
+                                                      airport,
+                                                      index,
+                                                      "from"
+                                                    )
+                                                  }
+                                                >
+                                                  {airport.city_name} (
+                                                  {airport.city_code}) -{" "}
+                                                  {airport.country_name}
+                                                </li>
+                                              )
                                             )
-                                          )}
-                                          {multiFilteredList === 0 && (
+                                          ) : !multiSelectedFrom[index] ? (
                                             <li
                                               style={{
                                                 padding: "8px 12px",
@@ -1415,9 +1469,10 @@ const FlightSearch = () => {
                                             >
                                               No result found
                                             </li>
-                                          )}
+                                          ) : null}
                                         </ul>
                                       )}
+
                                       <div className="">
                                         <span>Leaving from</span>
                                       </div>
@@ -1443,29 +1498,30 @@ const FlightSearch = () => {
                                           }
                                         />
                                       </div>
-                                      {multiFilteredToList[index]?.length >
-                                        0 && (
+                                      {segment.to.length > 0 && (
                                         <ul className="airportList_ul">
-                                          {multiFilteredToList[index].map(
-                                            (airport, i) => (
-                                              <li
-                                                className="airportList_li"
-                                                key={i}
-                                                onClick={() =>
-                                                  handleSelectAirport(
-                                                    airport,
-                                                    index,
-                                                    "to"
-                                                  )
-                                                }
-                                              >
-                                                {airport.City} (
-                                                {airport.AirportCode}) -{" "}
-                                                {airport.AirportName}
-                                              </li>
+                                          {multiFilteredToList[index]?.length >
+                                          0 ? (
+                                            multiFilteredToList[index].map(
+                                              (airport, i) => (
+                                                <li
+                                                  key={i}
+                                                  className="airportList_li"
+                                                  onClick={() =>
+                                                    handleSelectAirport(
+                                                      airport,
+                                                      index,
+                                                      "to"
+                                                    )
+                                                  }
+                                                >
+                                                  {airport.city_name} (
+                                                  {airport.city_code}) -{" "}
+                                                  {airport.country_name}
+                                                </li>
+                                              )
                                             )
-                                          )}
-                                          {multiFilteredToList == 0 && (
+                                          ) : !multiSelectedTo[index] ? (
                                             <li
                                               style={{
                                                 padding: "8px 12px",
@@ -1474,9 +1530,10 @@ const FlightSearch = () => {
                                             >
                                               No result found
                                             </li>
-                                          )}
+                                          ) : null}
                                         </ul>
                                       )}
+
                                       <div className="">
                                         <span>Going to</span>
                                       </div>
@@ -1486,6 +1543,7 @@ const FlightSearch = () => {
                                         </i>
                                       </div>
                                     </div>
+
                                     <div className="flight_Search_boxed date_flex_area">
                                       <div className="Journey_date">
                                         <span>Journey date</span>
@@ -1508,8 +1566,15 @@ const FlightSearch = () => {
                                       </div>
                                     </div>
                                     {index === 0 && (
-                                      <div className="flight_Search_boxed dropdown_passenger_area">
-                                        <p>Passenger, Class</p>
+                                      <div
+                                        className="flight_Search_boxed dropdown_passenger_area"
+                                        onClick={() =>
+                                          setShowDropdown(!showDropdown)
+                                        }
+                                      >
+                                        <div className="">
+                                          <span>Travellers and class</span>
+                                        </div>
                                         <div className="dropdown">
                                           <button
                                             className="dropdown-toggle final-count"
@@ -1521,7 +1586,6 @@ const FlightSearch = () => {
                                             {totalPassengers} Passenger
                                             {totalPassengers !== 1 ? "s" : ""}
                                           </button>
-
                                           {showDropdown && (
                                             <div
                                               className="dropdown-menu dropdown_passenger_info show"
@@ -1529,186 +1593,188 @@ const FlightSearch = () => {
                                                 e.stopPropagation()
                                               }
                                             >
-                                              <div className="traveller-calulate-persons">
-                                                <div className="passengers">
-                                                  <h6>Passengers</h6>
+                                              <div className="dropdown-header hdr-drop">
+                                                <h6>
+                                                  Select Travelers & Class
+                                                </h6>
+                                              </div>
+                                              <div className="card travel-card">
+                                                <div className="card-body">
                                                   {error && (
                                                     <div
                                                       style={{
                                                         color: "red",
-                                                        fontSize: "14px",
-                                                        marginBottom: "10px",
+                                                        fontSize: "12px",
+                                                        marginBottom: "0px",
                                                       }}
                                                     >
                                                       {error}
                                                     </div>
                                                   )}
-                                                  <div className="passengers-types">
-                                                    <div className="passengers-type">
-                                                      <div className="text">
-                                                        <div className="type-label">
-                                                          <p>Adult</p>
-                                                          <span>12+ yrs</span>
+                                                  <div className="traveller-calulate-persons">
+                                                    <h6>Travelers</h6>
+                                                    <div className="passengers">
+                                                      {/* Adult */}
+                                                      <div className="passengers-types">
+                                                        <div className="passengers-type">
+                                                          <div className="text">
+                                                            <div className="type-label">
+                                                              <p>
+                                                                Adult{" "}
+                                                                <span>
+                                                                  (12+ yrs)
+                                                                </span>
+                                                              </p>
+                                                            </div>
+                                                          </div>
+                                                          <div className="button-set">
+                                                            <button
+                                                              type="button"
+                                                              className="btn-subtract"
+                                                              onClick={() =>
+                                                                handleDecrement(
+                                                                  "adult"
+                                                                )
+                                                              }
+                                                            >
+                                                              <FaMinus />
+                                                            </button>
+                                                            <span className="count pcount">
+                                                              {adults}
+                                                            </span>
+                                                            <button
+                                                              type="button"
+                                                              className="btn-add"
+                                                              onClick={() =>
+                                                                handleIncrement(
+                                                                  "adult"
+                                                                )
+                                                              }
+                                                            >
+                                                              <FaPlus />
+                                                            </button>
+                                                          </div>
                                                         </div>
                                                       </div>
-                                                      <div className="button-set">
-                                                        <button
-                                                          type="button"
-                                                          className="btn-subtract"
-                                                          onClick={() =>
-                                                            handleDecrement(
-                                                              "adult"
-                                                            )
-                                                          }
-                                                        >
-                                                          <FaMinus />
-                                                        </button>
-                                                        <span className="count pcount">
-                                                          {adults}
-                                                        </span>
-                                                        <button
-                                                          type="button"
-                                                          className="btn-add"
-                                                          onClick={() =>
-                                                            handleIncrement(
-                                                              "adult"
-                                                            )
-                                                          }
-                                                        >
-                                                          <FaPlus />
-                                                        </button>
+                                                      {/* Children */}
+                                                      <div className="passengers-types">
+                                                        <div className="passengers-type">
+                                                          <div className="text">
+                                                            <div className="type-label">
+                                                              <p>
+                                                                Children{" "}
+                                                                <span>
+                                                                  (2-12 yrs)
+                                                                </span>
+                                                              </p>
+                                                            </div>
+                                                          </div>
+                                                          <div className="button-set">
+                                                            <button
+                                                              type="button"
+                                                              className="btn-subtract-in"
+                                                              onClick={() =>
+                                                                handleDecrement(
+                                                                  "child"
+                                                                )
+                                                              }
+                                                            >
+                                                              <FaMinus />
+                                                            </button>
+                                                            <span className="count pcount">
+                                                              {children}
+                                                            </span>
+                                                            <button
+                                                              type="button"
+                                                              className="btn-add-in"
+                                                              onClick={() =>
+                                                                handleIncrement(
+                                                                  "child"
+                                                                )
+                                                              }
+                                                            >
+                                                              <FaPlus />
+                                                            </button>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                      {/* Infant */}
+                                                      <div className="passengers-types">
+                                                        <div className="passengers-type">
+                                                          <div className="text">
+                                                            <div className="type-label">
+                                                              <p>
+                                                                Infant{" "}
+                                                                <span>
+                                                                  (0-12 yrs)
+                                                                </span>
+                                                              </p>
+                                                            </div>
+                                                          </div>
+                                                          <div className="button-set">
+                                                            <button
+                                                              type="button"
+                                                              className="btn-subtract-in"
+                                                              onClick={() =>
+                                                                handleDecrement(
+                                                                  "infant"
+                                                                )
+                                                              }
+                                                            >
+                                                              <FaMinus />
+                                                            </button>
+                                                            <span className="count incount">
+                                                              {infants}
+                                                            </span>
+                                                            <button
+                                                              type="button"
+                                                              className="btn-add-in"
+                                                              onClick={() =>
+                                                                handleIncrement(
+                                                                  "infant"
+                                                                )
+                                                              }
+                                                            >
+                                                              <FaPlus />
+                                                            </button>
+                                                          </div>
+                                                        </div>
                                                       </div>
                                                     </div>
                                                   </div>
-                                                  <div className="passengers-types">
-                                                    <div className="passengers-type">
-                                                      <div className="text">
-                                                        <div className="type-label">
-                                                          <p className="fz14 mb-xs-0">
-                                                            Children
-                                                          </p>
-                                                          <span>
-                                                            2 - Less than 12 yrs
-                                                          </span>
-                                                        </div>
-                                                      </div>
-                                                      <div className="button-set">
-                                                        <button
-                                                          type="button"
-                                                          className="btn-subtract-in"
-                                                          onClick={() =>
-                                                            handleDecrement(
-                                                              "child"
-                                                            )
-                                                          }
+                                                  <div className="">
+                                                    <h6 className="mb-2">
+                                                      Classes
+                                                    </h6>
+                                                    <div className="class-options">
+                                                      {[
+                                                        "ECONOMY",
+                                                        "PREMIUM ECONOMY",
+                                                        "BUSINESS",
+                                                        "FIRST CLASS",
+                                                      ].map((cls) => (
+                                                        <label
+                                                          className="class-radio"
+                                                          key={cls}
                                                         >
-                                                          <FaMinus />
-                                                        </button>
-                                                        <span className="count pcount">
-                                                          {children}
-                                                        </span>
-                                                        <button
-                                                          type="button"
-                                                          className="btn-add-in"
-                                                          onClick={() =>
-                                                            handleIncrement(
-                                                              "child"
-                                                            )
-                                                          }
-                                                        >
-                                                          <FaPlus />
-                                                        </button>
-                                                      </div>
+                                                          <input
+                                                            type="radio"
+                                                            name="cabin"
+                                                            value={cls}
+                                                            checked={
+                                                              travelClass ===
+                                                              cls
+                                                            }
+                                                            onChange={
+                                                              handleClassChange
+                                                            }
+                                                          />
+                                                          <span className="custom-circle"></span>
+                                                          <span>{cls}</span>
+                                                        </label>
+                                                      ))}
                                                     </div>
                                                   </div>
-
-                                                  {Array.from({
-                                                    length: children,
-                                                  }).map((_, index) => (
-                                                    <div
-                                                      key={index}
-                                                      className="mb-2 mt-2"
-                                                    >
-                                                      <select
-                                                        className="form-control"
-                                                        value={
-                                                          childAges[index] || ""
-                                                        }
-                                                        onChange={(e) =>
-                                                          handleChildAgeChange(
-                                                            index,
-                                                            e.target.value
-                                                          )
-                                                        }
-                                                      >
-                                                        <option value="">
-                                                          Select Age
-                                                        </option>
-                                                        {Array.from(
-                                                          { length: 11 },
-                                                          (_, i) => i + 2
-                                                        ).map((age) => (
-                                                          <option
-                                                            key={age}
-                                                            value={age}
-                                                          >
-                                                            {age}
-                                                          </option>
-                                                        ))}
-                                                      </select>
-                                                    </div>
-                                                  ))}
-
-                                                  <div className="passengers-types">
-                                                    <div className="passengers-type">
-                                                      <div className="text">
-                                                        <div className="type-label">
-                                                          <p className="fz14 mb-xs-0">
-                                                            Infant
-                                                          </p>
-                                                          <span>
-                                                            Less than 2 yrs
-                                                          </span>
-                                                        </div>
-                                                      </div>
-                                                      <div className="button-set">
-                                                        <button
-                                                          type="button"
-                                                          className="btn-subtract-in"
-                                                          onClick={() =>
-                                                            handleDecrement(
-                                                              "infant"
-                                                            )
-                                                          }
-                                                        >
-                                                          <FaMinus />
-                                                        </button>
-                                                        <span className="count incount">
-                                                          {infants}
-                                                        </span>
-                                                        <button
-                                                          type="button"
-                                                          className="btn-add-in"
-                                                          onClick={() =>
-                                                            handleIncrement(
-                                                              "infant"
-                                                            )
-                                                          }
-                                                        >
-                                                          <FaPlus />
-                                                        </button>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-
-                                                <div className="cabin-selection mt-0">
-                                                  <button
-                                                    className="btn commonBtn"
-                                                    onClick={handleDone}
-                                                  >
-                                                    Done
-                                                  </button>
                                                 </div>
                                               </div>
                                             </div>
@@ -1723,15 +1789,6 @@ const FlightSearch = () => {
                                 </div>
                               </div>
                               <div className="col-md-1">
-                                <div className="top_form_search_button mb-2">
-                                  <button
-                                    type="submit"
-                                    // onClick={searchTab}
-                                    className="btn btn_theme btn_md"
-                                  >
-                                    Search
-                                  </button>
-                                </div>
                                 <div className="multi_form_remove">
                                   {index > 1 && (
                                     <button
@@ -1742,20 +1799,34 @@ const FlightSearch = () => {
                                     </button>
                                   )}
                                 </div>
+
+                                {/* Show Search button only on last row */}
+                                {index === multiCityData.length - 1 && (
+                                  <div className="top_form_search_button mt-2">
+                                    <button
+                                      type="submit"
+                                      className="btn btn_theme btn_md"
+                                    >
+                                      Search
+                                    </button>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
                         ))}
-                        <div className="top_form_search_button mb-2">
-                          <button
-                            type="button"
-                            id="addMulticityRow"
-                            onClick={addFlightSegment}
-                            className="btn btn_theme btn_md"
-                          >
-                            + Add Another Flight
-                          </button>
-                        </div>
+                        {multiCityData.length < 5 && (
+                          <div className="top_form_search_button mb-2">
+                            <button
+                              type="button"
+                              id="addMulticityRow"
+                              onClick={addFlightSegment}
+                              className="btn btn_theme btn_md"
+                            >
+                              + Add Another Flight
+                            </button>
+                          </div>
+                        )}
                       </form>
                     </div>
                   </div>
@@ -1765,6 +1836,7 @@ const FlightSearch = () => {
           </div>
         </div>
       </section>
+
       {/* <!-- Flight Search Areas --> */}
       <section id="explore_area" className="section_padding pt-30">
         <div className="container">
@@ -1773,74 +1845,25 @@ const FlightSearch = () => {
               <h4>Choose type of Flights you are interested</h4>
             </div>
             <Slider {...setting} className="row">
-              <div className="col-md-3 mb-4">
-                <div className="card booking-card pull-up">
-                  <div className="card-body">
-                    <div className="card-contact">
-                      <div className="">
-                        <div className="clock-icon">
-                          <BiSolidPlane />
+              {mappedFlights.map((airLine, a) => (
+                <div className="col-md-3 mb-4" key={a}>
+                  <div className="card booking-card pull-up">
+                    <div className="card-body">
+                      <div className="card-contact">
+                        <div className="">
+                          <div className="clock-icon">
+                            <BiSolidPlane />
+                          </div>
                         </div>
-                      </div>
-                      <div className="info-contact">
-                        <h6>American Airline</h6>
-                        <p>216 Flights</p>
+                        <div className="info-contact">
+                          <h6>{airLine.airline}</h6>
+                          <p>216 Flights</p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="col-md-3 mb-4">
-                <div className="card booking-card pull-up">
-                  <div className="card-body">
-                    <div className="card-contact">
-                      <div className="">
-                        <div className="clock-icon">
-                          <BiSolidPlane />
-                        </div>
-                      </div>
-                      <div className="info-contact">
-                        <h6>Delta Airlines</h6>
-                        <p>569 Flights</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-3 mb-4">
-                <div className="card booking-card pull-up">
-                  <div className="card-body">
-                    <div className="card-contact">
-                      <div className="">
-                        <div className="clock-icon">
-                          <BiSolidPlane />
-                        </div>
-                      </div>
-                      <div className="info-contact">
-                        <h6>Emirates</h6>
-                        <p>129 Flights</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-3 mb-4">
-                <div className="card booking-card pull-up">
-                  <div className="card-body">
-                    <div className="card-contact">
-                      <div className="">
-                        <div className="clock-icon">
-                          <BiSolidPlane />
-                        </div>
-                      </div>
-                      <div className="info-contact">
-                        <h6>Qatar Airways</h6>
-                        <p>200 Flights</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              ))}
             </Slider>
           </div>
           <div className="row">
@@ -1900,21 +1923,11 @@ const FlightSearch = () => {
                       className="filter-content"
                       style={{ display: isPopularCollapsed ? "block" : "none" }}
                     >
-                      <label>
-                        <input type="checkbox" /> Quatar Airways
-                      </label>
-                      <label>
-                        <input type="checkbox" /> Lufthansa
-                      </label>
-                      <label>
-                        <input type="checkbox" /> Swiss
-                      </label>
-                      <label>
-                        <input type="checkbox" /> Qatar Airways
-                      </label>
-                      <label>
-                        <input type="checkbox" /> Emirates Airlines
-                      </label>
+                      {mappedFlights.map((line, e) => (
+                        <label key={e}>
+                          <input type="checkbox" /> {line.airline}
+                        </label>
+                      ))}
                     </div>
                   </div>
                   {/* Property Type Filter */}
@@ -1938,32 +1951,20 @@ const FlightSearch = () => {
                         display: isPropertyCollapsed ? "block" : "none",
                       }}
                     >
-                      <h6>Departs Delhi International Airport</h6>
-                      <label>
-                        <input type="checkbox" /> 12:00 AM–5:59 AM
-                      </label>
-                      <label>
-                        <input type="checkbox" /> 6:00 AM–11:59 AM
-                      </label>
-                      <label>
-                        <input type="checkbox" /> 12:00 PM–5:59 PM
-                      </label>
-                      <label>
-                        <input type="checkbox" /> 6:00 PM–11:59 PM
-                      </label>
-                      <h6>Arrives to Munich Airport</h6>
-                      <label>
-                        <input type="checkbox" /> 12:00 AM–5:59 AM
-                      </label>
-                      <label>
-                        <input type="checkbox" /> 6:00 AM–11:59 AM
-                      </label>
-                      <label>
-                        <input type="checkbox" /> 12:00 PM–5:59 PM
-                      </label>
-                      <label>
-                        <input type="checkbox" /> 6:00 PM–11:59 PM
-                      </label>
+                      {mappedFlights.map((time, t) => (
+                        <label key={t}>
+                          <input type="checkbox" />{" "}
+                          {new Date(time.departureTime).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                          –{" "}
+                          {new Date(time.arrivalTime).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </label>
+                      ))}
                     </div>
                   </div>
                   {/* Duration Filter */}
@@ -1980,9 +1981,13 @@ const FlightSearch = () => {
                     </div>
                     <div
                       className="filter-content"
-                      style={{ display: isStarCollapsed ? "block" : "none" }}
+                      style={{ display: isPopularCollapsed ? "block" : "none" }}
                     >
-                      <h6>Maximum travel time</h6>
+                      {mappedFlights.map((duration, e) => (
+                        <label key={e}>
+                          <input type="checkbox" /> {duration.duration}
+                        </label>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -1991,321 +1996,348 @@ const FlightSearch = () => {
             <div className="col-md-9">
               <div className="row">
                 <div className="col-lg-12">
-                  <div className="tab">
+                  <div>
+                    <div className="row">
+                      <div className="col-md-12 mb-4">
+                        <div className="flight-search">
+                          <h6>{totalFlights} Flights Found on Your Search</h6>
+                          <div className="field-set">
+                            <label>Sort By:</label>
+                            <select
+                              style={{
+                                border: "1px dashed #d7e04e !important",
+                              }}
+                            >
+                              <option>Recommended</option>
+                              <option>Lowest</option>
+                              <option>Review</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-md-12 mb-4">
+                        <div className="card banner-card">
+                          <div className="card-body">
+                            <div className="text-cont">
+                              <h6>
+                                <AiOutlineInfoCircle /> Save an average of 15%
+                                on thousands of flights when you're signed in
+                              </h6>
+                              <button
+                                type="button"
+                                className="btn btn_theme btn_md"
+                              >
+                                Sign in
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <Slider {...setting2} className="choosedepartList">
+                        {/* Each item becomes a slide */}
+                        {[...Array(7)].map((_, index) => (
+                          <div key={index} className="px-2">
+                            <button className="btn chooseBtnFlt w-100">
+                              <span className="smalltext">Jul 16</span>
+                              <div></div>
+                              <span className="priceBigText">$1,102</span>
+                            </button>
+                          </div>
+                        ))}
+                      </Slider>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-lg-12">
+                        <div className="flight_search_result_wrapper">
+                          {paginatedData.map((flight, index) => (
+                            <div
+                              className="flight_search_item_wrappper"
+                              key={index}
+                            >
+                              <div className="card flight_search_items">
+                                <div className="card-body">
+                                  <div className="row">
+                                    <div className="col-md-12">
+                                      <div className="badge-main">
+                                        <span className="">Best</span>
+                                        <span className="">
+                                          Flexible ticket upgrade available
+                                        </span>
+                                        <span className="">Cheapest</span>
+                                        <span className="">
+                                          Cheapest direct
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="col-md-9 flight-serach-main">
+                                      <div className="">
+                                        <div className="d-flex align-items-center gap-5">
+                                          <div className="flight_logo">
+                                            <img src={flightImg} alt="img" />
+                                            <p>{flight.airline}</p>
+                                          </div>
+                                          {/* Departure */}
+                                          <div className="flight_search_destination">
+                                            <h3>
+                                              {new Date(
+                                                flight.departureTime
+                                              ).toLocaleTimeString([], {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                              })}
+                                            </h3>
+                                            <p>
+                                              {flight.fromAirport} -{" "}
+                                              {new Date(
+                                                flight.departureTime
+                                              ).toLocaleDateString()}
+                                            </p>
+                                          </div>
+                                          {/* Duration */}
+                                          <div className="flight_right_arrow">
+                                            <p>Non-stop</p>
+                                            <div className="flightLine">
+                                              <div></div>
+                                              <div></div>
+                                            </div>
+                                            <p>{flight.duration}</p>
+                                          </div>
+                                          {/* Arrival */}
+                                          <div className="flight_search_destination">
+                                            <h3>
+                                              {new Date(
+                                                flight.arrivalTime
+                                              ).toLocaleTimeString([], {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                              })}
+                                            </h3>
+                                            <p>
+                                              {flight.toAirport} -{" "}
+                                              {new Date(
+                                                flight.arrivalTime
+                                              ).toLocaleDateString()}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {/* Price & Booking */}
+                                    <div className="col-md-3 d-flex justify-content-end">
+                                      <div className="flight_search_right">
+                                        {/* <p>{flight.note}</p> */}
+                                        <div className="extra-dis">
+                                          <FaClipboardList />
+                                          <FaBagShopping />
+                                          <FaSuitcaseRolling />
+                                        </div>
+                                        <div
+                                          className="allsameheading"
+                                          style={{ position: "relative" }}
+                                        >
+                                          <h3
+                                            onClick={() =>
+                                              toggleDropdown(index)
+                                            }
+                                          >
+                                            {flight.price}{" "}
+                                            <BsFillInfoCircleFill />
+                                          </h3>
+                                          <div
+                                            className={`dropdown-list ${
+                                              openDropdown === index
+                                                ? "show"
+                                                : ""
+                                            }`}
+                                          >
+                                            <div className="list list-1">
+                                              <div className="price-hdr">
+                                                <h5>Price details</h5>
+                                                <IoClose
+                                                  className="cross-icon"
+                                                  onClick={() =>
+                                                    toggleDropdown(index)
+                                                  }
+                                                />
+                                              </div>
+                                              <div className="item price-bdy">
+                                                <table className="w-100">
+                                                  <tbody>
+                                                    <tr>
+                                                      <td>
+                                                        <h6>Flights</h6>
+                                                      </td>
+                                                      <td className="text-end">
+                                                        <p>
+                                                          Includes taxes and
+                                                          fees
+                                                        </p>
+                                                      </td>
+                                                    </tr>
+                                                    {/* <tr>
+                                                          <td>Adult (1)</td>
+                                                          <td className="text-end">
+                                                            INR5,499.30
+                                                          </td>
+                                                        </tr> */}
+                                                    <tr>
+                                                      <td>Base Fee</td>
+                                                      <td className="text-end">
+                                                        {flight.flightFare}
+                                                      </td>
+                                                    </tr>
+                                                    <tr>
+                                                      <td>Service Fee</td>
+                                                      <td className="text-end">
+                                                        {flight.serviceFare}
+                                                      </td>
+                                                    </tr>
+                                                    <tr>
+                                                      <td>
+                                                        Airline taxes and fees
+                                                      </td>
+                                                      <td className="text-end">
+                                                        {flight.airlineTex}
+                                                      </td>
+                                                    </tr>
+                                                    <tr>
+                                                      <td>
+                                                        Agency Commission fees
+                                                      </td>
+                                                      <td className="text-end">
+                                                        {
+                                                          flight.airlineCommission
+                                                        }
+                                                      </td>
+                                                    </tr>
+                                                    <tr>
+                                                      <td>Total:</td>
+                                                      <td className="text-end">
+                                                        {flight.price}
+                                                      </td>
+                                                    </tr>
+                                                  </tbody>
+                                                </table>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className="load_more_flight">
+                                          <button
+                                            className="btn btn_md"
+                                            onClick={bookingDetails}
+                                          >
+                                            Book Now
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <hr />
+                                  <div className="">
+                                    <div className="flight-card">
+                                      <div
+                                        className="flight-detail-toggle"
+                                        onClick={() => handleToggle(index)}
+                                      >
+                                        Flight Detail{" "}
+                                        {openIndex === index ? (
+                                          <IoIosArrowUp />
+                                        ) : (
+                                          <IoIosArrowDown />
+                                        )}
+                                      </div>
+
+                                      {openIndex === index && (
+                                        <div className="flight-detail">
+                                          <div className="detail-segment">
+                                            <strong>
+                                              {flight.fromDetails}
+                                            </strong>
+                                            <p>
+                                              {new Date(
+                                                flight.departureTime
+                                              ).toLocaleString()}{" "}
+                                              -{" "}
+                                              {new Date(
+                                                flight.arrivalTime
+                                              ).toLocaleString()}{" "}
+                                              ({flight.duration})
+                                            </p>
+                                            <p>
+                                              Operated by {flight.airline} |
+                                              Flight {flight.flightNumber}
+                                            </p>
+                                            <p>
+                                              Adult(s): {flight.baggerAmount}
+                                              {flight.baggerType === "KILO"
+                                                ? "kg"
+                                                : "pc"}{" "}
+                                              luggage free
+                                            </p>
+                                          </div>
+                                          <div className="detail-segment">
+                                            <strong>{flight.toDetails}</strong>
+                                            <p>
+                                              {new Date(
+                                                flight.departureTime
+                                              ).toLocaleString()}{" "}
+                                              -{" "}
+                                              {new Date(
+                                                flight.arrivalTime
+                                              ).toLocaleString()}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="pagination-controls">
+                          <button
+                            onClick={() =>
+                              setCurrentPage((prev) => Math.max(prev - 1, 1))
+                            }
+                            disabled={currentPage === 1}
+                          >
+                            Prev
+                          </button>
+                          {/* Page Numbers */}
+                          <span className="font-semibold text-[#123b67]">
+                            Page {currentPage} of {totalPages}
+                          </span>
+
+                          <button
+                            onClick={() =>
+                              setCurrentPage((prev) =>
+                                prev < totalPages ? prev + 1 : prev
+                              )
+                            }
+                            disabled={currentPage === totalPages}
+                          >
+                            Next
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* <div className="tab">
                     <div className="tab__list">
                       <div className="tab__item">Best</div>
                       <div className="tab__item">Cheapest</div>
                       <div className="tab__item">Fastest</div>
                     </div>
                     <div className="tab__content">
-                      <div className="tab__content-item tab">
-                        <div className="row">
-                          <div className="col-md-12 mb-4">
-                            <div className="flight-search">
-                              <h6>1920 Flights Found on Your Search</h6>
-                              <div className="field-set">
-                                <label>Sort By:</label>
-                                <select
-                                  style={{
-                                    border: "1px dashed #d7e04e !important",
-                                  }}
-                                >
-                                  <option>Recommended</option>
-                                  <option>Lowest</option>
-                                  <option>Review</option>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-md-12 mb-4">
-                            <div className="card banner-card">
-                              <div className="card-body">
-                                <div className="text-cont">
-                                  <h6>
-                                    <AiOutlineInfoCircle /> Save an average of
-                                    15% on thousands of flights when you're
-                                    signed in
-                                  </h6>
-                                  <button
-                                    type="button"
-                                    className="btn btn_theme btn_md"
-                                  >
-                                    Sign in
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <Slider {...setting2} className="choosedepartList">
-                            {/* Each item becomes a slide */}
-                            {[...Array(7)].map((_, index) => (
-                              <div key={index} className="px-2">
-                                <button className="btn chooseBtnFlt w-100">
-                                  <span className="smalltext">Jul 16</span>
-                                  <div></div>
-                                  <span className="priceBigText">$1,102</span>
-                                </button>
-                              </div>
-                            ))}
-                          </Slider>
-                        </div>
-                        <div className="row">
-                          <div className="col-lg-12">
-                            <div className="flight_search_result_wrapper">
-                              {paginatedData.map((flight, index) => (
-                                <div
-                                  className="flight_search_item_wrappper"
-                                  key={index}
-                                >
-                                  <div className="card flight_search_items">
-                                    <div className="card-body">
-                                      <div className="row">
-                                        <div className="col-md-12">
-                                          <div className="badge-main">
-                                            <span className="">Best</span>
-                                            <span className="">
-                                              Flexible ticket upgrade available
-                                            </span>
-                                            <span className="">Cheapest</span>
-                                            <span className="">
-                                              Cheapest direct
-                                            </span>
-                                          </div>
-                                        </div>
-                                        <div className="col-md-9 flight-serach-main">
-                                          <div className="">
-                                            <div className="d-flex align-items-center gap-5">
-                                              <div className="flight_logo">
-                                                <img
-                                                  src={flightImg}
-                                                  alt="img"
-                                                />
-                                                <p>Air India</p>
-                                              </div>
-                                              <div className="flight_search_destination">
-                                                <h3>{flight.time}</h3>
-                                                <p>
-                                                  {flight.fromAirport} -{" "}
-                                                  {flight.date}
-                                                </p>
-                                              </div>
-                                              <div className="flight_right_arrow">
-                                                <p>Non-stop</p>
-                                                <div className="flightLine">
-                                                  <div></div>
-                                                  <div></div>
-                                                </div>
-                                                <p>{flight.duration}</p>
-                                              </div>
-                                              <div className="flight_search_destination">
-                                                <h3>{flight.time}</h3>
-                                                <p>
-                                                  {flight.toAirport} -{" "}
-                                                  {flight.date}
-                                                </p>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div className="col-md-3 d-flex justify-content-end">
-                                          <div className="flight_search_right">
-                                            {/* <p>{flight.note}</p> */}
-                                            <div className="extra-dis">
-                                              <FaClipboardList />
-                                              <FaBagShopping />
-                                              <FaSuitcaseRolling />
-                                            </div>
-                                            <div
-                                              className="allsameheading"
-                                              style={{ position: "relative" }}
-                                            >
-                                              <h3
-                                                onClick={() =>
-                                                  toggleDropdown(index)
-                                                }
-                                              >
-                                                {flight.price}{" "}
-                                                <BsFillInfoCircleFill />
-                                              </h3>
-                                              <div
-                                                className={`dropdown-list ${
-                                                  openDropdown === index
-                                                    ? "show"
-                                                    : ""
-                                                }`}
-                                              >
-                                                <div className="list list-1">
-                                                  <div className="price-hdr">
-                                                    <h5>Price details</h5>
-                                                    <IoClose
-                                                      className="cross-icon"
-                                                      onClick={() =>
-                                                        toggleDropdown(index)
-                                                      }
-                                                    />
-                                                  </div>
-                                                  <div className="item price-bdy">
-                                                    <table className="w-100">
-                                                      <tbody>
-                                                        <tr>
-                                                          <td>
-                                                            <h6>Flights</h6>
-                                                          </td>
-                                                          <td className="text-end">
-                                                            <p>
-                                                              Includes taxes and
-                                                              fees
-                                                            </p>
-                                                          </td>
-                                                        </tr>
-                                                        <tr>
-                                                          <td>Adult (1)</td>
-                                                          <td className="text-end">
-                                                            INR5,499.30
-                                                          </td>
-                                                        </tr>
-                                                        <tr>
-                                                          <td>Flight fare</td>
-                                                          <td className="text-end">
-                                                            INR4,458.00
-                                                          </td>
-                                                        </tr>
-                                                        <tr>
-                                                          <td>
-                                                            Third-party fee
-                                                          </td>
-                                                          <td className="text-end">
-                                                            INR162.30
-                                                          </td>
-                                                        </tr>
-                                                        <tr>
-                                                          <td>
-                                                            Airline taxes and
-                                                            fees
-                                                          </td>
-                                                          <td className="text-end">
-                                                            INR879.00
-                                                          </td>
-                                                        </tr>
-                                                        <tr>
-                                                          <td>Total:</td>
-                                                          <td className="text-end">
-                                                            {flight.price}
-                                                          </td>
-                                                        </tr>
-                                                      </tbody>
-                                                    </table>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                            <div className="load_more_flight">
-                                              <button
-                                                className="btn btn_md"
-                                                onClick={bookingDetails}
-                                              >
-                                                Book Now
-                                              </button>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <hr />
-                                      <div className="">
-                                        <div className="flight-card">
-                                          <div
-                                            className="flight-detail-toggle"
-                                            onClick={() => handleToggle(index)}
-                                          >
-                                            Flight Detail{" "}
-                                            {openIndex === index ? (
-                                              <IoIosArrowUp />
-                                            ) : (
-                                              <IoIosArrowDown />
-                                            )}
-                                          </div>
-
-                                          {openIndex === index && (
-                                            <div className="flight-detail">
-                                              <div className="detail-segment">
-                                                <strong>
-                                                  IST - Istanbul Airport,
-                                                  Turkish
-                                                </strong>
-                                                <p>
-                                                  Thu, Jun 16 – 23:20 (22h 50m)
-                                                </p>
-                                                <p>
-                                                  Operated by Airlines | Flight
-                                                  EK585 | Boeing 777-300ER
-                                                </p>
-                                                <p>
-                                                  Adult(s): 25kg luggage free
-                                                </p>
-                                              </div>
-                                              <div className="detail-segment">
-                                                <strong>
-                                                  DXB - Dubai, UAE
-                                                </strong>
-                                                <p>Fri, Jun 17 – 03:20</p>
-                                              </div>
-                                            </div>
-                                          )}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                            <div className="pagination-controls">
-                              <button
-                                onClick={() =>
-                                  setCurrentPage((prev) =>
-                                    Math.max(prev - 1, 1)
-                                  )
-                                }
-                                disabled={currentPage === 1}
-                              >
-                                Prev
-                              </button>
-
-                              <span>Page {currentPage}</span>
-
-                              <button
-                                onClick={() =>
-                                  setCurrentPage((prev) =>
-                                    prev <
-                                    Math.ceil(flightData.length / itemsPerPage)
-                                      ? prev + 1
-                                      : prev
-                                  )
-                                }
-                                disabled={
-                                  currentPage ===
-                                  Math.ceil(flightData.length / itemsPerPage)
-                                }
-                              >
-                                Next
-                              </button>
-                            </div>
-
-                            {/* <div className="load_more_flight">
-                                    <button className="btn btn_md">
-                                      <i className="fas fa-spinner fa-spin"></i> Load more..
-                                    </button>
-                                  </div> */}
-                            {/* <Stack spacing={2}>
-                                    <Pagination count={10} shape="rounded" />
-                                    <Pagination count={10} variant="outlined" shape="rounded" />
-                                  </Stack> */}
-                          </div>
-                        </div>
-                      </div>
+                      <div className="tab__content-item tab"></div>
                       <div className="tab__content-item"></div>
                       <div className="tab__content-item tab"></div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

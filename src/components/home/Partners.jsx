@@ -14,7 +14,7 @@ const Partners = () => {
     axios
       .get(`${API_BASE_URL}/our/partner`)
       .then((response) => {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setPartner(response.data.data);
         setImagePath(response.data.image_path);
       })

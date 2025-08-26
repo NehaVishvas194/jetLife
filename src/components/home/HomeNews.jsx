@@ -18,7 +18,7 @@ const HomeNews = () => {
     axios
       .get(`${API_BASE_URL}/news/status`)
       .then((response) => {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setActiveNews(response.data.data);
         setActiveImage(response.data.image_path);
       })

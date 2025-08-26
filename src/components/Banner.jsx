@@ -18,7 +18,7 @@ const HomeBanner = () => {
     axios
       .get(`${API_BASE_URL}/banners`)
       .then((response) => {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setBanner(response.data.data);
         setImagePath(response.data.image_path);
       })
@@ -36,7 +36,7 @@ const HomeBanner = () => {
         modules={[Navigation, Autoplay]}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         slidesPerView={1}
-        loop={true}
+        // loop={true}
         // navigation={true}
         onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
         className="home_six_banner_slider_wrapper"
