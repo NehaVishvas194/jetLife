@@ -24,8 +24,8 @@ const Home = () => {
       <Destination />
       <SpecialOffer/>
       <TopDestinationPhoto />
-      <Partners />
       <HomeNews />
+      <Partners />
       <Newsletter />
       <BackToTop />
       <Footer />

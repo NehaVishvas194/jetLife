@@ -22,14 +22,16 @@ import { IoClose } from "react-icons/io5";
 import routeImg from "../assets/img/route-flight.png";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { BiSolidPlane } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
+import { useNavigate } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 // import { IoIosArrowForward } from "react-icons/io";
 import { FaAngleDoubleRight } from "react-icons/fa";
 import backgroundImage from "../assets/img/flight2.jpg";
 import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 const FlightSearch = () => {
   const [airportList, setAirPortList] = useState([]);
@@ -64,8 +66,10 @@ const FlightSearch = () => {
   const [isPropertyCollapsed, setIsPropertyCollapsed] = useState(true);
   const [isStarCollapsed, setIsStarCollapsed] = useState(true);
   const [apiFlights, setApiFlights] = useState([]);
+  const [apiFlights2, setApiFlights2] = useState([]);
   const [openIndex, setOpenIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [fareKey, setFareKey] = useState("");
   // const [selectedClass, setSelectedClass] = useState("Economy");
   const itemsPerPage = 5;
   const getTodayDate = () => new Date().toISOString().split("T")[0];
@@ -73,6 +77,8 @@ const FlightSearch = () => {
     { from: "", to: "", date: getTodayDate() },
     { from: "", to: "", date: getTodayDate() },
   ]);
+
+  const navigate = useNavigate();
   const handleToggle = (index) => {
     setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
   };
@@ -161,7 +167,11 @@ const FlightSearch = () => {
           code: toInput,
         },
         departure_date: journeyDate,
-        pax_list: [{ type: "ADULT", count: adults }],
+        pax_list: [
+          { type: "ADULT", count: adults },
+          { type: "CHILD", count: children },
+          { type: "INFANT", count: infants },
+        ],
         accept_pending: true,
         cabin_type: travelClass,
       };
@@ -180,6 +190,97 @@ const FlightSearch = () => {
       setApiFlights(flightsData);
     } catch (error) {
       console.log("Error Fetching Search List Data:", error);
+      toast.error(error.response?.data?.error?.description || "Flight Searching Error", {
+                    autoClose: 3000,
+                  });
+    }
+  };
+
+  // Flight Return SearchAbility Data
+  const fetchReturnAirportSearch = async (e) => {
+    e.preventDefault();
+    try {
+      const authToken = localStorage.getItem("authToken");
+      if (!authToken) {
+        console.error("No auth token available, cannot fetch airports");
+        return;
+      }
+      const searchData = {
+        from_destination: {
+          city: true,
+          code: fromInput2,
+        },
+        to_destination: {
+          city: true,
+          code: toInput2,
+        },
+        departure_date: journeyDate,
+        return_date: journeyDate2,
+        pax_list: [
+          { type: "ADULT", count: adults },
+          { type: "CHILD", count: children },
+          { type: "INFANT", count: infants },
+        ],
+        accept_pending: true,
+        cabin_type: travelClass,
+      };
+
+      const response = await axios.post(
+        "/api/rest/flight/v2/search",
+        searchData,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const flightsData = response.data?.result?.departure_flights || [];
+      console.log("Flights found:", flightsData);
+      setApiFlights2(flightsData);
+      // navigate and pass data
+    } catch (error) {
+      console.log("Error Fetching Search List Data:", error);
+    }
+  };
+
+  // flight Booking Data
+  const fetchfare = async (e) => {
+    e.preventDefault();
+    try {
+      const authToken = localStorage.getItem("authToken");
+      const Token = localStorage.getItem("Token");
+      if (!authToken) {
+        console.error("No Auth token available, cannot fetch token");
+        return;
+      }
+
+      if (!Token) {
+        navigate("/login");
+        return;
+      }
+
+      const fareData = {
+        departure_fare_key: fareKey,
+        pax_list: [
+          { type: "ADULT", count: adults },
+          { type: "CHILD", count: children },
+          { type: "INFANT", count: infants },
+        ],
+      };
+
+      const response = await axios.post("/api/rest/flight/v2/fare", fareData, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const fareDetails = response.data?.result || [];
+      console.log(fareDetails);
+      navigate("/booking_details", { state: { fareDetails } });
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -382,64 +483,32 @@ const FlightSearch = () => {
     if (type === "infant" && infants > 0) setInfants(infants - 1);
   };
 
-  // const handleChildAgeChange = (index, value) => {
-  //   const updatedAges = [...childAges];
-  //   updatedAges[index] = value;
-  //   setChildAges(updatedAges);
-  // };
-
-  // const handleDone = () => {
-  //   setShowDropdown(false);
-  // };
-
-  // tab-section
-  // const tabs = document.querySelectorAll(".tab");
-
-  // function tabify(tab) {
-  //   const tabList = tab.querySelector(".tab__list");
-
-  //   if (tabList) {
-  //     const tabItems = [...tabList.children];
-  //     const tabContent = tab.querySelector(".tab__content");
-  //     const tabContentItems = [...tabContent.children];
-  //     let tabIndex = 0;
-
-  //     tabIndex = tabItems.findIndex((item, index) => {
-  //       return [...item.classList].indexOf("is--active") > -1;
-  //     });
-
-  //     tabIndex > -1 ? (tabIndex = tabIndex) : (tabIndex = 0);
-
-  //     function setTab(index) {
-  //       tabItems.forEach((x, index) => x.classList.remove("is--active"));
-  //       tabContentItems.forEach((x, index) => x.classList.remove("is--active"));
-
-  //       tabItems[index].classList.add("is--active");
-  //       tabContentItems[index].classList.add("is--active");
-  //     }
-
-  //     tabItems.forEach((x, index) =>
-  //       x.addEventListener("click", () => setTab(index))
-  //     );
-  //     setTab(tabIndex);
-  //     tab.querySelectorAll(".tab").forEach((tabContent) => tabify(tabContent));
-  //   }
-  // }
-  // tabs.forEach(tabify);
-
   const location = useLocation();
   const locationFlights = location.state?.flights || [];
 
   useEffect(() => {
     if (locationFlights.length > 0) {
       setApiFlights(locationFlights);
+      setApiFlights2(locationFlights);
     }
   }, [locationFlights]);
 
-  const mappedFlights = apiFlights.map((f) => {
+  useEffect(() => {
+    const firstFlight = (
+      apiFlights?.length > 0 ? apiFlights : apiFlights2
+    )?.[0];
+    if (firstFlight?.fares?.[0]?.fare_key) {
+      setFareKey(firstFlight.fares[0].fare_key);
+    }
+  }, [apiFlights, apiFlights2]);
+
+  const mappedFlights = (
+    apiFlights && apiFlights.length > 0 ? apiFlights : apiFlights2
+  )?.map((f) => {
     const leg = f.legs[0];
     const fare = f.fares[0]?.fare_info?.fare_detail;
     const baggage = leg?.baggages[0];
+    const fareKey = f.fares?.[0]?.fare_key;
 
     return {
       airline: leg.airline_info?.carrier_name || "Unknown Airline",
@@ -460,10 +529,11 @@ const FlightSearch = () => {
       serviceFare: `${fare?.currency_code} ${fare?.price_info?.service_fee}`,
       airlineTex: `${fare?.currency_code} ${fare?.price_info?.tax}`,
       airlineCommission: `${fare?.currency_code} ${fare?.price_info?.agency_commission}`,
+      fareKey,
     };
   });
-  const totalFlights = mappedFlights.length;
 
+  const totalFlights = mappedFlights.length;
   const totalPages = Math.ceil(mappedFlights.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -534,13 +604,15 @@ const FlightSearch = () => {
       },
     ],
   };
-  const navigate = useNavigate();
-  const bookingDetails = () => {
-    navigate("/booking_details");
-  };
+
+  // const bookingDetails = () => {
+  //   navigate("/booking_details");
+  // };
+
   return (
     <>
       <Header />
+      <ToastContainer/>
       {/* <!-- Common Banner Area --> */}
       <section
         id="common_banner_img"
@@ -709,7 +781,6 @@ const FlightSearch = () => {
                                       ) : null}
                                     </ul>
                                   )}
-
                                   <div className="">
                                     <span>Start typing to filter airports</span>
                                   </div>
@@ -1020,7 +1091,7 @@ const FlightSearch = () => {
                       role="tabpanel"
                       aria-labelledby="roundtrip-tab"
                     >
-                      <form action="#!">
+                      <form onSubmit={fetchReturnAirportSearch}>
                         <div className="row mb-2 align-items-center">
                           <div className="col-md-11">
                             <div className="oneway_search_form">
@@ -1923,13 +1994,16 @@ const FlightSearch = () => {
                       className="filter-content"
                       style={{ display: isPopularCollapsed ? "block" : "none" }}
                     >
-                      {mappedFlights.map((line, e) => (
-                        <label key={e}>
-                          <input type="checkbox" /> {line.airline}
+                      {[
+                        ...new Set(mappedFlights.map((line) => line.airline)),
+                      ].map((airline, index) => (
+                        <label key={index}>
+                          <input type="checkbox" /> {airline}
                         </label>
                       ))}
                     </div>
                   </div>
+
                   {/* Property Type Filter */}
                   <div className="filter-block">
                     <div
@@ -1951,15 +2025,25 @@ const FlightSearch = () => {
                         display: isPropertyCollapsed ? "block" : "none",
                       }}
                     >
-                      {mappedFlights.map((time, t) => (
+                      {[
+                        ...new Map(
+                          mappedFlights.map((f) => [
+                            `${f.departureTime}-${f.arrivalTime}`,
+                            f,
+                          ])
+                        ).values(),
+                      ].map((flight, t) => (
                         <label key={t}>
                           <input type="checkbox" />{" "}
-                          {new Date(time.departureTime).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                          {new Date(flight.departureTime).toLocaleTimeString(
+                            [],
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}{" "}
                           –{" "}
-                          {new Date(time.arrivalTime).toLocaleTimeString([], {
+                          {new Date(flight.arrivalTime).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
                           })}
@@ -1983,12 +2067,26 @@ const FlightSearch = () => {
                       className="filter-content"
                       style={{ display: isPopularCollapsed ? "block" : "none" }}
                     >
+                      {[
+                        ...new Set(
+                          mappedFlights.map((duration) => duration.duration)
+                        ),
+                      ].map((duration, d) => (
+                        <label key={d}>
+                          <input type="checkbox" /> {duration}
+                        </label>
+                      ))}
+                    </div>
+                    {/* <div
+                      className="filter-content"
+                      style={{ display: isPopularCollapsed ? "block" : "none" }}
+                    >
                       {mappedFlights.map((duration, e) => (
                         <label key={e}>
                           <input type="checkbox" /> {duration.duration}
                         </label>
                       ))}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -2226,7 +2324,7 @@ const FlightSearch = () => {
                                         <div className="load_more_flight">
                                           <button
                                             className="btn btn_md"
-                                            onClick={bookingDetails}
+                                            onClick={fetchfare}
                                           >
                                             Book Now
                                           </button>
@@ -2326,18 +2424,6 @@ const FlightSearch = () => {
                       </div>
                     </div>
                   </div>
-                  {/* <div className="tab">
-                    <div className="tab__list">
-                      <div className="tab__item">Best</div>
-                      <div className="tab__item">Cheapest</div>
-                      <div className="tab__item">Fastest</div>
-                    </div>
-                    <div className="tab__content">
-                      <div className="tab__content-item tab"></div>
-                      <div className="tab__content-item"></div>
-                      <div className="tab__content-item tab"></div>
-                    </div>
-                  </div> */}
                 </div>
               </div>
             </div>

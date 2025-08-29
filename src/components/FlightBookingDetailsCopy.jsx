@@ -3,156 +3,59 @@ import { useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
-// import { FaRegCheckCircle } from "react-icons/fa";
-// import { FaCheck } from "react-icons/fa6";
-// import { MdOutlineCancel } from "react-icons/md";
+import { FaRegCheckCircle } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa6";
+import { MdOutlineCancel } from "react-icons/md";
 import { FaAngleDoubleRight } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
+import {useLocation} from "react-router-dom";
 
 const FlightBookingDetails = () => {
-  // const [currentStep, setCurrentStep] = useState(0);
-  // const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate();
+  const [currentStep, setCurrentStep] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+
   const location = useLocation();
   const locationFare = location.state?.fareDetails;
   const fare_detail_key = locationFare.fare_detail_key;
   console.log(locationFare);
-  console.log("fare details key:-", fare_detail_key);
+  console.log("fare details key:-",fare_detail_key);
 
-  const [formData, setFormData] = useState({
-    fare_detail_key: fare_detail_key,
-    contact: {
-      email: "",
-      phone: { area_code: "", country_code: "", phone_number: "" },
-    },
-    pax_list: [
-      {
-        name: "",
-        lastname: "",
-        birthdate: "",
-        type: "ADULT",
-        gender: "MALE",
-        identity_info: {
-          cnic: { no: "" },
-          foid: { citizenship_country: "", no: "" },
-          passport: { citizenship_country: "", end_date: "", no: "" },
-          tc: { no: "", hes_code: "" },
-          type: "PASSPORT",
-          not_turkish_citizen: true,
-          not_pakistan_citizen: true,
-        },
-      },
-    ],
-    offers: [],
-    notes: "",
-  });
-
-  const handleChange = (path, value) => {
-    const keys = path.split(".");
-    const newForm = { ...formData };
-    let obj = newForm;
-    while (keys.length > 1) {
-      obj = obj[keys.shift()];
-    }
-    obj[keys[0]] = value;
-    setFormData(newForm);
+  if(!locationFare){
+    return (
+      <p>No fare details available.</p>
+    )
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const authToken = localStorage.getItem("authToken");
-      if (!authToken) {
-        console.error("Flight Booking:- No auth token available");
-        return;
-      }
-      // const bookingData = {
-      //   fare_detail_key: fare_detail_key,
-      //   contact: {
-      //     email: "",
-      //     phone: { area_code: "", country_code: "", phone_number: "" },
-      //   },
-      //   pax_list: [
-      //     {
-      //       name: "",
-      //       lastname: "",
-      //       birthdate: "",
-      //       type: "ADULT",
-      //       gender: "MALE",
-      //       identity_info: {
-      //         cnic: { no: "" },
-      //         foid: { citizenship_country: "", no: "" },
-      //         passport: { citizenship_country: "", end_date: "", no: "" },
-      //         tc: { no: "", hes_code: "" },
-      //         type: "PASSPORT",
-      //         not_turkish_citizen: true,
-      //         not_pakistan_citizen: true,
-      //       },
-      //     },
-      //   ],
-      //   offers: [],
-      //   notes: "",
-      // };
+  const totalPrice = locationFare.fare_detail.price_info.total_fare;
+  const currency = locationFare.fare_detail.currency_code;
 
-      const response = await axios.post("/api/rest/flight/v2/book", formData, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const bookingDetails = response.data?.result || [];
-      console.log(bookingDetails);
-      toast.success("Flight Booked Successfully", {
-        autoClose: 3000,
-      });
-      navigate("/my_booking", { state: { bookingDetails } });
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.error?.description || "Flight Booking Error", {
-        autoClose: 3000,
-      });
+
+  const steps = [
+    "Ticket type",
+    "Your details",
+    "Extras",
+    "Select your seat",
+    "Check and pay",
+  ];
+
+  const totalSteps = 5;
+  const nextStep = () => {
+    if (currentStep < totalSteps - 1) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      // Submit logic here
+      console.log("Form Submitted");
     }
   };
 
-  if (!locationFare) {
-    return <p>No fare details available.</p>;
-  }
-
-  // const totalPrice = locationFare.fare_detail.price_info.total_fare;
-  // const currency = locationFare.fare_detail.currency_code;
-
-  // const steps = [
-  //   "Ticket type",
-  //   "Your details",
-  //   "Extras",
-  //   "Select your seat",
-  //   "Check and pay",
-  // ];
-
-  // const totalSteps = 5;
-  // const nextStep = () => {
-  //   if (currentStep < totalSteps - 1) {
-  //     setCurrentStep(currentStep + 1);
-  //   } else {
-  //     // Submit logic here
-  //     console.log("Form Submitted");
-  //   }
-  // };
-
-  // const prevStep = () => {
-  //   if (currentStep > 0) {
-  //     setCurrentStep(currentStep - 1);
-  //   }
-  // };
+  const prevStep = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
 
   return (
     <div>
       <Header />
-      <ToastContainer/>
       {/* <!-- Common Banner Area --> */}
       <section id="common_banner">
         <div className="container">
@@ -182,7 +85,7 @@ const FlightBookingDetails = () => {
       <section className="section_padding" id="common_author_area">
         <div className="container">
           <div className="row">
-            {/* <div className="col-md-12 mb-5">
+            <div className="col-md-12 mb-5">
               <div className="stepper1">
                 {steps.map((label, index) => (
                   <div className="stepper" id="stepper">
@@ -204,33 +107,29 @@ const FlightBookingDetails = () => {
                   </div>
                 ))}
               </div>
-            </div> */}
+            </div>
             {/* Flight Info */}
             <div className="col-md-12">
-              {locationFare.departure_selected_flights?.map((item, index) => {
-                const flight = item.flight;
-                return (
-                  <div className="from-to-main" key={index}>
-                    <div className="d-flex justify-content-center align-items-center gap-3">
-                      <h6>{flight.from}</h6>
-                      <div className="flightLine" style={{ width: "10%" }}>
-                        <div></div>
-                        <div></div>
-                      </div>
-                      <h6>{flight.to}</h6>
-                    </div>
-                    <p>
-                      {flight.flight_number} ({flight.operator_airline_code}) |
-                      {flight.class_code} ({flight.cabin_type}) |{" "}
-                      {new Date(flight.departure_time).toLocaleString()} -{" "}
-                      {new Date(flight.arrival_time).toLocaleString()}
-                    </p>
+            {locationFare.departure_selected_flights?.map((item,index) => {
+               const flight = item.flight;
+               return(
+              <div className="from-to-main" key={index}>
+                <div className="d-flex justify-content-center align-items-center gap-3">
+                  <h6>{flight.from}</h6>
+                  <div className="flightLine" style={{ width: "10%" }}>
+                    <div></div>
+                    <div></div>
                   </div>
-                );
-              })}
+                  <h6>{flight.to}</h6>
+                </div>
+                <p>{flight.flight_number} ({flight.operator_airline_code}) |{flight.class_code} ({flight.cabin_type}) | {new Date(flight.departure_time).toLocaleString()} - {new Date (flight.arrival_time).toLocaleString()}</p>
+              </div>
+               )
+            })}
             </div>
+            {/* Ticket Options */}
             <div className="col-md-12">
-              {/* <div className="step-content" id="step-content">
+              <div className="step-content" id="step-content">
                 {currentStep === 0 && (
                   <div className="step-pane active">
                     <div className="row">
@@ -262,7 +161,7 @@ const FlightBookingDetails = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="col-md-4">
+                      {/* <div className="col-md-4">
                         <div className="card booking-card ">
                           <div className="card-body">
                             <h3>Flexible ticket</h3>
@@ -314,13 +213,14 @@ const FlightBookingDetails = () => {
                             </button>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                       <div className="col-md-4">
+                        {/* <!-- Cancel for Any Reason --> */}
                         <div className="card booking-card">
                           <div className="card-body">
                             <h3>Cancel for Any Reason ticket</h3>
                             <div className="price">
-                              Total price <strong>{currency} {totalPrice - 50 }</strong>
+                              Total price <strong>{currency} {totalPrice - 50 /* example addon */}</strong>
                             </div>
                             <div className="features">
                               <p>
@@ -342,12 +242,12 @@ const FlightBookingDetails = () => {
                                 </span>
                                 Refund includes ticket + extras
                               </p>
-                              <p>
+                              {/* <p>
                                 <span>
                                   <FaRegCheckCircle />
                                 </span>
                                 Refund up to INR 210,000.00 per person
-                              </p>
+                              </p> */}
                             </div>
                             <button className="btn btn_theme btn_md w-100">
                               Continue
@@ -382,6 +282,7 @@ const FlightBookingDetails = () => {
                               Add this traveler’s details
                             </button>
                           </div>
+                          {/* <!-- Modal --> */}
                           {showModal && (
                             <div
                               className="custom-modal-overlay"
@@ -598,12 +499,14 @@ const FlightBookingDetails = () => {
                               </div>
                             </div>
                           </div>
+                          {/* Baggage Details */}
                           <div className="col-md-4">
                             <div className="card p-0">
                               <div className="card-header hdr-card">
                                 <h6>Baggage Details</h6>
                               </div>
                               <div className="card-body">
+                                {/* <!-- <div className="d-flex"> --> */}
                                 <div className="baggage">
                                   <div className="item">
                                     <span className="icon">
@@ -642,6 +545,7 @@ const FlightBookingDetails = () => {
                                     </div>
                                   </div>
                                 </div>
+                                {/* <!-- </div> --> */}
                               </div>
                             </div>
                           </div>
@@ -716,6 +620,7 @@ const FlightBookingDetails = () => {
                             >
                               <div className="accordion-body">
                                 <div className="seat-grid">
+                                  {/* <!-- First row: headers --> */}
                                   <div className="empty"></div>
                                   <div className="header">A</div>
                                   <div className="header">B</div>
@@ -728,6 +633,7 @@ const FlightBookingDetails = () => {
                                   <div className="header">K</div>
                                   <div className="header">L</div>
 
+                                  {/* <!-- Row 21 --> */}
                                   <div className="row-number">21</div>
                                   <button className="seat booked"></button>
                                   <button className="seat booked"></button>
@@ -740,6 +646,7 @@ const FlightBookingDetails = () => {
                                   <button className="seat booked"></button>
                                   <button className="seat booked"></button>
 
+                                  {/* <!-- Row 22 --> */}
                                   <div className="row-number">22</div>
                                   <button className="seat booked"></button>
                                   <button className="seat"></button>
@@ -752,6 +659,7 @@ const FlightBookingDetails = () => {
                                   <button className="seat"></button>
                                   <button className="seat"></button>
 
+                                  {/* <!-- Row 23 --> */}
                                   <div className="row-number">23</div>
                                   <button className="seat"></button>
                                   <button className="seat"></button>
@@ -764,6 +672,7 @@ const FlightBookingDetails = () => {
                                   <button className="seat"></button>
                                   <button className="seat"></button>
 
+                                  {/* <!-- Row 24 --> */}
                                   <div className="row-number">24</div>
                                   <button className="seat"></button>
                                   <button className="seat"></button>
@@ -776,6 +685,7 @@ const FlightBookingDetails = () => {
                                   <button className="seat"></button>
                                   <button className="seat"></button>
 
+                                  {/* <!-- Row 25 --> */}
                                   <div className="row-number">25</div>
                                   <button className="seat"></button>
                                   <button className="seat"></button>
@@ -1115,8 +1025,8 @@ const FlightBookingDetails = () => {
                     </div>
                   </div>
                 )}
-              </div> */}
-              {/* <div className="step-controls">
+              </div>
+              <div className="step-controls">
                 <button
                   id="backBtn"
                   className="btn btn_theme btn_md"
@@ -1134,232 +1044,6 @@ const FlightBookingDetails = () => {
                 >
                   {currentStep === totalSteps - 1 ? "Submit" : "Next"}
                 </button>
-              </div> */}
-              <div className="card">
-                <div className="card-body">
-                  <form id="contact_form_content" onSubmit={handleSubmit}>
-                    <div className="row">
-                      <div className="card-header mb-4">
-                        Contact Information
-                      </div>
-                      <div className="col-lg-6">
-                        <div className="field-set">
-                          <label>Email</label>
-                          <input
-                            type="email"
-                            value={formData.contact.email}
-                            onChange={(e) =>
-                              handleChange("contact.email", e.target.value)
-                            }
-                            className="form-control bg_input"
-                          />
-                        </div>
-                      </div>
-                      <div className="col-lg-6">
-                        <div className="field-set">
-                          <label>Country Code</label>
-                          <input
-                            value={formData.contact.phone.country_code}
-                            onChange={(e) =>
-                              handleChange(
-                                "contact.phone.country_code",
-                                e.target.value
-                              )
-                            }
-                            className="form-control bg_input"
-                          />
-                        </div>
-                      </div>
-                      <div className="col-lg-6">
-                        <div className="field-set">
-                          <label>Area Code</label>
-                          <input
-                            value={formData.contact.phone.area_code}
-                            onChange={(e) =>
-                              handleChange(
-                                "contact.phone.area_code",
-                                e.target.value
-                              )
-                            }
-                            className="form-control bg_input"
-                          />
-                        </div>
-                      </div>
-                      <div className="col-lg-6">
-                        <div className="field-set">
-                          <label>Phone Number</label>
-                          <input
-                            value={formData.contact.phone.phone_number}
-                            onChange={(e) =>
-                              handleChange(
-                                "contact.phone.phone_number",
-                                e.target.value
-                              )
-                            }
-                            className="form-control bg_input"
-                          />
-                        </div>
-                      </div>
-                      <div className="card-header mb-4">
-                        Passenger Information
-                      </div>
-                      <div className="col-lg-6">
-                        <div className="field-set">
-                          <label>First Name</label>
-                          <input
-                            value={formData.pax_list[0].name}
-                            onChange={(e) =>
-                              handleChange("pax_list.0.name", e.target.value)
-                            }
-                            className="form-control bg_input"
-                          />
-                        </div>
-                      </div>
-                      <div className="col-lg-6">
-                        <div className="field-set">
-                          <label>Last Name</label>
-                          <input
-                            value={formData.pax_list[0].lastname}
-                            onChange={(e) =>
-                              handleChange(
-                                "pax_list.0.lastname",
-                                e.target.value
-                              )
-                            }
-                            className="form-control bg_input"
-                          />
-                        </div>
-                      </div>
-                      <div className="col-lg-6">
-                        <div className="field-set">
-                          <label>Birthdate</label>
-                          <input
-                            type="date"
-                            value={formData.pax_list[0].birthdate}
-                            onChange={(e) =>
-                              handleChange(
-                                "pax_list.0.birthdate",
-                                e.target.value
-                              )
-                            }
-                            className="form-control bg_input"
-                          />
-                        </div>
-                      </div>
-                      <div className="col-lg-6">
-                        <div className="field-set">
-                          <label>Type</label>
-                          <select
-                            value={formData.pax_list[0].type}
-                            onChange={(e) =>
-                              handleChange("pax_list.0.type", e.target.value)
-                            }
-                            className="form-control bg_input"
-                          >
-                            <option value="ADULT">Adult</option>
-                            <option value="CHILDREN">Children</option>
-                            <option value="INFANT">Infant</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div className="col-lg-6">
-                        <div className="field-set">
-                          <label>Gender</label>
-                          <select
-                            value={formData.pax_list[0].gender}
-                            onChange={(e) =>
-                              handleChange("pax_list.0.gender", e.target.value)
-                            }
-                            className="form-control bg_input"
-                          >
-                            <option value="MALE">Male</option>
-                            <option value="FEMALE">Female</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div className="card-header mb-4">
-                        Passport Information
-                      </div>
-                      <div className="col-lg-4">
-                        <div className="field-set">
-                          <label>Passport No</label>
-                          <input
-                            value={
-                              formData.pax_list[0].identity_info.passport.no
-                            }
-                            onChange={(e) =>
-                              handleChange(
-                                "pax_list.0.identity_info.passport.no",
-                                e.target.value
-                              )
-                            }
-                            className="form-control bg_input"
-                          />
-                        </div>
-                      </div>
-                      <div className="col-lg-4">
-                        <div className="field-set">
-                          <label>Expiry Date</label>
-                          <input
-                            type="date"
-                            value={
-                              formData.pax_list[0].identity_info.passport
-                                .end_date
-                            }
-                            onChange={(e) =>
-                              handleChange(
-                                "pax_list.0.identity_info.passport.end_date",
-                                e.target.value
-                              )
-                            }
-                            className="form-control bg_input"
-                          />
-                        </div>
-                      </div>
-                      <div className="col-lg-4">
-                        <div className="field-set">
-                          <label>Citizenship Country</label>
-                          <input
-                            value={
-                              formData.pax_list[0].identity_info.passport
-                                .citizenship_country
-                            }
-                            onChange={(e) =>
-                              handleChange(
-                                "pax_list.0.identity_info.passport.citizenship_country",
-                                e.target.value
-                              )
-                            }
-                            className="form-control bg_input"
-                          />
-                        </div>
-                      </div>
-                      <div className="card-header mb-4">Notes</div>
-                      <div className="col-lg-12">
-                        <div className="field-set">
-                          <label>Note</label>
-                          <textarea
-                            value={formData.notes}
-                            onChange={(e) =>
-                              handleChange("notes", e.target.value)
-                            }
-                            className="form-control bg_input"
-                          ></textarea>
-                        </div>
-                      </div>
-                      <div className="col-lg-12">
-                        <div className="form-group">
-                          <button
-                            type="submit"
-                            className="btn btn_theme btn_md"
-                          >
-                            Submit
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div>
               </div>
             </div>
           </div>

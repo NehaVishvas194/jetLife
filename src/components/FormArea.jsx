@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { FaHotel, FaHelicopter } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaHelicopter } from "react-icons/fa";
 import {
   FaPlaneArrival,
   FaPlaneDeparture,
@@ -14,6 +14,8 @@ import { MdRestaurantMenu } from "react-icons/md";
 import { MdOutlineFlight } from "react-icons/md";
 import { FaCarSide } from "react-icons/fa";
 import { RiHotelFill } from "react-icons/ri";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 // import { getAuthToken } from "../api/auth";
 
 const FormArea = () => {
@@ -58,7 +60,7 @@ const FormArea = () => {
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     setJourneyDate(today);
-     setJourneyDate2(today)
+    setJourneyDate2(today);
   }, []);
 
   const handleDateChange = (e) => {
@@ -66,7 +68,7 @@ const FormArea = () => {
   };
   const handleDateChange2 = (e) => {
     setJourneyDate2(e.target.value);
-  }
+  };
   const handleClassChange = (e) => {
     setTravelClass(e.target.value);
   };
@@ -141,7 +143,7 @@ const FormArea = () => {
     })();
   }, []);
 
-  // OneWay SearchAbility Data
+  // Flight OneWay SearchAbility Data
   const fetchAirportSearch = async (e) => {
     e.preventDefault();
     try {
@@ -163,8 +165,66 @@ const FormArea = () => {
         departure_date: journeyDate,
         pax_list: [
           { type: "ADULT", count: adults },
-          // { type: "CHILD", count: children },
-          // { type: "INFANT", count: infants },
+          { type: "CHILD", count: children },
+          { type: "INFANT", count: infants },
+        ],
+        accept_pending: true,
+        cabin_type: travelClass,
+      };
+
+      const response = await axios.post(
+        "/api/rest/flight/v2/search",
+        searchData,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const flights = response.data?.result?.departure_flights || [];
+      console.log("Flights found:", flights);
+      // navigate and pass data
+      navigate("/searchFlight", { state: { flights } });
+      // if (response.data?.result?.departure_flights[0]?.fares[0] || []){
+      // }
+      if (response.data.session_id) {
+        sessionStorage.setItem("session_id", response.data.session_id);
+      }
+    } catch (error) {
+      console.log("Error Fetching Search List Data:", error);
+       toast.error(error.response?.data?.error?.description || "Flight Searching Error", {
+              autoClose: 3000,
+            });
+    }
+  };
+
+// Flight Return SearchAbility Data
+  const fetchReturnAirportSearch = async (e) => {
+    e.preventDefault();
+    try {
+      const authToken =
+        localStorage.getItem("authToken") || (await getAuthToken());
+      if (!authToken) {
+        console.error("No auth token available, cannot fetch airports");
+        return;
+      }
+      const searchData = {
+        from_destination: {
+          city: true,
+          code: fromInput2,
+        },
+        to_destination: {
+          city: true,
+          code: toInput2,
+        },
+        departure_date: journeyDate,
+        return_date:journeyDate2,
+        pax_list: [
+          { type: "ADULT", count: adults },
+          { type: "CHILD", count: children },
+          { type: "INFANT", count: infants },
         ],
         accept_pending: true,
         cabin_type: travelClass,
@@ -404,6 +464,7 @@ const FormArea = () => {
 
   return (
     <>
+    <ToastContainer/>
       <section id="theme_search_form">
         <div className="container">
           <div className="row">
@@ -942,7 +1003,7 @@ const FormArea = () => {
                           role="tabpanel"
                           aria-labelledby="roundtrip-tab"
                         >
-                          <form action="#!">
+                          <form onSubmit={fetchReturnAirportSearch}>
                             <div className="row mb-2 align-items-center">
                               <div className="col-md-11">
                                 <div className="oneway_search_form">
@@ -1071,43 +1132,47 @@ const FormArea = () => {
                                     <div className="flight_Search_boxed date_flex_area">
                                       <div className="Journey_date">
                                         <span>Journey date</span>
-                                         <input
-                                      type="date"
-                                      value={journeyDate}
-                                      onChange={handleDateChange}
-                                      min={
-                                        new Date().toISOString().split("T")[0]
-                                      }
-                                    />
-                                    <span>
-                                      {journeyDate &&
-                                        new Date(
-                                          journeyDate
-                                        ).toLocaleDateString("en-US", {
-                                          weekday: "long",
-                                        })}
-                                    </span>
+                                        <input
+                                          type="date"
+                                          value={journeyDate}
+                                          onChange={handleDateChange}
+                                          min={
+                                            new Date()
+                                              .toISOString()
+                                              .split("T")[0]
+                                          }
+                                        />
+                                        <span>
+                                          {journeyDate &&
+                                            new Date(
+                                              journeyDate
+                                            ).toLocaleDateString("en-US", {
+                                              weekday: "long",
+                                            })}
+                                        </span>
                                       </div>
                                     </div>
                                     <div className="flight_Search_boxed date_flex_area">
                                       <div className="Journey_date">
                                         <span>Return date</span>
-                                         <input
-                                      type="date"
-                                      value={journeyDate2}
-                                      onChange={handleDateChange2}
-                                      min={
-                                        new Date().toISOString().split("T")[0]
-                                      }
-                                    />
-                                    <span>
-                                      {journeyDate2 &&
-                                        new Date(
-                                          journeyDate2
-                                        ).toLocaleDateString("en-US", {
-                                          weekday: "long",
-                                        })}
-                                    </span>
+                                        <input
+                                          type="date"
+                                          value={journeyDate2}
+                                          onChange={handleDateChange2}
+                                          min={
+                                            new Date()
+                                              .toISOString()
+                                              .split("T")[0]
+                                          }
+                                        />
+                                        <span>
+                                          {journeyDate2 &&
+                                            new Date(
+                                              journeyDate2
+                                            ).toLocaleDateString("en-US", {
+                                              weekday: "long",
+                                            })}
+                                        </span>
                                       </div>
                                     </div>
                                     <div
@@ -1801,387 +1866,3 @@ const FormArea = () => {
 };
 export default FormArea;
 
-{
-  /* <div className="col-md-6 text-end">
-    <div className="form-group">
-      <select
-        id="travelClass"
-        value={travelClass}
-        onChange={handleClassChange}
-      >
-        <option value="Economy">Economy</option>
-        <option value="Premium economy">
-          Premium economy
-        </option>
-        <option value="Business class">
-          Business class
-        </option>
-        <option value="First class">
-          First class
-        </option>
-      </select>
-    </div>
-  </div> */
-}
-{
-  /* <div className="row">
-<div className="col-lg-3 col-md-6 col-sm-12 col-12">
-<div className="flight_Search_boxed">
-<p>From</p>
-<input
-type="text"
-value={multiFromInput}
-onChange={handleMultiInputChange}
-placeholder="Leaving From..."
-/>
-<span>
-Select your Departure Airports...
-</span>
-<div className="plan_icon_posation">
-<FaPlaneDeparture
-  size={30}
-  style={{ color: "#143d69" }}
-/>
-</div>
-{multiFromInput.length > 0 && (
-<ul className="airportList_ul">
-  {multiFilteredList.map(
-    (airport, index) => (
-      <li
-        className="airportList_li"
-        key={index}
-        onClick={() => {
-          setMultiFromInput(
-            `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
-          );
-          setMultiFilteredList([]);
-        }}
-      >
-        {airport.City} (
-        {airport.AirportCode}) -{" "}
-        {airport.AirportName}
-      </li>
-    )
-  )}
-  {multiFilteredList.length ==
-    0 && (
-    <li
-      style={{
-        padding: "8px 12px",
-        color: "gray",
-      }}
-    >
-      {" "}
-      No results found
-    </li>
-  )}
-</ul>
-)}
-</div>
-</div>
-<div className="col-lg-3 col-md-6 col-sm-12 col-12">
-<div className="flight_Search_boxed">
-<p>To</p>
-<input
-type="text"
-value={multiToInput}
-onChange={handleMultiToInputChange}
-placeholder="Going to..."
-/>
-<span>
-Select Destination airport...{" "}
-</span>
-<div className="plan_icon_posation">
-<FaPlaneArrival
-  size={30}
-  style={{ color: "#143d69" }}
-/>
-</div>
-<div className="range_plan">
-<i>
-  <FaExchangeAlt />
-</i>
-</div>
-{multiToInput > 0 && (
-<ul className="airportList_ul">
-  {multiFilteredToList.map(
-    (airport, index) => (
-      <li
-        className="airportList_li"
-        key={index}
-        onClick={() => {
-          setMultiToInput(
-            `${airport.City} (${airport.AirportCode}) - ${airport.AirportName}`
-          );
-          setMultiFilteredToList(
-            []
-          );
-        }}
-      >
-        {airport.City} (
-        {airport.AirportCode}) -{" "}
-        {airport.AirportName}
-      </li>
-    )
-  )}
-  {multiFilteredToList === 0 && (
-    <li
-      style={{
-        padding: "8px 12px",
-        color: "gray",
-      }}
-    >
-      {" "}
-      No result found
-    </li>
-  )}
-</ul>
-)}
-</div>
-</div>
-<div className="col-lg-3 col-md-6 col-sm-12 col-12">
-<div className="form_search_date">
-<div className="flight_Search_boxed date_flex_area">
-<div className="Journey_date">
-  <p>Journey date</p>
-  <input
-    type="date"
-    value={journeyDate}
-    onChange={handleDateChange}
-    min={
-      new Date()
-        .toISOString()
-        .split("T")[0]
-    }
-  />
-  <span>
-    {journeyDate &&
-      new Date(
-        journeyDate
-      ).toLocaleDateString(
-        "en-US",
-        {
-          weekday: "long",
-        }
-      )}
-  </span>
-</div>
-</div>
-</div>
-</div>
-<div className="col-lg-3 col-md-6 col-sm-12 col-12">
-<div className="flight_Search_boxed dropdown_passenger_area">
-<p>Passenger, Class</p>
-<div className="dropdown">
-<button
-  className="dropdown-toggle final-count"
-  type="button"
-  onClick={() =>
-    setShowDropdown(!showDropdown)
-  }
->
-  {totalPassengers} Passenger
-  {totalPassengers !== 1 ? "s" : ""}
-</button>
-
-{showDropdown && (
-  <div
-    className="dropdown-menu dropdown_passenger_info show"
-    onClick={(e) =>
-      e.stopPropagation()
-    }
-  >
-    <div className="traveller-calulate-persons">
-      <div className="passengers">
-        <h6>Passengers</h6>
-        {error && (
-          <div
-            style={{
-              color: "red",
-              fontSize: "14px",
-              marginBottom: "10px",
-            }}
-          >
-            {error}
-          </div>
-        )}
-        <div className="passengers-types">
-          <div className="passengers-type">
-            <div className="text">
-              <div className="type-label">
-                <p>Adult</p>
-                <span>12+ yrs</span>
-              </div>
-            </div>
-            <div className="button-set">
-              <button
-                type="button"
-                className="btn-subtract"
-                onClick={() =>
-                  handleDecrement(
-                    "adult"
-                  )
-                }
-              >
-                <FaMinus />
-              </button>
-              <span className="count pcount">
-                {adults}
-              </span>
-              <button
-                type="button"
-                className="btn-add"
-                onClick={() =>
-                  handleIncrement(
-                    "adult"
-                  )
-                }
-              >
-                <FaPlus />
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="passengers-types">
-          <div className="passengers-type">
-            <div className="text">
-              <div className="type-label">
-                <p className="fz14 mb-xs-0">
-                  Children
-                </p>
-                <span>
-                  2 - Less than 12
-                  yrs
-                </span>
-              </div>
-            </div>
-            <div className="button-set">
-              <button
-                type="button"
-                className="btn-subtract-in"
-                onClick={() =>
-                  handleDecrement(
-                    "child"
-                  )
-                }
-              >
-                <FaMinus />
-              </button>
-              <span className="count pcount">
-                {children}
-              </span>
-              <button
-                type="button"
-                className="btn-add-in"
-                onClick={() =>
-                  handleIncrement(
-                    "child"
-                  )
-                }
-              >
-                <FaPlus />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {Array.from({
-          length: children,
-        }).map((_, index) => (
-          <div
-            key={index}
-            className="mb-2 mt-2"
-          >
-            <select
-              className="form-control"
-              value={
-                childAges[index] ||
-                ""
-              }
-              onChange={(e) =>
-                handleChildAgeChange(
-                  index,
-                  e.target.value
-                )
-              }
-            >
-              <option value="">
-                Select Age
-              </option>
-              {Array.from(
-                { length: 11 },
-                (_, i) => i + 2
-              ).map((age) => (
-                <option
-                  key={age}
-                  value={age}
-                >
-                  {age}
-                </option>
-              ))}
-            </select>
-          </div>
-        ))}
-
-        <div className="passengers-types">
-          <div className="passengers-type">
-            <div className="text">
-              <div className="type-label">
-                <p className="fz14 mb-xs-0">
-                  Infant
-                </p>
-                <span>
-                  Less than 2 yrs
-                </span>
-              </div>
-            </div>
-            <div className="button-set">
-              <button
-                type="button"
-                className="btn-subtract-in"
-                onClick={() =>
-                  handleDecrement(
-                    "infant"
-                  )
-                }
-              >
-                <FaMinus />
-              </button>
-              <span className="count incount">
-                {infants}
-              </span>
-              <button
-                type="button"
-                className="btn-add-in"
-                onClick={() =>
-                  handleIncrement(
-                    "infant"
-                  )
-                }
-              >
-                <FaPlus />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="cabin-selection mt-0">
-        <button
-          className="btn commonBtn"
-          onClick={handleDone}
-        >
-          Done
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-</div>
-<span onChange={handleClassChange}>
-{travelClass}
-</span>
-</div>
-</div>
-</div> */
-}

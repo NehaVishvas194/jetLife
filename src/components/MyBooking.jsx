@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { IoIosAirplane } from "react-icons/io";
 import { RiHotelFill } from "react-icons/ri";
 import { FiClock } from "react-icons/fi";
@@ -11,9 +11,14 @@ import hotelImg from "../assets/img/hotel.png";
 import { RxCrossCircled } from "react-icons/rx";
 import { FaAngleDoubleRight } from "react-icons/fa";
 
-const tabs = document.querySelectorAll(".tab");
+// const tabs = document.querySelectorAll(".tab");
 const MyBooking = () => {
   const [activeTab, setActiveTab] = useState("flight");
+  const location = useLocation();
+  const details = location.state?.bookingDetails;
+  console.log(details);
+  // const book = details.books[0];
+  // const pax = book.pax_list[0];
 
   return (
     <>
@@ -142,45 +147,50 @@ const MyBooking = () => {
                             }`}
                           >
                             {/* FLIGHT CONTENT */}
-                            <div className="card p-0">
-                              <div className="card-body">
-                                <div className="notifi-content">
-                                  <div className="d-flex gap-3">
-                                    <div className="book-img">
-                                      <img src={routeImg} alt="Flight Route" />
+                            {details?.books?.map((book, index) => (
+                              <div className="card mb-4">
+                                <div className="card-body" key={index}>
+                                  <div className="notifi-content">
+                                    <div className="d-flex gap-3">
+                                      <div className="book-img">
+                                        <img
+                                          src={routeImg}
+                                          alt="Flight Route"
+                                        />
+                                      </div>
+                                      <div className="main-noti-cont">
+                                        <h6>IndiGo Airlines 6E-785</h6>
+                                        <p>PNR:- {book.pnr}</p>
+                                      </div>
                                     </div>
-                                    <div className="main-noti-cont">
-                                      <h6>IndiGo Airlines 6E-785</h6>
-                                      <p>Passenger John | PNR XYZ123</p>
+                                    <div className="date-time-noti">
+                                      <FiClock />
+                                      <span>19 Jun 2025 at 10:10 AM</span>
                                     </div>
                                   </div>
-                                  <div className="date-time-noti">
-                                    <FiClock />
-                                    <span>19 Jun 2025 at 10:10 AM</span>
-                                  </div>
-                                </div>
-                                <div className="det-data">
-                                  <div className="other">
+                                  <div className="det-data">
+                                    <div className="other">
+                                      <p>
+                                        <strong>From:</strong> New Delhi (DEL)
+                                      </p>
+                                      <div className="flightLine">
+                                        <div></div>
+                                        <div></div>
+                                      </div>
+                                      <p>
+                                        <strong>To:</strong> Mumbai (Mum)
+                                      </p>
+                                    </div>
                                     <p>
-                                      <strong>From:</strong> New Delhi (DEL)
-                                    </p>
-                                    <div className="flightLine">
-                                      <div></div>
-                                      <div></div>
-                                    </div>
-                                    <p>
-                                      <strong>To:</strong> Mumbai (Mum)
+                                      Baggage Info | e-Ticket:-{book?.pax_list[0]?.eticket} | Invoice |{" "}
+                                      <span>
+                                        <FaRegCircleCheck /> {book.book_status}
+                                      </span>
                                     </p>
                                   </div>
-                                  <p>
-                                    Baggage Info | e-Ticket | Invoice |{" "}
-                                    <span>
-                                      <FaRegCircleCheck /> Confirmed
-                                    </span>
-                                  </p>
                                 </div>
                               </div>
-                            </div>
+                            ))}
                           </div>
                           <div
                             className={`tab__content-item ${
