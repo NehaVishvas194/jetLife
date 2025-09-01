@@ -8,7 +8,7 @@ import {
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import CarForm from "./formTabs/CarForm";
+// import CarForm from "./formTabs/CarForm";
 import HotelForm from "./formTabs/HotelForm";
 import { MdRestaurantMenu } from "react-icons/md";
 import { MdOutlineFlight } from "react-icons/md";
@@ -46,6 +46,7 @@ const FormArea = () => {
   const [toSelected, setToSelected] = useState(false);
   const [fromSelected2, setFromSelected2] = useState(false);
   const [toSelected2, setToSelected2] = useState(false);
+ const [loading, setLoading] = useState(false);
 
   const getTodayDate = () => new Date().toISOString().split("T")[0];
   const [multiCityData, setMultiCityData] = useState([
@@ -146,6 +147,7 @@ const FormArea = () => {
   // Flight OneWay SearchAbility Data
   const fetchAirportSearch = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const authToken =
         localStorage.getItem("authToken") || (await getAuthToken());
@@ -197,12 +199,15 @@ const FormArea = () => {
        toast.error(error.response?.data?.error?.description || "Flight Searching Error", {
               autoClose: 3000,
             });
+    } finally{
+      setLoading(false);
     }
   };
 
 // Flight Return SearchAbility Data
   const fetchReturnAirportSearch = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const authToken =
         localStorage.getItem("authToken") || (await getAuthToken());
@@ -250,6 +255,8 @@ const FormArea = () => {
       }
     } catch (error) {
       console.log("Error Fetching Search List Data:", error);
+    } finally{
+      setLoading(false);
     }
   };
 
@@ -989,7 +996,7 @@ const FormArea = () => {
                                     // onClick={searchTab}
                                     className="btn btn_theme btn_md"
                                   >
-                                    Search
+                                    {loading ? "Searching.." : "Search"}
                                   </button>
                                 </div>
                               </div>
@@ -1398,7 +1405,7 @@ const FormArea = () => {
                                     onClick={searchTab}
                                     className="btn btn_theme btn_md"
                                   >
-                                    Search
+                                    {loading ? "Searching.." : "Search"}
                                   </button>
                                 </div>
                               </div>
@@ -1852,7 +1859,7 @@ const FormArea = () => {
                       role="tabpanel"
                       aria-labelledby="bus-tab"
                     >
-                      <CarForm />
+                      {/* <CarForm /> */}
                     </div>
                   </div>
                 </div>

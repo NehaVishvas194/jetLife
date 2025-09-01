@@ -14638,3 +14638,9 @@ section#amazing_tour_place .section_heading_center p {
   font-weight: bold;
   border-bottom: 1px solid #e6e8ee;
 }
+
+.cancel_flight p{
+  color: red;
+  font-size: 14px;
+  font-weight: 600;
+}

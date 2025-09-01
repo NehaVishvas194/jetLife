@@ -70,6 +70,7 @@ const FlightSearch = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [fareKey, setFareKey] = useState("");
+   const [loading, setLoading] = useState(false);
   // const [selectedClass, setSelectedClass] = useState("Economy");
   const itemsPerPage = 5;
   const getTodayDate = () => new Date().toISOString().split("T")[0];
@@ -103,6 +104,7 @@ const FlightSearch = () => {
   const toggleStarCollapse = () => {
     setIsStarCollapsed(!isStarCollapsed);
   };
+
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     setJourneyDate(today);
@@ -149,6 +151,7 @@ const FlightSearch = () => {
   // OneWay SearchAbility Data
   const fetchAirportSearch = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const authToken = localStorage.getItem("authToken");
       if (!authToken) {
@@ -193,12 +196,15 @@ const FlightSearch = () => {
       toast.error(error.response?.data?.error?.description || "Flight Searching Error", {
                     autoClose: 3000,
                   });
+    } finally{
+      setLoading(false);
     }
   };
 
   // Flight Return SearchAbility Data
   const fetchReturnAirportSearch = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const authToken = localStorage.getItem("authToken");
       if (!authToken) {
@@ -242,6 +248,8 @@ const FlightSearch = () => {
       // navigate and pass data
     } catch (error) {
       console.log("Error Fetching Search List Data:", error);
+    } finally{
+      setLoading(false)
     }
   };
 
@@ -1077,7 +1085,7 @@ const FlightSearch = () => {
                                 // onClick={searchTab}
                                 className="btn btn_theme btn_md"
                               >
-                                Search
+                                {loading ? "Searching.." : "Search"}
                               </button>
                             </div>
                           </div>
@@ -1466,7 +1474,7 @@ const FlightSearch = () => {
                                 // onClick={searchTab}
                                 className="btn btn_theme btn_md"
                               >
-                                Search
+                               {loading ? "Searching.." : "Search"}
                               </button>
                             </div>
                           </div>

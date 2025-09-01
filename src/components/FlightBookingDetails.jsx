@@ -3,25 +3,28 @@ import { useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
-// import { FaRegCheckCircle } from "react-icons/fa";
-// import { FaCheck } from "react-icons/fa6";
-// import { MdOutlineCancel } from "react-icons/md";
 import { FaAngleDoubleRight } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
+import { API_BASE_URL } from "../Url/BaseUrl";
 
 const FlightBookingDetails = () => {
   // const [currentStep, setCurrentStep] = useState(0);
   // const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const locationFare = location.state?.fareDetails;
+  const locationFare = location.state?.fareDetails || {};
   const fare_detail_key = locationFare.fare_detail_key;
-  console.log(locationFare);
+  console.log("Full Fare Response:", locationFare);
   console.log("fare details key:-", fare_detail_key);
+  const flights = locationFare.departure_selected_flights || [];
+  const firstFlight = flights[0]?.flight || {};
+  const lastFlight = flights[flights.length - 1]?.flight || {};
+  const fareDetail = locationFare.fare_detail || {};
+  const paxFare = fareDetail.pax_fares?.[0] || {};
 
   const [formData, setFormData] = useState({
     fare_detail_key: fare_detail_key,
@@ -64,57 +67,84 @@ const FlightBookingDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const authToken = localStorage.getItem("authToken");
       if (!authToken) {
         console.error("Flight Booking:- No auth token available");
         return;
       }
-      // const bookingData = {
-      //   fare_detail_key: fare_detail_key,
-      //   contact: {
-      //     email: "",
-      //     phone: { area_code: "", country_code: "", phone_number: "" },
-      //   },
-      //   pax_list: [
-      //     {
-      //       name: "",
-      //       lastname: "",
-      //       birthdate: "",
-      //       type: "ADULT",
-      //       gender: "MALE",
-      //       identity_info: {
-      //         cnic: { no: "" },
-      //         foid: { citizenship_country: "", no: "" },
-      //         passport: { citizenship_country: "", end_date: "", no: "" },
-      //         tc: { no: "", hes_code: "" },
-      //         type: "PASSPORT",
-      //         not_turkish_citizen: true,
-      //         not_pakistan_citizen: true,
-      //       },
-      //     },
-      //   ],
-      //   offers: [],
-      //   notes: "",
-      // };
 
-      const response = await axios.post("/api/rest/flight/v2/book", formData, {
+      // ---- First API ----
+      const response1 = await axios.post("/api/rest/flight/v2/book", formData, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
         },
       });
-      const bookingDetails = response.data?.result || [];
-      console.log(bookingDetails);
-      toast.success("Flight Booked Successfully", {
-        autoClose: 3000,
+
+      const bookingResult = response1.data?.result || {};
+      console.log("Booking Result:", bookingResult);
+
+      // Extract fields from 1st API response
+      const firstBooking = bookingResult.books?.[0] || {};
+      const orderId = firstBooking.order_id
+        ? firstBooking.order_id.toString()
+        : "";
+      const pnr = firstBooking.pnr || {};
+      const bookingStatus = firstBooking.book_status || {};
+      // const passenger = firstBooking.pax_list?.[0] || {};
+
+      const token = localStorage.getItem("Token");
+      const id = localStorage.getItem("Id");
+
+      const response2 = await axios.post(`${API_BASE_URL}/my/booking`, {
+        token: token,
+        user_id: id,
+        order_id: orderId,
+        pnr_number: pnr,
+        user_booking_status: bookingStatus,
+        type: formData.pax_list[0]?.type,
+        email: formData.contact.email,
+        country_code: formData.contact.phone.country_code,
+        area_code: formData.contact.phone.area_code,
+        phone_number: formData.contact.phone.phone_number,
+        first_name: formData.pax_list[0]?.name,
+        last_name: formData.pax_list[0]?.lastname,
+        birthdate: formData.pax_list[0]?.birthdate,
+        passenger_type: formData.pax_list[0]?.type,
+        gender: formData.pax_list[0]?.gender,
+        passport_no: formData.pax_list[0]?.identity_info.passport.no,
+        passport_expiry_date:
+          formData.pax_list[0]?.identity_info.passport.end_date,
+        citizenship_country:
+          formData.pax_list[0]?.identity_info.passport.citizenship_country,
+        note: formData.notes,
+        booking_type: "Flight",
+        flight_name: firstFlight.marketing_airline_code || "",
+        flight_number: firstFlight.flight_number,
+        from_city: firstFlight.from,
+        to_city: lastFlight.to,
+        price: fareDetail.price_info?.total_fare,
+        class: firstFlight.cabin_type,
+        departure_time: firstFlight.departure_time,
+        arrival_time: lastFlight.arrival_time,
+        passenger_count: paxFare.number_of_pax,
+        journey_date: firstFlight.departure_time?.split(" ")[0] || "",
+        return_date: lastFlight.arrival_time?.split(" ")[0] || "",
       });
-      navigate("/my_booking", { state: { bookingDetails } });
+      console.log("Second API Response:", response2.data);
+
+      toast.success("Flight Booked Successfully", { autoClose: 3000 });
+      navigate("/my_booking", { state: { bookingResult } });
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.error?.description || "Flight Booking Error", {
-        autoClose: 3000,
-      });
+      toast.error(
+        error.response?.data?.error?.description || "Flight Booking Error",
+        {
+          autoClose: 3000,
+        }
+      );
     }
   };
 
@@ -152,7 +182,7 @@ const FlightBookingDetails = () => {
   return (
     <div>
       <Header />
-      <ToastContainer/>
+      <ToastContainer />
       {/* <!-- Common Banner Area --> */}
       <section id="common_banner">
         <div className="container">
@@ -1353,7 +1383,7 @@ const FlightBookingDetails = () => {
                             type="submit"
                             className="btn btn_theme btn_md"
                           >
-                            Submit
+                            Book
                           </button>
                         </div>
                       </div>
