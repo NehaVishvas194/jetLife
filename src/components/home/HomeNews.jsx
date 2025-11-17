@@ -49,10 +49,10 @@ const HomeNews = () => {
               slidesPerView={4}
               loop={true}
               navigation={true}
-              // autoplay={{
-              //   delay: 2500,
-              //   disableOnInteraction: false,
-              // }}
+              autoplay={{
+                delay: 2500,
+                disableOnInteraction: false,
+              }}
               breakpoints={{
                 320: { slidesPerView: 1 },
                 640: { slidesPerView: 2 },

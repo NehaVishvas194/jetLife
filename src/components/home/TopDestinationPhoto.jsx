@@ -53,7 +53,8 @@ const TopDestinationPhoto = () => {
                 modules={[Navigation, Autoplay]}
                 spaceBetween={30}
                 slidesPerView={4}
-                loop={false} 
+                loop={true} 
+                navigation={true}
                 breakpoints={{
                   320: { slidesPerView: 1 },
                   640: { slidesPerView: 2 },

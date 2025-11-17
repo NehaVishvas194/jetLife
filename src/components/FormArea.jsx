@@ -11,20 +11,19 @@ import axios from "axios";
 import CarForm from "./formTabs/CarForm";
 import HotelForm from "./formTabs/HotelForm";
 import PrivateCharter from "./formTabs/PrivateCharter";
-import { MdRestaurantMenu } from "react-icons/md";
 import { MdOutlineFlight } from "react-icons/md";
 import { FaCarSide } from "react-icons/fa";
 import { RiHotelFill } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
-import { API_BASE_URL } from "../Url/BaseUrl";
+// import { API_BASE_URL } from "../Url/BaseUrl";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-// import { getAuthToken } from "../api/auth";
+import { FLIGHT_API } from "../Url/BaseUrl";
 
 const FormArea = () => {
   // const [selectedClass, setSelectedClass] = useState("Economy");
-  const [airportList, setAirPortList] = useState([]);
+  // const [airportList, setAirPortList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [fromInput, setFromInput] = useState("");
   const [toInput, setToInput] = useState("");
@@ -37,31 +36,22 @@ const FormArea = () => {
   const [multiFilteredToList, setMultiFilteredToList] = useState([]);
   const [multiSelectedFrom, setMultiSelectedFrom] = useState([]);
   const [multiSelectedTo, setMultiSelectedTo] = useState([]);
-  // const [journeyDate, setJourneyDate] = useState("");
-  // const [journeyDate2, setJourneyDate2] = useState("");
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [infants, setInfants] = useState(0);
   const [childAges, setChildAges] = useState([]);
   const [error, setError] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
-  const [travelClass, setTravelClass] = useState("ECONOMY");
+  const [travelClass, setTravelClass] = useState("economy");
   const [fromSelected, setFromSelected] = useState(false);
   const [toSelected, setToSelected] = useState(false);
   const [fromSelected2, setFromSelected2] = useState(false);
   const [toSelected2, setToSelected2] = useState(false);
   const [loading, setLoading] = useState(false);
   const [departureDate, setDepartureDate] = useState(null);
-  // const [returnDate, setReturnDate] = useState(null);
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
-  // const [startDate, setStartDate] = useState(null);
-  // const [endDate, setEndDate] = useState(null);
   const getTodayDate = () => new Date().toISOString().split("T")[0];
-  // const [multiCityData, setMultiCityData] = useState([
-  //   { from: "", to: "", date: getTodayDate() },
-  //   { from: "", to: "", date: getTodayDate() },
-  // ]);
   const [multiCityData, setMultiCityData] = useState([
     { from: "", to: "", date: "" },
     { from: "", to: "", date: "" },
@@ -72,87 +62,71 @@ const FormArea = () => {
     // navigate("/searchFlight");
   };
 
-  // useEffect(() => {
-  //   const today = new Date().toISOString().split("T")[0];
-  //   setJourneyDate(today);
-  //   setJourneyDate2(today);
-  // }, []);
-
-  // const handleDateChange = (e) => {
-  //   setJourneyDate(e.target.value);
-  // };
-  // const handleDateChange2 = (e) => {
-  //   setJourneyDate2(e.target.value);
-  // };
   const handleClassChange = (e) => {
     setTravelClass(e.target.value);
   };
-  // const handleChange = (e) => {
-  //   setSelectedClass(e.target.value);
-  // };
 
+// Generate Flight Token 
   const getAuthToken = async () => {
     try {
-      const authcode = "D6F4E8ADB1B3FFC8BC8BCCC811EF7645AEA21EBE";
-      const secret = "Jetlife@2025";
-      // Base64 encode
-      const credentials = btoa(`${authcode}:${secret}`);
-      const response = await axios.get(
-        //  "https://testapi.iati.com/rest/auth/token",
-        `${API_BASE_URL}/genrate/token`,
+      const response = await axios.post(
+        `${FLIGHT_API}/auth/login`,
+        {
+          email: "shubhamkumar@mobappswebsolutions.com",
+          password: "A@dGsZ&xJ",
+        },
         {
           headers: {
-            Authorization: `Basic ${credentials}`,
+            "Content-Type": "application/json",
           },
         }
       );
-      const authToken = response.data?.result?.token;
-      console.log("Auth API Response:", authToken);
-
-      if (authToken) {
-        // Save in localStorage with consistent key
-        localStorage.setItem("authToken", authToken);
-        return authToken;
+      console.log("Integr8t Token Response:", response.data.data.access_token);
+      const flightToken = response.data.data.access_token;
+      if (flightToken) {
+        localStorage.setItem("flightToken", flightToken);
+        return flightToken;
       } else {
         console.error("No token found in response:", response.data);
         return null;
       }
     } catch (error) {
-      console.error(
-        "Error getting token:",
-        error.response ? error.response.data : error.message
-      );
-      return null;
+      console.error("Error Getting Flight Token:", error);
     }
   };
 
-  const fetchAirPort = async () => {
+// Generate Airpoirt List
+  const fetchAirPort = async (query) => {
     try {
-      // Try localStorage first
-      let authToken = localStorage.getItem("authToken");
-      if (!authToken) {
+      let flightToken = localStorage.getItem("flightToken");
+      if (!flightToken) {
         // If missing, fetch a new one
-        authToken = await getAuthToken();
+        flightToken = await getAuthToken();
       }
-      if (!authToken) {
-        console.error("No auth token available, cannot fetch airports");
+      if (!flightToken) {
+        console.error("No Flight token available, cannot fetch airports");
         return;
       }
 
-      const data = { language_code: "EN" };
-      const response = await axios.post(
-        // "https://testapi.iati.com/rest/flight/v2/airport",
-        `${API_BASE_URL}/airport/data`,
-        data,
+      const response = await axios.get(
+        `${FLIGHT_API}/airports/search?search=${query}`,
         {
           headers: {
-            Authorization: `Bearer ${authToken}`,
+            Authorization: `Bearer ${flightToken}`,
             "Content-Type": "application/json",
           },
         }
       );
-      console.log("Airport Response:", response.data);
-      setAirPortList(response.data.result || []);
+
+      // console.log("Airport Response:", response.data);
+      const original = response.data?.data?.original || [];
+      const mapped = original.map((item) => ({
+        city_name: item.city,
+        city_code: item.code,
+        name: item.name,
+        country_code: item.country,
+      }));
+      return mapped;
     } catch (error) {
       console.error("Error fetching airports:", error);
     }
@@ -170,53 +144,53 @@ const FormArea = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      let authToken = localStorage.getItem("authToken");
-      if (!authToken) {
-        // If missing, fetch a new one
-        authToken = await getAuthToken();
+      let flightToken = localStorage.getItem("flightToken");
+      if (!flightToken) {
+        flightToken = await getAuthToken();
       }
-      if (!authToken) {
+      if (!flightToken) {
         console.error("No auth token available, cannot fetch airports");
         return;
       }
-
       const searchData = {
-        from_destination: {
-          city: true,
-          code: fromInput,
-        },
-        to_destination: {
-          city: true,
-          code: toInput,
-        },
-        departure_date: departureDate,
-        pax_list: [
-          { type: "ADULT", count: adults },
-          { type: "CHILD", count: children },
-          { type: "INFANT", count: infants },
-        ],
-        accept_pending: true,
-        cabin_type: travelClass,
+        legs: [
+          {
+          origin: fromInput,
+          destination: toInput,
+          departureDate: departureDate,
+        }
+      ],
+      passengers: {
+        adults:adults,
+        children:children,
+        infants:infants,
+      },
+        cabinClass: travelClass,
+        tripType:"oneway",
+        currencyCode:"USD",
+        sort:"recommended",
+        bookingSources:[
+          "amadeus",
+          "sabre"
+        ]
       };
 
-      const response = await axios.post(`${API_BASE_URL}/search`, searchData, {
+      const response = await axios.post(`${FLIGHT_API}/flights/search`, searchData, {
         headers: {
-          Authorization: `Bearer ${authToken}`,
+          Authorization: `Bearer ${flightToken}`,
           "Content-Type": "application/json",
         },
       });
 
-      const flights = response.data?.result?.departure_flights || [];
-      console.log("Flights found:", flights);
+      const Flights = response.data?.data?.results?.flightOffers ||
+      response.data?.data?.flightOffers || [];
+      console.log("One Way Flights found:", Flights);
       // navigate and pass data
-      navigate("/searchFlight", { state: { flights } });
+      navigate("/searchFlight", { state: { Flights } });
     } catch (error) {
       console.log("Error Fetching Search List Data:", error);
       toast.error(
         error.response?.data?.error?.description || "Flight Searching Error",
-        {
-          autoClose: 3000,
-        }
       );
     } finally {
       setLoading(false);
@@ -228,215 +202,245 @@ const FormArea = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      let authToken = localStorage.getItem("authToken");
-      if (!authToken) {
-        authToken = await getAuthToken();
+      let flightToken = localStorage.getItem("flightToken");
+      if (!flightToken) {
+        flightToken = await getAuthToken();
       }
 
-      if (!authToken) {
+      if (!flightToken) {
         console.error("No auth token available, cannot fetch airports");
         return;
       }
 
       const searchData = {
-        from_destination: {
-          city: true,
-          code: fromInput2,
-        },
-        to_destination: {
-          city: true,
-          code: toInput2,
-        },
-        departure_date: startDate,
-        return_date: endDate,
-        pax_list: [
-          { type: "ADULT", count: adults },
-          { type: "CHILD", count: children },
-          { type: "INFANT", count: infants },
-        ],
-        accept_pending: true,
-        cabin_type: travelClass,
+        legs: [
+          {
+          origin: fromInput2,
+          destination: toInput2,
+          departureDate: startDate,
+        }
+      ],
+      passengers: {
+        adults:adults,
+        children:children,
+        infants:infants,
+      },
+        cabinClass: travelClass,
+        tripType:"roundtrip",
+        returnDate: endDate,
+        currencyCode:"USD",
+        sort:"recommended",
+        bookingSources:[
+          "amadeus",
+          "sabre"
+        ]
       };
 
-      const response = await axios.post(`${API_BASE_URL}/search`, searchData, {
+      const response = await axios.post(`${FLIGHT_API}/flights/search`, searchData, {
         headers: {
-          Authorization: `Bearer ${authToken}`,
+          Authorization: `Bearer ${flightToken}`,
           "Content-Type": "application/json",
         },
       });
 
-      const flights = response.data?.result?.departure_flights || [];
-      const flights2 = response.data?.result?.return_flights || [];
-
-      console.log("Departure flights:", flights);
-      console.log("Return flights:", flights2);
-
-      navigate("/searchFlight", {
-        state: {
-          flights,
-          flights2,
-        },
-      });
+      const FlightReturn = response.data?.data?.results?.flightOffers ||
+      response.data?.data?.flightOffers || [];
+      console.log("Return Flight Found:", FlightReturn);
+      navigate("/searchFlight", {state: { FlightReturn,  activeUITab: "roundtrip" }}); //<< tell new page to open Return tab
     } catch (error) {
       console.log("Error Fetching Search List Data:", error);
+       toast.error(
+        error.response?.data?.error?.description || "Flight Searching Error",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   // OneWay filter data
-
+  let timeoutId;
   const handleInputChange = (e) => {
     const value = e.target.value;
     setFromInput(value);
     setFromSelected(false);
 
-    const filtered = airportList.filter((airport) =>
-      `${airport.city_name} ${airport.city_code} ${airport.name} ${airport.country_code}`
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
-    setFilteredList(filtered);
+    clearTimeout(timeoutId);
+
+    if (value.length < 1) {
+      setFilteredList([]);
+      return;
+    }
+
+    timeoutId = setTimeout(async () => {
+      const data = await fetchAirPort(value);
+      setFilteredList(data);
+    }, 200);
   };
 
   const handleAirport = (airport) => {
     setFromInput(
-      // `${airport.city_name}(${airport.city_code}) - ${airport.name} (${airport.country_code})`
-      `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`
+      `${airport.city_code}`
     );
     setFilteredList([]);
     setFromSelected(true);
   };
 
+  let toTimeoutId;
   const handleToInputChange = (e) => {
     const value = e.target.value;
     setToInput(value);
     setToSelected(false);
 
-    const filtered = airportList.filter((airport) =>
-      `${airport.city_name} ${airport.city_code} ${airport.name} ${airport.country_code}`
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
-    setFilteredToList(filtered);
+    clearTimeout(toTimeoutId);
+
+    if (value.length < 1) {
+      setFilteredToList([]);
+      return;
+    }
+
+    toTimeoutId = setTimeout(async () => {
+      const data = await fetchAirPort(value);
+      setFilteredToList(data);
+    }, 200);
   };
 
   const handleSelectToAirport = (airport) => {
     setToInput(
-      //  `${airport.city_name}(${airport.city_code}) - ${airport.name} (${airport.country_code})`
-      `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`
+      `${airport.city_code}`
     );
     setFilteredToList([]);
     setToSelected(true);
   };
 
   // Roundtrip filter data
+  let fromTimeoutId2;
   const handleInputChange2 = (e) => {
     const value = e.target.value;
     setFromInput2(value);
     setFromSelected2(false);
 
-    const filtered = airportList.filter((airport) =>
-      `${airport.city_name} ${airport.city_code} ${airport.name} ${airport.country_code}`
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
-    setFilteredList2(filtered);
+    clearTimeout(fromTimeoutId2);
+    if (value.length < 1) {
+      setFilteredList2([]);
+      return;
+    }
+    fromTimeoutId2 = setTimeout(async () => {
+      const data = await fetchAirPort(value);
+      setFilteredList2(data);
+    }, 200);
   };
 
   const handleSelectAirport2 = (airport) => {
     setFromInput2(
-      //  `${airport.city_name}(${airport.city_code}) - ${airport.name} (${airport.country_code})`
-      `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`
+      `${airport.city_code}`
     );
     setFilteredList2([]);
     setFromSelected2(true);
   };
 
+  let toTimeoutId2;
   const handleToInputChange2 = (e) => {
     const value = e.target.value;
     setToInput2(value);
     setToSelected2(false);
 
-    const filtered = airportList.filter((airport) =>
-      `${airport.city_name} ${airport.city_code} ${airport.name} ${airport.country_code}`
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
-    setFilteredToList2(filtered);
+    clearTimeout(toTimeoutId2);
+
+    if (value.length < 1) {
+      setFilteredToList2([]);
+      return;
+    }
+
+    toTimeoutId2 = setTimeout(async () => {
+      const data = await fetchAirPort(value);
+      setFilteredToList2(data);
+    }, 200);
   };
 
   const handleSelectToAirport2 = (airport) => {
     setToInput2(
-      //  `${airport.city_name}(${airport.city_code}) - ${airport.name} (${airport.country_code})`
-      `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`
+      // `${airport.city_code} ${airport.city_name} - ${airport.country_code}`
+       `${airport.city_code}`
     );
     setFilteredToList2([]);
     setToSelected2(true);
   };
 
   // Multi filter data
+  let multiTimeoutIds = {};
   const handleMultiInputChange = (e, index, type) => {
     const value = e.target.value;
-    const updatedData = [...multiCityData];
-    updatedData[index][type] = value;
-    setMultiCityData(updatedData);
 
-    const filtered = airportList.filter((airport) =>
-      `${airport.city_name} ${airport.city_code} ${airport.name} ${airport.country_code}`
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
+    const updated = [...multiCityData];
+    updated[index][type] = value;
+    setMultiCityData(updated);
 
-    if (type === "from") {
-      const updatedFiltered = [...multiFilteredList];
-      updatedFiltered[index] = filtered;
-      setMultiFilteredList(updatedFiltered);
+    // clear previous debounce
+    clearTimeout(multiTimeoutIds[index + type]);
 
-      const updatedSelected = [...multiSelectedFrom];
-      updatedSelected[index] = false;
-      setMultiSelectedFrom(updatedSelected);
-    } else if (type === "to") {
-      const updatedFiltered = [...multiFilteredToList];
-      updatedFiltered[index] = filtered;
-      setMultiFilteredToList(updatedFiltered);
-
-      const updatedSelected = [...multiSelectedTo];
-      updatedSelected[index] = false;
-      setMultiSelectedTo(updatedSelected);
+    if (value.length < 1) {
+      if (type === "from") {
+        const temp = [...multiFilteredList];
+        temp[index] = [];
+        setMultiFilteredList(temp);
+      } else {
+        const temp = [...multiFilteredToList];
+        temp[index] = [];
+        setMultiFilteredToList(temp);
+      }
+      return;
     }
+
+    // set new debounce
+    multiTimeoutIds[index + type] = setTimeout(async () => {
+      const results = await fetchAirPort(value);
+
+      if (type === "from") {
+        const temp = [...multiFilteredList];
+        temp[index] = results;
+        setMultiFilteredList(temp);
+
+        const sel = [...multiSelectedFrom];
+        sel[index] = false;
+        setMultiSelectedFrom(sel);
+      } else {
+        const temp = [...multiFilteredToList];
+        temp[index] = results;
+        setMultiFilteredToList(temp);
+
+        const sel = [...multiSelectedTo];
+        sel[index] = false;
+        setMultiSelectedTo(sel);
+      }
+    }, 100);
   };
 
   const handleSelectAirport = (airport, index, type) => {
-    const formatted = `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`;
-    const updatedData = [...multiCityData];
-    updatedData[index][type] = formatted;
-    setMultiCityData(updatedData);
+    const formatted = `${airport.city_code} (${airport.city_name}) - ${airport.country_code}`;
+
+    const updated = [...multiCityData];
+    updated[index][type] = formatted;
+    setMultiCityData(updated);
 
     if (type === "from") {
-      const updatedFiltered = [...multiFilteredList];
-      updatedFiltered[index] = [];
-      setMultiFilteredList(updatedFiltered);
+      const temp = [...multiFilteredList];
+      temp[index] = [];
+      setMultiFilteredList(temp);
 
-      const updatedSelected = [...multiSelectedFrom];
-      updatedSelected[index] = true;
-      setMultiSelectedFrom(updatedSelected);
+      const sel = [...multiSelectedFrom];
+      sel[index] = true;
+      setMultiSelectedFrom(sel);
     } else {
-      const updatedFiltered = [...multiFilteredToList];
-      updatedFiltered[index] = [];
-      setMultiFilteredToList(updatedFiltered);
+      const temp = [...multiFilteredToList];
+      temp[index] = [];
+      setMultiFilteredToList(temp);
 
-      const updatedSelected = [...multiSelectedTo];
-      updatedSelected[index] = true;
-      setMultiSelectedTo(updatedSelected);
+      const sel = [...multiSelectedTo];
+      sel[index] = true;
+      setMultiSelectedTo(sel);
     }
   };
 
-  // const handleMultiDateChange = (e, index) => {
-  //   const updatedData = [...multiCityData];
-  //   updatedData[index].date = e.target.value;
-  //   setMultiCityData(updatedData);
-  // };
   const handleMultiDateChange = (date, index) => {
     const updatedData = [...multiCityData];
     updatedData[index].date = date;
@@ -701,10 +705,7 @@ const FormArea = () => {
                                                     handleAirport(airport)
                                                   }
                                                 >
-                                                  {airport.city_name}(
-                                                  {airport.city_code}) -{" "}
-                                                  {airport.name} (
-                                                  {airport.country_code})
+                                                  {airport.city_name} ({airport.city_code}) - {airport.country_code}
                                                 </li>
                                               )
                                             )
@@ -713,6 +714,7 @@ const FormArea = () => {
                                               style={{
                                                 padding: "8px 12px",
                                                 color: "gray",
+                                                border: "1px solid #ccc",
                                               }}
                                             >
                                               No results found
@@ -761,10 +763,7 @@ const FormArea = () => {
                                                     )
                                                   }
                                                 >
-                                                  {airport.city_name}(
-                                                  {airport.city_code}) -{" "}
-                                                  {airport.name} (
-                                                  {airport.country_code})
+                                                  {airport.city_name} ({airport.city_code}) - {airport.country_code}
                                                 </li>
                                               )
                                             )
@@ -773,6 +772,7 @@ const FormArea = () => {
                                               style={{
                                                 padding: "8px 12px",
                                                 color: "gray",
+                                                border: "1px solid #ccc",
                                               }}
                                             >
                                               No results found
@@ -789,16 +789,6 @@ const FormArea = () => {
                                         <div className="">
                                           <span>Departure</span>
                                         </div>
-                                        {/* <input
-                                          type="date"
-                                          value={journeyDate}
-                                          onChange={handleDateChange}
-                                          min={
-                                            new Date()
-                                              .toISOString()
-                                              .split("T")[0]
-                                          }
-                                        /> */}
                                         <DatePicker
                                           selected={departureDate}
                                           onChange={(date) =>
@@ -810,20 +800,6 @@ const FormArea = () => {
                                           placeholderText="dd-mm-yyyy"
                                           className="rounded w-full cursor-pointer"
                                         />
-                                        {/* {journeyDate && (
-                                          <div className="mt-1 text-sm">
-                                            <span className="block italic text-gray-500">
-                                              {new Date(
-                                                journeyDate
-                                              ).toLocaleDateString("en-US", {
-                                                weekday: "long",
-                                                day: "numeric",
-                                                month: "long",
-                                                year: "numeric",
-                                              })}
-                                            </span>
-                                          </div>
-                                        )} */}
                                         {departureDate && (
                                           <div className="mt-1 text-sm">
                                             <span className="block italic text-gray-500">
@@ -977,7 +953,7 @@ const FormArea = () => {
                                                             <p>
                                                               Infant{" "}
                                                               <span>
-                                                                (0-12 yrs)
+                                                                (below 2yrs)
                                                               </span>
                                                             </p>
                                                           </div>
@@ -1019,10 +995,10 @@ const FormArea = () => {
                                                   </h6>
                                                   <div className="class-options">
                                                     {[
-                                                      "ECONOMY",
-                                                      "PREMIUM ECONOMY",
-                                                      "BUSINESS",
-                                                      "FIRST CLASS",
+                                                      "economy",
+                                                      "premium economy",
+                                                      "business class",
+                                                      "first class",
                                                     ].map((cls) => (
                                                       <label
                                                         className="class-radio"
@@ -1117,22 +1093,14 @@ const FormArea = () => {
                                               (airport, index) => (
                                                 <li
                                                   key={index}
+                                                  className="airportList_li"
                                                   onClick={() =>
                                                     handleSelectAirport2(
                                                       airport
                                                     )
                                                   }
-                                                  style={{
-                                                    padding: "8px 12px",
-                                                    cursor: "pointer",
-                                                    borderBottom:
-                                                      "1px solid #eee",
-                                                  }}
                                                 >
-                                                  {airport.city_name}(
-                                                  {airport.city_code}) -{" "}
-                                                  {airport.name} (
-                                                  {airport.country_code})
+                                                  {airport.city_name} ({airport.city_code}) - {airport.country_code}
                                                 </li>
                                               )
                                             )
@@ -1141,6 +1109,7 @@ const FormArea = () => {
                                               style={{
                                                 padding: "8px 12px",
                                                 color: "gray",
+                                                border: "1px solid #ccc",
                                               }}
                                             >
                                               No result found
@@ -1182,22 +1151,14 @@ const FormArea = () => {
                                               (airport, index) => (
                                                 <li
                                                   key={index}
+                                                  className="airportList_li"
                                                   onClick={() =>
                                                     handleSelectToAirport2(
                                                       airport
                                                     )
                                                   }
-                                                  style={{
-                                                    padding: "8px 12px",
-                                                    cursor: "pointer",
-                                                    borderBottom:
-                                                      "1px solid #eee",
-                                                  }}
                                                 >
-                                                  {airport.city_name}(
-                                                  {airport.city_code}) -{" "}
-                                                  {airport.name} (
-                                                  {airport.country_code})
+                                                  {airport.city_name} ({airport.city_code}) - {airport.country_code}
                                                 </li>
                                               )
                                             )
@@ -1206,6 +1167,7 @@ const FormArea = () => {
                                               style={{
                                                 padding: "8px 12px",
                                                 color: "gray",
+                                                border: "1px solid #ccc",
                                               }}
                                             >
                                               No result found
@@ -1399,7 +1361,7 @@ const FormArea = () => {
                                                             <p>
                                                               Infant{" "}
                                                               <span>
-                                                                (0-12 yrs)
+                                                                (below 2yrs)
                                                               </span>
                                                             </p>
                                                           </div>
@@ -1441,10 +1403,10 @@ const FormArea = () => {
                                                   </h6>
                                                   <div className="class-options">
                                                     {[
-                                                      "ECONOMY",
-                                                      "PREMIUM ECONOMY",
-                                                      "BUSINESS",
-                                                      "FIRST CLASS",
+                                                      "economy",
+                                                      "premium economy",
+                                                      "business",
+                                                      "first class",
                                                     ].map((cls) => (
                                                       <label
                                                         className="class-radio"
@@ -1557,10 +1519,11 @@ const FormArea = () => {
                                                         )
                                                       }
                                                     >
-                                                      {airport.city_name}(
+                                                    {airport.city_name} ({airport.city_code}) - {airport.country_code}
+                                                      {/* {airport.city_name}(
                                                       {airport.city_code}) -{" "}
                                                       {airport.name} (
-                                                      {airport.country_code})
+                                                      {airport.country_code}) */}
                                                     </li>
                                                   )
                                                 )
@@ -1621,10 +1584,11 @@ const FormArea = () => {
                                                         )
                                                       }
                                                     >
-                                                      {airport.city_name}(
+                                                    {airport.city_name} ({airport.city_code}) - {airport.country_code}
+                                                      {/* {airport.city_name}(
                                                       {airport.city_code}) -{" "}
                                                       {airport.name} (
-                                                      {airport.country_code})
+                                                      {airport.country_code}) */}
                                                     </li>
                                                   )
                                                 )
@@ -1841,7 +1805,8 @@ const FormArea = () => {
                                                                   <p>
                                                                     Infant{" "}
                                                                     <span>
-                                                                      (0-12 yrs)
+                                                                      (below
+                                                                      2yrs)
                                                                     </span>
                                                                   </p>
                                                                 </div>
@@ -1883,10 +1848,10 @@ const FormArea = () => {
                                                         </h6>
                                                         <div className="class-options">
                                                           {[
-                                                            "ECONOMY",
-                                                            "PREMIUM ECONOMY",
-                                                            "BUSINESS",
-                                                            "FIRST CLASS",
+                                                            "economy",
+                                                            "premium economy",
+                                                            "business",
+                                                            "first class",
                                                           ].map((cls) => (
                                                             <label
                                                               className="class-radio"

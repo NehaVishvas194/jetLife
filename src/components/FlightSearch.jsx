@@ -34,6 +34,8 @@ import { API_BASE_URL } from "../Url/BaseUrl";
 import DatePicker from "react-datepicker";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { FLIGHT_API } from "../Url/BaseUrl";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 const FlightSearch = () => {
   const [email, setEmail] = useState("");
@@ -41,7 +43,6 @@ const FlightSearch = () => {
   const [email2, setEmail2] = useState("");
   const [password2, setPassword2] = useState("");
   const [loading, setLoading] = useState(false);
-  const [airportList, setAirPortList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [fromInput, setFromInput] = useState("");
   const [toInput, setToInput] = useState("");
@@ -58,9 +59,7 @@ const FlightSearch = () => {
   const [multiFilteredToList, setMultiFilteredToList] = useState([]);
   const [multiSelectedFrom, setMultiSelectedFrom] = useState([]);
   const [multiSelectedTo, setMultiSelectedTo] = useState([]);
-  const [travelClass, setTravelClass] = useState("ECONOMY");
-  // const [journeyDate, setJourneyDate] = useState("");
-  // const [journeyDate2, setJourneyDate2] = useState("");
+  const [travelClass, setTravelClass] = useState("economy");
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [infants, setInfants] = useState(0);
@@ -71,42 +70,57 @@ const FlightSearch = () => {
   const [isPriceCollapsed, setIsPriceCollapsed] = useState(true);
   const [isPopularCollapsed, setIsPopularCollapsed] = useState(true);
   const [isPropertyCollapsed, setIsPropertyCollapsed] = useState(true);
-  // const [isStarCollapsed, setIsStarCollapsed] = useState(true);
-  const [apiFlights, setApiFlights] = useState([]);
-  const [apiFlights2, setApiFlights2] = useState([]);
+  const location = useLocation();
+  const { activeUITab } = location.state || {};
+  const [rowFlights, setRowFlights] = useState(location.state?.Flights || []);
+  const [rowFlightsReturn, setRowFlightsReturn] = useState(
+    location.state?.FlightReturn || []
+  );
   const [openIndex, setOpenIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage2, setCurrentPage2] = useState(1);
   const [fareKey, setFareKey] = useState("");
   const [showAllAirlines, setShowAllAirlines] = useState(false);
   const [showAllFlightTimes, setShowAllFlightTimes] = useState(false);
-  // null = any, 0 = direct, 1 = 1 stop
+  const [showAllAirlines2, setShowAllAirlines2] = useState(false);
+  const [showAllFlightTimes2, setShowAllFlightTimes2] = useState(false);
   const [selectedStops, setSelectedStops] = useState(null);
+  const [selectedStops2, setSelectedStops2] = useState(null);
   const [departureDate, setDepartureDate] = useState(null);
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
-  // const [selectedClass, setSelectedClass] = useState("Economy");
   const itemsPerPage = 10;
+
   const getTodayDate = () => new Date().toISOString().split("T")[0];
-  // const [multiCityData, setMultiCityData] = useState([
-  //   { from: "", to: "", date: getTodayDate() },
-  //   { from: "", to: "", date: getTodayDate() },
-  // ]);
   const [multiCityData, setMultiCityData] = useState([
     { from: "", to: "", date: "" },
     { from: "", to: "", date: "" },
   ]);
   const [activeTab, setActiveTab] = useState("Best");
+  const [activeTab2, setActiveTab2] = useState("Best");
+  const [activeTab3, setActiveTab3] = useState("Best");
 
   const tabs = ["Best", "Cheapest", "Fastest"];
+  const tabs2 = ["Best", "Cheapest", "Fastest"];
+  const tabs3 = ["Best", "Cheapest", "Fastest"];
+
   const navigate = useNavigate();
+  useEffect(() => {
+    if (activeUITab) {
+      const tabTrigger = document.querySelector(`#${activeUITab}-tab`);
+      if (tabTrigger) {
+        const tab = new bootstrap.Tab(tabTrigger);
+        tab.show();
+      }
+    }
+  }, [activeUITab]);
+
   const handleToggle = (index) => {
     setOpenIndex((prevIndex) => (prevIndex === index ? null : index));
   };
-
   const toggleDropdown = (index) => {
     setOpenDropdown(openDropdown === index ? null : index);
   };
-
   const handleClassChange = (event) => {
     setTravelClass(event.target.value);
   };
@@ -120,150 +134,172 @@ const FlightSearch = () => {
     setIsPropertyCollapsed(!isPropertyCollapsed);
   };
 
-  // const toggleStarCollapse = () => {
-  //   setIsStarCollapsed(!isStarCollapsed);
-  // };
-
-  // useEffect(() => {
-  //   const today = new Date().toISOString().split("T")[0];
-  //   setJourneyDate(today);
-  //   setJourneyDate2(today);
-  // }, []);
-
-  // const handleDateChange = (e) => {
-  //   setJourneyDate(e.target.value);
-  // };
-  // const handleDateChange2 = (e) => {
-  //   setJourneyDate2(e.target.value);
-  // };
-  // const handleChange = (e) => {
-  //   setSelectedClass(e.target.value);
-  // };
-
   // Flight airportList api
-  useEffect(() => {
-    const fetchAirportList = async () => {
-      try {
-        const authToken = localStorage.getItem("authToken");
-        if (!authToken) {
-          console.error("No auth token available, cannot fetch airports");
-          return;
-        }
-        const data = {
-          language_code: "EN",
-        };
-        const response = await axios.post(
-          `${API_BASE_URL}/airport/data`,
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log("Flight Airport Response:", response.data);
-        setAirPortList(response.data.result || []);
-      } catch (error) {
-        console.log("Error Fetching Flight Airport:", error);
+  const fetchAirportList = async (query) => {
+    try {
+      const flightToken = localStorage.getItem("flightToken");
+      if (!flightToken) {
+        console.error("No auth token available, cannot fetch airports");
+        return;
       }
-    };
+
+      const response = await axios.get(
+        `${FLIGHT_API}/airports/search?search=${query}`,
+        {
+          headers: {
+            Authorization: `Bearer ${flightToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      // console.log("Airport Response:", response.data);
+      const original = response.data?.data?.original || [];
+      const mapped = original.map((item) => ({
+        city_name: item.city,
+        city_code: item.code,
+        name: item.name,
+        country_code: item.country,
+      }));
+      return mapped;
+    } catch (error) {
+      console.log("Error Fetching Flight Airport:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchAirportList();
   }, []);
 
   // OneWay SearchAbility Data
-  const fetchAirportSearch = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const authToken = localStorage.getItem("authToken");
-      if (!authToken) {
-        console.error(
-          "Flight Search:-No auth token available, cannot fetch airport data"
-        );
-        return;
-      }
-      const searchData = {
-        from_destination: {
-          city: true,
-          code: fromInput,
+const fetchAirportSearch = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  try {
+    const flightToken = localStorage.getItem("flightToken");
+    if (!flightToken) {
+      console.error("Flight Search:-No auth token available, cannot fetch airport data");
+      return;
+    }
+
+    const searchData = {
+      legs: [
+        {
+          origin: fromInput,
+          destination: toInput,
+          departureDate: departureDate,
         },
-        to_destination: {
-          city: true,
-          code: toInput,
-        },
-        departure_date: departureDate,
-        // return_date: journeyDate2,
-        pax_list: [
-          { type: "ADULT", count: adults },
-          { type: "CHILD", count: children },
-          { type: "INFANT", count: infants },
-        ],
-        accept_pending: true,
-        cabin_type: travelClass,
-      };
-      const response = await axios.post(`${API_BASE_URL}/search`, searchData, {
+      ],
+      passengers: {
+        adults,
+        children,
+        infants,
+      },
+      cabinClass: travelClass,
+      tripType: "oneway",
+      currencyCode: "USD",
+      sort: "recommended",
+      bookingSources: ["amadeus", "sabre"],
+    };
+
+    const response = await axios.post(
+      `${FLIGHT_API}/flights/search`,
+      searchData,
+      {
         headers: {
-          Authorization: `Bearer ${authToken}`,
+          Authorization: `Bearer ${flightToken}`,
           "Content-Type": "application/json",
         },
-      });
-      const flightsData = response.data?.result?.departure_flights || [];
-      setApiFlights(flightsData);
-    } catch (error) {
-      console.log("Error Fetching Search List Data:", error);
-      toast.error(
-        error.response?.data?.error?.description || "Flight Searching Error",
-        {
-          autoClose: 3000,
-        }
-      );
-    } finally {
-      setLoading(false);
+      }
+    );
+
+    // *** Extract session key ***
+    const sessionKey = response.data?.data?.searchSessionKey;
+
+    // *** Store it ***
+    if (sessionKey) {
+      localStorage.setItem("sessionKey", sessionKey);
+      console.log("Session Key Saved:", sessionKey);
+    } else {
+      console.log("Session Key Not Found in Response");
     }
-  };
+
+    // *** Extract flights ***
+    const flightsData =
+      response.data?.data?.results?.flightOffers ||
+      response.data?.data?.flightOffers ||
+      [];
+
+    console.log("One Way Flights found:", flightsData);
+
+    setRowFlights(flightsData);
+  } catch (error) {
+    console.log("Error Fetching Search List Data:", error);
+    toast.error(error.response?.data?.message || "Flight Searching Error");
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Flight Return SearchAbility Data
   const fetchReturnAirportSearch = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const authToken = localStorage.getItem("authToken");
-      if (!authToken) {
+      const flightToken = localStorage.getItem("flightToken");
+      if (!flightToken) {
         console.error("No auth token available, cannot fetch airports");
         return;
       }
       const searchData = {
-        from_destination: {
-          city: true,
-          code: fromInput2,
-        },
-        to_destination: {
-          city: true,
-          code: toInput2,
-        },
-        departure_date: startDate,
-        return_date: endDate,
-        pax_list: [
-          { type: "ADULT", count: adults },
-          { type: "CHILD", count: children },
-          { type: "INFANT", count: infants },
+        legs: [
+          {
+            origin: fromInput2,
+            destination: toInput2,
+            departureDate: startDate,
+          },
         ],
-        accept_pending: true,
-        cabin_type: travelClass,
+        passengers: {
+          adults: adults,
+          children: children,
+          infants: infants,
+        },
+        cabinClass: travelClass,
+        tripType: "roundtrip",
+        returnDate: endDate,
+        currencyCode: "USD",
+        sort: "recommended",
+        // bookingSources: ["amadeus", "sabre"],
       };
 
-      const response = await axios.post(`${API_BASE_URL}/search`, searchData, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(
+        `${FLIGHT_API}/flights/search`,
+        searchData,
+        {
+          headers: {
+            Authorization: `Bearer ${flightToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      const flightsData = response.data?.result?.departure_flights || [];
-      console.log("Flights found:", flightsData);
-      setApiFlights2(flightsData);
-      // navigate and pass data
+      // *** Extract session key ***
+    const sessionKey = response.data?.data?.searchSessionKey;
+
+    // *** Store it ***
+    if (sessionKey) {
+      localStorage.setItem("sessionKey", sessionKey);
+      console.log("Session Key Saved:", sessionKey);
+    } else {
+      console.log("Session Key Not Found in Response");
+    }
+
+      const flightsReturnsData =
+        response.data?.data?.results?.flightOffers ||
+        response.data?.data?.flightOffers ||
+        [];
+      console.log("Flights found:", flightsReturnsData);
+      setRowFlightsReturn(flightsReturnsData);
     } catch (error) {
       console.log("Error Fetching Search List Data:", error);
     } finally {
@@ -272,7 +308,8 @@ const FlightSearch = () => {
   };
 
   // flight Booking Data
-  const fetchfare = async (e) => {
+
+  const FightBooking = async (e) => {
     e.preventDefault();
     try {
       const authToken = localStorage.getItem("authToken");
@@ -286,16 +323,11 @@ const FlightSearch = () => {
         return;
       }
 
-      const fareData = {
+      const Data = {
         departure_fare_key: fareKey,
-        pax_list: [
-          { type: "ADULT", count: adults },
-          // { type: "CHILD", count: children },
-          // { type: "INFANT", count: infants },
-        ],
+        pax_list: [{ type: "ADULT", count: adults }],
       };
-
-      const response = await axios.post(`${API_BASE_URL}/fare`, fareData, {
+      const response = await axios.post(`${FLIGHT_API}/bookings`, Data, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
@@ -310,153 +342,177 @@ const FlightSearch = () => {
   };
 
   // OneWay filter data
+  let timeoutId;
   const handleInputChange = (e) => {
     const value = e.target.value;
     setFromInput(value);
     setFromSelected(false);
-
-    const filtered = airportList.filter((airport) =>
-      `${airport.city_name} ${airport.city_code} ${airport.name} ${airport.country_code}`
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
-    setFilteredList(filtered);
+    clearTimeout(timeoutId);
+    if (value.length < 1) {
+      setFilteredList([]);
+      return;
+    }
+    timeoutId = setTimeout(async () => {
+      const data = await fetchAirportList(value);
+      setFilteredList(data);
+    }, 200);
   };
 
   const handleAirport = (airport) => {
-    setFromInput(
-      `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`
-    );
+    setFromInput(`${airport.city_code}`);
     setFilteredList([]);
     setFromSelected(true);
   };
 
+  let toTimeoutId;
   const handleToInputChange = (e) => {
     const value = e.target.value;
     setToInput(value);
     setToSelected(false);
 
-    const filtered = airportList.filter((airport) =>
-      `${airport.city_name} ${airport.city_code} ${airport.name} ${airport.country_code}`
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
-    setFilteredToList(filtered);
+    clearTimeout(toTimeoutId);
+    if (value.length < 1) {
+      setFilteredToList([]);
+      return;
+    }
+    toTimeoutId = setTimeout(async () => {
+      const data = await fetchAirportList(value);
+      setFilteredToList(data);
+    }, 200);
   };
 
   const handleSelectToAirport = (airport) => {
-    setToInput(
-      `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`
-    );
+    setToInput(`${airport.city_code}`);
     setFilteredToList([]);
     setToSelected(true);
   };
 
   // Roundtrip filter data
+  let fromTimeoutId2;
   const handleInputChange2 = (e) => {
     const value = e.target.value;
     setFromInput2(value);
     setFromSelected2(false);
 
-    const filtered = airportList.filter((airport) =>
-      `${airport.city_name} ${airport.city_code} ${airport.name} ${airport.country_code}`
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
-    setFilteredList2(filtered);
+    clearTimeout(fromTimeoutId2);
+    if (value.length < 1) {
+      setFilteredList2([]);
+      return;
+    }
+    fromTimeoutId2 = setTimeout(async () => {
+      const data = await fetchAirportList(value);
+      setFilteredList2(data);
+    }, 200);
   };
 
   const handleSelectAirport2 = (airport) => {
-    setFromInput2(
-      `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`
-    );
+    setFromInput2(`${airport.city_code}`);
     setFilteredList2([]);
     setFromSelected2(true);
   };
 
+  let toTimeoutId2;
   const handleToInputChange2 = (e) => {
     const value = e.target.value;
     setToInput2(value);
     setToSelected2(false);
 
-    const filtered = airportList.filter((airport) =>
-      `${airport.city_name} ${airport.city_code} ${airport.name} ${airport.country_code}`
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
-    setFilteredToList2(filtered);
+    clearTimeout(toTimeoutId2);
+
+    if (value.length < 1) {
+      setFilteredToList2([]);
+      return;
+    }
+
+    toTimeoutId2 = setTimeout(async () => {
+      const data = await fetchAirportList(value);
+      setFilteredToList2(data);
+    }, 200);
   };
 
   const handleSelectToAirport2 = (airport) => {
     setToInput2(
-      `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`
+      // `${airport.city_code} ${airport.city_name} - ${airport.country_code}`
+      `${airport.city_code}`
     );
     setFilteredToList2([]);
     setToSelected2(true);
   };
 
   // Multi filter data
+  let multiTimeoutIds = {};
   const handleMultiInputChange = (e, index, type) => {
     const value = e.target.value;
-    const updatedData = [...multiCityData];
-    updatedData[index][type] = value;
-    setMultiCityData(updatedData);
 
-    const filtered = airportList.filter((airport) =>
-      `${airport.city_name} ${airport.city_code} ${airport.name} ${airport.country_code}`
-        .toLowerCase()
-        .includes(value.toLowerCase())
-    );
+    const updated = [...multiCityData];
+    updated[index][type] = value;
+    setMultiCityData(updated);
 
-    if (type === "from") {
-      const updatedFiltered = [...multiFilteredList];
-      updatedFiltered[index] = filtered;
-      setMultiFilteredList(updatedFiltered);
+    // clear previous debounce
+    clearTimeout(multiTimeoutIds[index + type]);
 
-      const updatedSelected = [...multiSelectedFrom];
-      updatedSelected[index] = false;
-      setMultiSelectedFrom(updatedSelected);
-    } else if (type === "to") {
-      const updatedFiltered = [...multiFilteredToList];
-      updatedFiltered[index] = filtered;
-      setMultiFilteredToList(updatedFiltered);
-
-      const updatedSelected = [...multiSelectedTo];
-      updatedSelected[index] = false;
-      setMultiSelectedTo(updatedSelected);
+    if (value.length < 1) {
+      if (type === "from") {
+        const temp = [...multiFilteredList];
+        temp[index] = [];
+        setMultiFilteredList(temp);
+      } else {
+        const temp = [...multiFilteredToList];
+        temp[index] = [];
+        setMultiFilteredToList(temp);
+      }
+      return;
     }
+
+    // set new debounce
+    multiTimeoutIds[index + type] = setTimeout(async () => {
+      const results = await fetchAirportList(value);
+
+      if (type === "from") {
+        const temp = [...multiFilteredList];
+        temp[index] = results;
+        setMultiFilteredList(temp);
+
+        const sel = [...multiSelectedFrom];
+        sel[index] = false;
+        setMultiSelectedFrom(sel);
+      } else {
+        const temp = [...multiFilteredToList];
+        temp[index] = results;
+        setMultiFilteredToList(temp);
+
+        const sel = [...multiSelectedTo];
+        sel[index] = false;
+        setMultiSelectedTo(sel);
+      }
+    }, 100);
   };
 
   const handleSelectAirport = (airport, index, type) => {
-    const formatted = `${airport.city_code} (${airport.city_name}) - ${airport.country_name}`;
-    const updatedData = [...multiCityData];
-    updatedData[index][type] = formatted;
-    setMultiCityData(updatedData);
+    const formatted = `${airport.city_code} (${airport.city_name}) - ${airport.country_code}`;
+
+    const updated = [...multiCityData];
+    updated[index][type] = formatted;
+    setMultiCityData(updated);
 
     if (type === "from") {
-      const updatedFiltered = [...multiFilteredList];
-      updatedFiltered[index] = [];
-      setMultiFilteredList(updatedFiltered);
+      const temp = [...multiFilteredList];
+      temp[index] = [];
+      setMultiFilteredList(temp);
 
-      const updatedSelected = [...multiSelectedFrom];
-      updatedSelected[index] = true;
-      setMultiSelectedFrom(updatedSelected);
+      const sel = [...multiSelectedFrom];
+      sel[index] = true;
+      setMultiSelectedFrom(sel);
     } else {
-      const updatedFiltered = [...multiFilteredToList];
-      updatedFiltered[index] = [];
-      setMultiFilteredToList(updatedFiltered);
+      const temp = [...multiFilteredToList];
+      temp[index] = [];
+      setMultiFilteredToList(temp);
 
-      const updatedSelected = [...multiSelectedTo];
-      updatedSelected[index] = true;
-      setMultiSelectedTo(updatedSelected);
+      const sel = [...multiSelectedTo];
+      sel[index] = true;
+      setMultiSelectedTo(sel);
     }
   };
-
-  // const handleMultiDateChange = (e, index) => {
-  //   const updatedData = [...multiCityData];
-  //   updatedData[index].date = e.target.value;
-  //   setMultiCityData(updatedData);
-  // };
 
   const handleMultiDateChange = (date, index) => {
     const updatedData = [...multiCityData];
@@ -514,118 +570,65 @@ const FlightSearch = () => {
     if (type === "infant" && infants > 0) setInfants(infants - 1);
   };
 
-  const location = useLocation();
-  const locationFlights = location.state?.flights || [];
-  const locationFlights2 = location.state?.flights2 || [];
+  // One Way Flight Data
+  const formattedFlights = rowFlights.map((offer) => {
+    const segments = offer["itinerary.segments"] || [];
+    if (segments.length === 0) return null;
 
-  useEffect(() => {
-    if (locationFlights.length > 0) {
-      setApiFlights(locationFlights);
-      setApiFlights2(locationFlights);
-    }
-  }, [locationFlights]);
+    const firstSegment = segments[0];
+    const lastSagment = segments[segments.length - 1];
+    const fees = offer["offer.priceBreakdown"]?.["priceBreakdown.fees"] || [];
+    const taxes = offer["offer.priceBreakdown"]?.["priceBreakdown.taxes"] || [];
 
-  // ================= 09-09-25 =================
-  useEffect(() => {
-    if (locationFlights.length > 0) {
-      setApiFlights(locationFlights);
-    }
-    if (locationFlights2.length > 0) {
-      setApiFlights2(locationFlights2);
-    }
-  }, [locationFlights, locationFlights2]);
+    const formatDuration = (isoDuation) => {
+      if (!isoDuation) return "N/A";
+      const hours = isoDuation.match(/(\d+)H/)?.[1] || "0";
+      const minutes = isoDuation.match(/(\d+)M/)?.[1] || "00";
+      return `${hours}h ${minutes}m`;
+    };
 
-  useEffect(() => {
-    const firstFlight = (
-      apiFlights?.length > 0 ? apiFlights : apiFlights2
-    )?.[0];
-    if (firstFlight?.fares?.[0]?.fare_key) {
-      setFareKey(firstFlight.fares[0].fare_key);
-    }
-  }, [apiFlights, apiFlights2]);
+    const safeGet = (obj, key) => obj?.[key] || "";
+    return {
+      airline: safeGet(firstSegment, "segment.carrier.marketingCode") || "N/A",
+      // fromAirport: `${safeGet(
+      //   firstSegment,
+      //   "segment.departure.airportCode"
+      // )} - ${safeGet(firstSegment, "segment.departure.cityName")}`,
+      fromAirport: `${safeGet(firstSegment, "segment.departure.airportCode")}`,
+      // toAirport: `${safeGet(
+      //   lastSagment,
+      //   "segment.arrival.airportCode"
+      // )} - ${safeGet(lastSagment, "segment.arrival.cityName")}`,
+      toAirport: `${safeGet(lastSagment, "segment.arrival.airportCode")}`,
 
-  // ================= 09-09-25 Helper =================
-  const mapFlights = (flights) =>
-    flights?.map((f) => {
-      const leg = f.legs?.[0];
-      const fare = f.fares?.[0]?.fare_info?.fare_detail;
-      const baggage = leg?.baggages?.[0];
-      const fareKey = f.fares?.[0]?.fare_key;
+      departureTime: safeGet(firstSegment, "segment.departure.datetime"),
+      arrivalTime: safeGet(lastSagment, "segment.arrival.datetime"),
+      duration: formatDuration(offer["itinerary.duration"]),
+      price:
+        offer["offer.priceBreakdown"]?.["priceBreakdown.total"] ||
+        offer["pricing.total"] ||
+        "",
+      basePrice: offer["offer.priceBreakdown"]?.["priceBreakdown.base"] || "",
+      serviceFee:
+        fees.find((f) => f["fee.type"] === "SERVICE_FEE")?.["fee.amount"] ?? 0,
+      commissionFee:
+        fees.find((f) => f["fee.type"] === "COMMISSION")?.["fee.amount"] ?? 0,
 
-      return {
-        airline: leg?.airline_info?.carrier_name || "Unknown Airline",
-        flightNumber: leg?.flight_number,
-        fromAirport: `${leg?.departure_info?.airport_code} (${leg?.departure_info?.city_name})`,
-        fromCity: leg?.departure_info?.city_name,
-        fromDetails: `${leg?.departure_info?.airport_code} - ${leg?.departure_info?.airport_name}, ${leg?.departure_info?.city_name}`,
-        departureTime: leg?.departure_info?.date,
-        toAirport: `${leg?.arrival_info?.airport_code} (${leg?.arrival_info?.city_name})`,
-        toCity: leg?.arrival_info?.city_name,
-        toDetails: `${leg?.arrival_info?.airport_code} - ${leg?.arrival_info?.airport_name}, ${leg?.arrival_info?.city_name}`,
-        arrivalTime: leg?.arrival_info?.date,
-        duration: `${leg?.time_info?.flight_time_hour}h ${leg?.time_info?.flight_time_minute}m`,
-        baggerAmount: baggage?.amount,
-        baggerType: baggage?.type,
-        price: `${fare?.currency_code} ${fare?.price_info?.total_fare}`,
-        flightFare: `${fare?.currency_code} ${fare?.price_info?.base_fare}`,
-        serviceFare: `${fare?.currency_code} ${fare?.price_info?.service_fee}`,
-        airlineTex: `${fare?.currency_code} ${fare?.price_info?.tax}`,
-        airlineCommission: `${fare?.currency_code} ${fare?.price_info?.agency_commission}`,
-        fareKey,
-        legs: f.legs,
-      };
-    }) || [];
+      airlineTex:
+        taxes.find((f) => f["tax.type"] === "TOTAL_TAX")?.["tax.amount"] ?? 0,
+      currency:
+        offer["offer.priceBreakdown"]?.["priceBreakdown.currency"] ||
+        offer["pricing.currency"] ||
+        "USD",
 
-  const mappedFlights = mapFlights(apiFlights);
-  const mappedFlightsReturn = mapFlights(apiFlights2);
-
-  // ================= 09-09-25 =================
-  // Merge flights for pagination
-  const allFlights =
-    mappedFlightsReturn.length > 0
-      ? [...mappedFlights, ...mappedFlightsReturn] // round-trip
-      : mappedFlights; // one-way
-
-  // Pagination logic on merged data
-  const totalPages = Math.ceil(allFlights.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedData = allFlights.slice(startIndex, endIndex);
-
-  // const mappedFlights = (
-  //   apiFlights && apiFlights.length > 0 ? apiFlights : apiFlights2
-  // )?.map((f) => {
-  //   const leg = f.legs?.[0];
-  //   const fare = f.fares?.[0]?.fare_info?.fare_detail;
-  //   const baggage = leg?.baggages?.[0];
-  //   const fareKey = f.fares?.[0]?.fare_key;
-
-  //   return {
-  //     airline: leg?.airline_info?.carrier_name || "Unknown Airline",
-  //     flightNumber: leg?.flight_number,
-  //     fromAirport: `${leg?.departure_info?.airport_name} (${leg?.departure_info?.city_name})`,
-  //     fromCity: leg?.departure_info?.city_name,
-  //     fromDetails: `${leg?.departure_info?.airport_code} - ${leg?.departure_info?.airport_name}, ${leg?.departure_info?.city_name}`,
-  //     departureTime: leg?.departure_info?.date,
-  //     toAirport: `${leg?.arrival_info?.airport_name} (${leg?.arrival_info?.city_name})`,
-  //     toCity: leg?.arrival_info?.city_name,
-  //     toDetails: `${leg?.arrival_info?.airport_code} - ${leg?.arrival_info?.airport_name}, ${leg?.arrival_info?.city_name}`,
-  //     arrivalTime: leg?.arrival_info?.date,
-  //     duration: `${leg?.time_info?.flight_time_hour}h ${leg?.time_info?.flight_time_minute}m`,
-  //     baggerAmount: baggage?.amount,
-  //     baggerType: baggage?.type,
-  //     price: `${fare?.currency_code} ${fare?.price_info?.total_fare}`,
-  //     flightFare: `${fare?.currency_code} ${fare?.price_info?.base_fare}`,
-  //     serviceFare: `${fare?.currency_code} ${fare?.price_info?.service_fee}`,
-  //     airlineTex: `${fare?.currency_code} ${fare?.price_info?.tax}`,
-  //     airlineCommission: `${fare?.currency_code} ${fare?.price_info?.agency_commission}`,
-  //     fareKey,
-  //     legs: f.legs, // ✅ keep original legs
-  //   };
-  // });
+      stops: Math.max(segments.length - 1, 0),
+      legs: segments,
+    };
+  });
+  console.log("Formatted Flights:", formattedFlights);
 
   // 1. Count flights per airline
-  const airlineCounts = mappedFlights.reduce((acc, flight) => {
+  const airlineCounts = formattedFlights.reduce((acc, flight) => {
     const airline = flight.airline;
     acc[airline] = (acc[airline] || 0) + 1;
     return acc;
@@ -646,7 +649,7 @@ const FlightSearch = () => {
 
   const uniqueFlightTimes = [
     ...new Map(
-      mappedFlights.map((f) => [`${f.departureTime}-${f.arrivalTime}`, f])
+      formattedFlights.map((f) => [`${f.departureTime}-${f.arrivalTime}`, f])
     ).values(),
   ];
 
@@ -656,7 +659,7 @@ const FlightSearch = () => {
     : uniqueFlightTimes.slice(0, 10);
 
   // Example: apply airline + stops filter (expand as needed)
-  const flightsWithStops = mappedFlights.map((f) => ({
+  const flightsWithStops = formattedFlights.map((f) => ({
     ...f,
     stops: (f.legs?.length ?? 1) - 1, // ✅ safe check
   }));
@@ -673,10 +676,239 @@ const FlightSearch = () => {
     return true;
   });
 
-  // const totalPages = Math.ceil(filteredFlights.length / itemsPerPage);
-  // const startIndex = (currentPage - 1) * itemsPerPage;
-  // const endIndex = startIndex + itemsPerPage;
-  // const paginatedData = filteredFlights.slice(startIndex, endIndex);
+  let sortedFlights = [...filteredFlights];
+  if (activeTab === "Cheapest") {
+    sortedFlights.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+  } else if (activeTab === "Fastest") {
+    const getMinutes = (durationStr) => {
+      const [h, m] = durationStr
+        .replace("h", "")
+        .replace("m", "")
+        .split(" ")
+        .map(Number);
+      return (h || 0) * 60 + (m || 0);
+    };
+    sortedFlights.sort(
+      (a, b) => getMinutes(a.duration) - getMinutes(b.duration)
+    );
+  } else if (activeTab === "Best") {
+    sortedFlights = filteredFlights;
+  }
+
+  // One Way Pagination logic
+  const totalPages = Math.ceil(sortedFlights.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedData = sortedFlights.slice(startIndex, endIndex);
+
+  //Round Trip Flight Data
+  const formattedRoundTripFlights = rowFlightsReturn.map((offer) => {
+    const segments = offer["itinerary.segments"] || [];
+    if (segments.length === 0) return null;
+
+    const fees = offer["offer.priceBreakdown"]?.["priceBreakdown.fees"] || [];
+    const taxes = offer["offer.priceBreakdown"]?.["priceBreakdown.taxes"] || [];
+
+    const safeGet = (obj, key) => obj?.[key] || "";
+
+    const formatDuration = (isoDuration) => {
+      if (!isoDuration) return "N/A";
+      const hours = isoDuration.match(/(\d+)H/)?.[1] || "0";
+      const minutes = isoDuration.match(/(\d+)M/)?.[1] || "00";
+      return `${hours}h ${minutes}m`;
+    };
+
+    //------------------------------------------
+    // 1. Detect outbound and return using airport logic
+    //------------------------------------------
+
+    const firstOrigin = segments[0]["segment.departure.airportCode"];
+
+    // Find FIRST airport that is not the origin → this is the destination
+    let firstDestination = null;
+    for (const seg of segments) {
+      const arr = seg["segment.arrival.airportCode"];
+      if (arr !== firstOrigin) {
+        firstDestination = arr;
+        break;
+      }
+    }
+
+    // fallback (rare)
+    if (!firstDestination)
+      firstDestination =
+        segments[segments.length - 1]["segment.arrival.airportCode"];
+
+    //------------------------------------------
+    // 2. Split outbound/return
+    //------------------------------------------
+    const outbound = [];
+    const ret = [];
+
+    let outboundDone = false;
+
+    for (const seg of segments) {
+      if (!outboundDone) {
+        outbound.push(seg);
+        // outbound ends when arrival = firstDestination
+        if (seg["segment.arrival.airportCode"] === firstDestination) {
+          outboundDone = true;
+        }
+      } else {
+        ret.push(seg);
+      }
+    }
+
+    //------------------------------------------
+    // 3. Helper to format flight details
+    //------------------------------------------
+    const getFlightInfo = (flightSegments) => {
+      if (flightSegments.length === 0) return null;
+
+      return {
+        // fromAirport: `${safeGet(
+        //   flightSegments[0],
+        //   "segment.departure.airportCode"
+        // )} - ${safeGet(flightSegments[0], "segment.departure.cityName")}`,
+        fromAirport: `${safeGet(
+          flightSegments[0],
+          "segment.departure.airportCode"
+        )}`,
+        toAirport: `${safeGet(
+          flightSegments[flightSegments.length - 1],
+          "segment.arrival.airportCode"
+        )}`,
+        departureTime: safeGet(flightSegments[0], "segment.departure.date"),
+        arrivalTime: safeGet(
+          flightSegments[flightSegments.length - 1],
+          "segment.arrival.date"
+        ),
+        stops: Math.max(flightSegments.length - 1, 0),
+        legs: flightSegments,
+      };
+    };
+
+    //------------------------------------------
+    // 4. Final response
+    //------------------------------------------
+    return {
+      airline: safeGet(segments[0], "segment.carrier.marketingCode") || "N/A",
+      price:
+        offer["offer.priceBreakdown"]?.["priceBreakdown.total"] ||
+        offer["pricing.total"] ||
+        "",
+      basePrice: offer["offer.priceBreakdown"]?.["priceBreakdown.base"] || "",
+      serviceFee:
+        fees.find((f) => f["fee.type"] === "SERVICE_FEE")?.["fee.amount"] ?? 0,
+      commissionFee:
+        fees.find((f) => f["fee.type"] === "COMMISSION")?.["fee.amount"] ?? 0,
+      airlineTax:
+        taxes.find((f) => f["tax.type"] === "TOTAL_TAX")?.["tax.amount"] ?? 0,
+      currency:
+        offer["offer.priceBreakdown"]?.["priceBreakdown.currency"] ||
+        offer["pricing.currency"] ||
+        "USD",
+      duration: formatDuration(offer["itinerary.duration"]),
+      outbound: getFlightInfo(outbound),
+      return: getFlightInfo(ret),
+    };
+  });
+
+  console.log("Formatted Round Trip Flights:", formattedRoundTripFlights);
+
+  // 1. Round Trip Count flights per airline
+  const airlineCounts2 = formattedRoundTripFlights.reduce((acc, flight) => {
+    const airline = flight.airline;
+    acc[airline] = (acc[airline] || 0) + 1;
+    return acc;
+  }, {});
+
+  // 2. Round Trip Convert to array for display
+  const uniqueAirlines2 = Object.entries(airlineCounts2).map(
+    ([airline, count]) => ({ airline, count })
+  );
+
+  // 3. Round Trip Apply show-more logic
+  const visibleAirlines2 = showAllAirlines2
+    ? uniqueAirlines2
+    : uniqueAirlines2.slice(0, 10);
+
+  // 4. Round Trip Unique timing logic for round-trip
+  const uniqueFlightTimes2 = [
+    ...new Map(
+      formattedRoundTripFlights.map((f) => [
+        `${f.outbound.departureTime}-${f.outbound.arrivalTime}-${f.return.departureTime}-${f.return.arrivalTime}`,
+        f,
+      ])
+    ).values(),
+  ];
+
+  // 5. Round Trip Apply show-more logic for flight timings
+  const visibleFlightTimes2 = showAllFlightTimes2
+    ? uniqueFlightTimes2
+    : uniqueFlightTimes2.slice(0, 10);
+
+  // Example: apply airline + stops filter (expand as needed)
+  const flightsWithStops2 = formattedRoundTripFlights.map((f) => {
+    const outboundStops = (f.outbound?.legs?.length ?? 1) - 1;
+    const returnStops = (f.return?.legs?.length ?? 1) - 1;
+
+    const outboundDuration = f.outbound?.duration || "0h 0m";
+    const returnDuration = f.return?.duration || "0h 0m";
+
+    const parseMinutes = (str) => {
+      const [h, m] = str
+        .replace("h", "")
+        .replace("m", "")
+        .split(" ")
+        .map(Number);
+      return (h || 0) * 60 + (m || 0);
+    };
+
+    const totalDurationMinutes =
+      parseMinutes(outboundDuration) + parseMinutes(returnDuration);
+
+    return {
+      ...f,
+      outboundStops,
+      returnStops,
+      totalStops: outboundStops + returnStops,
+      totalDurationMinutes,
+    };
+  });
+  const totalFlights2 = flightsWithStops2.length;
+  const directFlights2 = flightsWithStops2.filter(
+    (f) => f.totalStops === 0
+  ).length;
+  const oneStopFlights2 = flightsWithStops2.filter(
+    (f) => f.totalStops === 1
+  ).length;
+  const twoStopFlights2 = flightsWithStops2.filter(
+    (f) => f.totalStops >= 2
+  ).length;
+  const filteredFlights2 = flightsWithStops2.filter((f) => {
+    if (selectedStops2 === null) return true;
+    if (selectedStops2 === 0) return f.totalStops === 0;
+    if (selectedStops2 === 1) return f.totalStops === 1;
+    if (selectedStops2 === 2) return f.totalStops >= 2;
+    return true;
+  });
+
+  // --- SORT ---
+  let sortedFlights2 = [...filteredFlights2];
+
+  if (activeTab2 === "Cheapest") {
+    sortedFlights2.sort((a, b) => a.numericPrice - b.numericPrice);
+  } else if (activeTab2 === "Fastest") {
+    sortedFlights2.sort(
+      (a, b) => a.totalDurationMinutes - b.totalDurationMinutes
+    );
+  }
+  // Roundtrip Pagination logic
+  const totalPages2 = Math.ceil(sortedFlights2.length / itemsPerPage);
+  const startIndex2 = (currentPage2 - 1) * itemsPerPage;
+  const endDate2 = startIndex2 + itemsPerPage;
+  const paginatedData2 = sortedFlights2.slice(startIndex2, endDate2);
 
   const setting = {
     dots: false,
@@ -900,7 +1132,7 @@ const FlightSearch = () => {
         }
         toast.success("Login successful!");
         console.log("Login response:", res.data);
-        navigate("/");
+        // navigate("/");
         const modal = window.bootstrap.Modal.getInstance(
           document.getElementById("exampleModal")
         );
@@ -954,7 +1186,7 @@ const FlightSearch = () => {
         }
         toast.success("Login successful!");
         console.log("Login response:", res.data);
-        navigate("/");
+        // navigate("/");
 
         const modal = window.bootstrap.Modal.getInstance(
           document.getElementById("exampleModal")
@@ -970,7 +1202,7 @@ const FlightSearch = () => {
   };
 
   const handleGoogleError = () => {
-    console.log("Google Login Failed");
+    // console.log("Google Login Failed");
     toast.error("Google Login Failed!");
   };
 
@@ -1129,10 +1361,13 @@ const FlightSearch = () => {
                                               handleAirport(airport)
                                             }
                                           >
-                                            {airport.city_name}(
+                                            {airport.city_name} (
+                                            {airport.city_code}) -{" "}
+                                            {airport.country_code}
+                                            {/* {airport.city_name}(
                                             {airport.city_code}) -{" "}
                                             {airport.name} (
-                                            {airport.country_code})
+                                            {airport.country_code}) */}
                                           </li>
                                         ))
                                       ) : !fromSelected ? (
@@ -1182,10 +1417,13 @@ const FlightSearch = () => {
                                               handleSelectToAirport(airport)
                                             }
                                           >
-                                            {airport.city_name}(
+                                            {airport.city_name} (
+                                            {airport.city_code}) -{" "}
+                                            {airport.country_code}
+                                            {/* {airport.city_name}(
                                             {airport.city_code}) -{" "}
                                             {airport.name} (
-                                            {airport.country_code})
+                                            {airport.country_code}) */}
                                           </li>
                                         ))
                                       ) : !toSelected ? (
@@ -1409,10 +1647,10 @@ const FlightSearch = () => {
                                               <h6 className="mb-2">Classes</h6>
                                               <div className="class-options">
                                                 {[
-                                                  "ECONOMY",
-                                                  "PREMIUM ECONOMY",
-                                                  "BUSINESS",
-                                                  "FIRST CLASS",
+                                                  "economy",
+                                                  "premium economy",
+                                                  "business",
+                                                  "first class",
                                                 ].map((cls) => (
                                                   <label
                                                     className="class-radio"
@@ -1461,7 +1699,6 @@ const FlightSearch = () => {
                             <div className="top_form_search_button">
                               <button
                                 type="submit"
-                                // onClick={searchTab}
                                 className="btn btn_theme btn_md"
                               >
                                 {loading ? "Searching.." : "Search"}
@@ -1479,7 +1716,7 @@ const FlightSearch = () => {
                     className="section_padding pt-30"
                   >
                     <div className="container">
-                      <div className="row">
+                      {/* <div className="row">
                         <div className="col-md-12 mb-4 text-center">
                           <h4>Choose type of Flights you are interested</h4>
                         </div>
@@ -1504,7 +1741,7 @@ const FlightSearch = () => {
                             </div>
                           ))}
                         </Slider>
-                      </div>
+                      </div> */}
                       <div className="row">
                         <div className="col-md-3">
                           <div className="card booking-card">
@@ -1727,23 +1964,14 @@ const FlightSearch = () => {
                                             average of 15% on thousands of
                                             flights when you're signed in
                                           </h6>
-                                          {/* <button
-                                            type="button"
-                                            class="btn btn_theme btn_md"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal"
-                                          >
-                                            Sign In
-                                          </button> */}
                                         </div>
                                       </div>
                                     </div>
                                   </div>
-                                  <Slider
+                                  {/* <Slider
                                     {...setting2}
                                     className="choosedepartList"
                                   >
-                                    {/* Each item becomes a slide */}
                                     {[...Array(7)].map((_, index) => (
                                       <div key={index} className="px-2">
                                         <button className="btn chooseBtnFlt w-100">
@@ -1757,13 +1985,12 @@ const FlightSearch = () => {
                                         </button>
                                       </div>
                                     ))}
-                                  </Slider>
+                                  </Slider> */}
                                 </div>
 
                                 <div className="row">
                                   <div className="col-lg-12">
                                     <div className="flight_search_result_wrapper">
-                                      {/* ✅ If Return flights exist -> Show departure + return */}
                                       {paginatedData.map((flight, index) => (
                                         <div
                                           className="flight_search_item_wrappper"
@@ -1773,7 +2000,6 @@ const FlightSearch = () => {
                                             <div className="card-body">
                                               <div className="row">
                                                 <div className="col-md-9 flight-serach-main">
-                                                  {/* Departure */}
                                                   <div className="">
                                                     <div className="d-flex align-items-center gap-5">
                                                       <div className="flight_logo">
@@ -1783,6 +2009,7 @@ const FlightSearch = () => {
                                                         />
                                                         <p>{flight.airline}</p>
                                                       </div>
+                                                      {/* Departure */}
                                                       <div className="flight_search_destination">
                                                         <h3>
                                                           {new Date(
@@ -1848,7 +2075,6 @@ const FlightSearch = () => {
                                                       </div>
                                                     </div>
                                                   </div>
-                                                  {/* return */}
                                                 </div>
                                                 {/* Price & Booking */}
                                                 <div className="col-md-3 d-flex justify-content-end">
@@ -1869,7 +2095,7 @@ const FlightSearch = () => {
                                                           toggleDropdown(index)
                                                         }
                                                       >
-                                                        {flight.price}{" "}
+                                                        $ {flight.price}{" "}
                                                         <BsFillInfoCircleFill />
                                                       </h3>
                                                       <div
@@ -1915,8 +2141,9 @@ const FlightSearch = () => {
                                                                     Base Fee
                                                                   </td>
                                                                   <td className="text-end">
+                                                                    ${" "}
                                                                     {
-                                                                      flight.flightFare
+                                                                      flight.basePrice
                                                                     }
                                                                   </td>
                                                                 </tr>
@@ -1925,8 +2152,9 @@ const FlightSearch = () => {
                                                                     Service Fee
                                                                   </td>
                                                                   <td className="text-end">
+                                                                    ${" "}
                                                                     {
-                                                                      flight.serviceFare
+                                                                      flight.serviceFee
                                                                     }
                                                                   </td>
                                                                 </tr>
@@ -1937,6 +2165,7 @@ const FlightSearch = () => {
                                                                     fees
                                                                   </td>
                                                                   <td className="text-end">
+                                                                    ${" "}
                                                                     {
                                                                       flight.airlineTex
                                                                     }
@@ -1949,8 +2178,9 @@ const FlightSearch = () => {
                                                                     fees
                                                                   </td>
                                                                   <td className="text-end">
+                                                                    ${" "}
                                                                     {
-                                                                      flight.airlineCommission
+                                                                      flight.commissionFee
                                                                     }
                                                                   </td>
                                                                 </tr>
@@ -1959,6 +2189,7 @@ const FlightSearch = () => {
                                                                     Total:
                                                                   </td>
                                                                   <td className="text-end">
+                                                                    ${" "}
                                                                     {
                                                                       flight.price
                                                                     }
@@ -1973,7 +2204,7 @@ const FlightSearch = () => {
                                                     <div className="load_more_flight">
                                                       <button
                                                         className="btn btn_md"
-                                                        onClick={fetchfare}
+                                                        //onClick={fetchfare}
                                                       >
                                                         Book Now
                                                       </button>
@@ -1990,7 +2221,7 @@ const FlightSearch = () => {
                                                       handleToggle(index)
                                                     }
                                                   >
-                                                    Flight Detail{" "}
+                                                    View Detail{" "}
                                                     {openIndex === index ? (
                                                       <IoIosArrowUp />
                                                     ) : (
@@ -2136,10 +2367,13 @@ const FlightSearch = () => {
                                               borderBottom: "1px solid #eee",
                                             }}
                                           >
-                                            {airport.city_name}(
+                                            {airport.city_name} (
+                                            {airport.city_code}) -{" "}
+                                            {airport.country_code}
+                                            {/* {airport.city_name}(
                                             {airport.city_code}) -{" "}
                                             {airport.name} (
-                                            {airport.country_code})
+                                            {airport.country_code}) */}
                                           </li>
                                         ))
                                       ) : !fromSelected2 ? (
@@ -2195,10 +2429,13 @@ const FlightSearch = () => {
                                                 borderBottom: "1px solid #eee",
                                               }}
                                             >
-                                              {airport.city_name}(
+                                              {airport.city_name} (
+                                              {airport.city_code}) -{" "}
+                                              {airport.country_code}
+                                              {/* {airport.city_name}(
                                               {airport.city_code}) -{" "}
                                               {airport.name} (
-                                              {airport.country_code})
+                                              {airport.country_code}) */}
                                             </li>
                                           )
                                         )
@@ -2261,49 +2498,8 @@ const FlightSearch = () => {
                                         </span>
                                       </div>
                                     )}
-                                    {/* {journeyDate && (
-                                  <div className="mt-1 text-sm">
-                                    <span className="block italic text-gray-500">
-                                      {new Date(
-                                        journeyDate
-                                      ).toLocaleDateString("en-US", {
-                                        weekday: "long",
-                                        day: "numeric",
-                                        month: "long",
-                                        year: "numeric",
-                                      })}
-                                    </span>
-                                  </div>
-                                )} */}
                                   </div>
                                 </div>
-                                {/* <div className="flight_Search_boxed date_flex_area">
-                              <div className="Journey_date">
-                                <span>Return date</span>
-                                <input
-                                  type="date"
-                                  value={journeyDate2}
-                                  onChange={handleDateChange2}
-                                  min={
-                                    new Date().toISOString().split("T")[0]
-                                  }
-                                />
-                                {journeyDate2 && (
-                                  <div className="mt-1 text-sm">
-                                    <span className="block italic text-gray-500">
-                                      {new Date(
-                                        journeyDate2
-                                      ).toLocaleDateString("en-US", {
-                                        weekday: "long",
-                                        day: "numeric",
-                                        month: "long",
-                                        year: "numeric",
-                                      })}
-                                    </span>
-                                  </div>
-                                )}
-                              </div>
-                            </div> */}
                                 <div
                                   className="flight_Search_boxed dropdown_passenger_area"
                                   onClick={() => setShowDropdown(!showDropdown)}
@@ -2476,10 +2672,10 @@ const FlightSearch = () => {
                                               <h6 className="mb-2">Classes</h6>
                                               <div className="class-options">
                                                 {[
-                                                  "ECONOMY",
-                                                  "PREMIUM ECONOMY",
-                                                  "BUSINESS",
-                                                  "FIRST CLASS",
+                                                  "economy",
+                                                  "premium economy",
+                                                  "business",
+                                                  "first class",
                                                 ].map((cls) => (
                                                   <label
                                                     className="class-radio"
@@ -2546,7 +2742,7 @@ const FlightSearch = () => {
                     className="section_padding pt-30"
                   >
                     <div className="container">
-                      <div className="row">
+                      {/* <div className="row">
                         <div className="col-md-12 mb-4 text-center">
                           <h4>Choose type of Flights you are interested</h4>
                         </div>
@@ -2571,14 +2767,14 @@ const FlightSearch = () => {
                             </div>
                           ))}
                         </Slider>
-                      </div>
+                      </div> */}
                       <div className="row">
                         <div className="col-md-3">
                           <div className="card booking-card">
                             <div className="card-body">
                               <div className="filter-hd">
                                 <h6>Filter</h6>
-                                <a href="">Clear All</a>
+                                <a href="#">Clear All</a>
                               </div>
                               {/* Price Filters */}
                               <div className="filter-block">
@@ -2595,7 +2791,6 @@ const FlightSearch = () => {
                                     ></i>
                                   </div>
                                 </div>
-
                                 <div
                                   className="filter-content"
                                   style={{
@@ -2608,40 +2803,40 @@ const FlightSearch = () => {
                                     <input
                                       type="radio"
                                       name="stops"
-                                      checked={selectedStops === null}
-                                      onChange={() => setSelectedStops(null)}
+                                      checked={selectedStops2 === null}
+                                      onChange={() => setSelectedStops2(null)}
                                     />{" "}
-                                    Any ({totalFlights})
+                                    Any ({totalFlights2})
                                   </label>
 
                                   <label>
                                     <input
                                       type="radio"
                                       name="stops"
-                                      checked={selectedStops === 0}
-                                      onChange={() => setSelectedStops(0)}
+                                      checked={selectedStops2 === 0}
+                                      onChange={() => setSelectedStops2(0)}
                                     />
-                                    Direct only ({directFlights})
+                                    Direct only ({directFlights2})
                                   </label>
 
                                   <label>
                                     <input
                                       type="radio"
                                       name="stops"
-                                      checked={selectedStops === 1}
-                                      onChange={() => setSelectedStops(1)}
+                                      checked={selectedStops2 === 1}
+                                      onChange={() => setSelectedStops2(1)}
                                     />{" "}
-                                    1 stop max ({oneStopFlights})
+                                    1 stop max ({oneStopFlights2})
                                   </label>
 
                                   <label>
                                     <input
                                       type="radio"
                                       name="stops"
-                                      checked={selectedStops === 2}
-                                      onChange={() => setSelectedStops(2)}
+                                      checked={selectedStops2 === 2}
+                                      onChange={() => setSelectedStops2(2)}
                                     />{" "}
-                                    2+ stops ({twoStopFlights})
+                                    2+ stops ({twoStopFlights2})
                                   </label>
                                 </div>
                               </div>
@@ -2669,7 +2864,7 @@ const FlightSearch = () => {
                                       : "none",
                                   }}
                                 >
-                                  {visibleAirlines.map((air, index) => (
+                                  {visibleAirlines2.map((air, index) => (
                                     <label
                                       key={index}
                                       style={{ display: "block" }}
@@ -2679,14 +2874,14 @@ const FlightSearch = () => {
                                     </label>
                                   ))}
 
-                                  {uniqueAirlines.length > 10 && (
+                                  {uniqueAirlines2.length > 10 && (
                                     <button
                                       className="filterBtn p-0 mt-2"
                                       onClick={() =>
-                                        setShowAllAirlines(!showAllAirlines)
+                                        setShowAllAirlines2(!showAllAirlines2)
                                       }
                                     >
-                                      {showAllAirlines
+                                      {showAllAirlines2
                                         ? "Show Less..."
                                         : "Show More..."}
                                     </button>
@@ -2709,7 +2904,6 @@ const FlightSearch = () => {
                                     ></i>
                                   </div>
                                 </div>
-
                                 <div
                                   className="filter-content"
                                   style={{
@@ -2718,18 +2912,36 @@ const FlightSearch = () => {
                                       : "none",
                                   }}
                                 >
-                                  {visibleFlightTimes.map((flight, t) => (
+                                  {visibleFlightTimes2.map((flight, t) => (
                                     <label key={t} style={{ display: "block" }}>
                                       <input type="checkbox" />{" "}
+                                      {/* Outbound Time */}
+                                      <b>Departure:</b>
                                       {new Date(
-                                        flight.departureTime
+                                        flight.outbound.departureTime
                                       ).toLocaleTimeString([], {
                                         hour: "2-digit",
                                         minute: "2-digit",
-                                      })}{" "}
-                                      –{" "}
+                                      })}
+                                      –
                                       {new Date(
-                                        flight.arrivalTime
+                                        flight.outbound.arrivalTime
+                                      ).toLocaleTimeString([], {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}
+                                      {"  "} | {"  "}
+                                      {/* Return Time */}
+                                      <b>Return:</b>
+                                      {new Date(
+                                        flight.return.departureTime
+                                      ).toLocaleTimeString([], {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}
+                                      –
+                                      {new Date(
+                                        flight.return.arrivalTime
                                       ).toLocaleTimeString([], {
                                         hour: "2-digit",
                                         minute: "2-digit",
@@ -2738,16 +2950,16 @@ const FlightSearch = () => {
                                   ))}
 
                                   {/* Show More / Less button */}
-                                  {uniqueFlightTimes.length > 10 && (
+                                  {uniqueFlightTimes2.length > 10 && (
                                     <button
                                       className="filterBtn p-0 mt-2"
                                       onClick={() =>
-                                        setShowAllFlightTimes(
-                                          !showAllFlightTimes
+                                        setShowAllFlightTimes2(
+                                          !showAllFlightTimes2
                                         )
                                       }
                                     >
-                                      {showAllFlightTimes
+                                      {showAllFlightTimes2
                                         ? "Show Less..."
                                         : "Show More..."}
                                     </button>
@@ -2762,15 +2974,15 @@ const FlightSearch = () => {
                             <div className="col-lg-12">
                               <div className="flight-tabs">
                                 <div className="tab-container">
-                                  {tabs.map((tab) => (
+                                  {tabs2.map((tab2) => (
                                     <div
-                                      key={tab}
+                                      key={tab2}
                                       className={`tab ${
-                                        activeTab === tab ? "active" : ""
+                                        activeTab2 === tab2 ? "active" : ""
                                       }`}
-                                      onClick={() => setActiveTab(tab)}
+                                      onClick={() => setActiveTab2(tab2)}
                                     >
-                                      {tab}
+                                      {tab2}
                                     </div>
                                   ))}
                                 </div>
@@ -2780,7 +2992,7 @@ const FlightSearch = () => {
                                   <div className="col-md-12 mb-4">
                                     <div className="flight-search">
                                       <h6>
-                                        {totalFlights} Flights Found on Your
+                                        {totalFlights2} Flights Found on Your
                                         Search
                                       </h6>
                                     </div>
@@ -2794,23 +3006,14 @@ const FlightSearch = () => {
                                             average of 15% on thousands of
                                             flights when you're signed in
                                           </h6>
-                                          {/* <button
-                                            type="button"
-                                            class="btn btn_theme btn_md"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal"
-                                          >
-                                            Sign In
-                                          </button> */}
                                         </div>
                                       </div>
                                     </div>
                                   </div>
-                                  <Slider
+                                  {/* <Slider
                                     {...setting2}
                                     className="choosedepartList"
                                   >
-                                    {/* Each item becomes a slide */}
                                     {[...Array(7)].map((_, index) => (
                                       <div key={index} className="px-2">
                                         <button className="btn chooseBtnFlt w-100">
@@ -2824,14 +3027,14 @@ const FlightSearch = () => {
                                         </button>
                                       </div>
                                     ))}
-                                  </Slider>
+                                  </Slider> */}
                                 </div>
 
                                 <div className="row">
                                   <div className="col-lg-12">
                                     <div className="flight_search_result_wrapper">
                                       {/* ✅ If Return flights exist -> Show departure + return */}
-                                      {paginatedData.map((flight, index) => (
+                                      {paginatedData2.map((flight, index) => (
                                         <div
                                           className="flight_search_item_wrappper"
                                           key={index}
@@ -2840,82 +3043,194 @@ const FlightSearch = () => {
                                             <div className="card-body">
                                               <div className="row">
                                                 <div className="col-md-9 flight-serach-main">
-                                                  {/* Departure */}
-                                                  <div className="">
-                                                    <div className="d-flex align-items-center gap-5">
-                                                      <div className="flight_logo">
-                                                        <img
-                                                          src={flightImg}
-                                                          alt="img"
-                                                        />
-                                                        <p>{flight.airline}</p>
-                                                      </div>
-                                                      <div className="flight_search_destination">
-                                                        <h3>
-                                                          {new Date(
-                                                            flight.departureTime
-                                                          ).toLocaleTimeString(
-                                                            [],
-                                                            {
-                                                              hour: "2-digit",
-                                                              minute: "2-digit",
-                                                            }
-                                                          )}
-                                                        </h3>
-                                                        <p>
-                                                          {flight.fromAirport} -{" "}
-                                                          {new Date(
-                                                            flight.departureTime
-                                                          ).toLocaleDateString()}
-                                                        </p>
-                                                      </div>
-                                                      {/* Duration */}
-                                                      <div className="flight_right_arrow">
-                                                        <p>
-                                                          {flight.legs?.length >
-                                                          1
-                                                            ? `${
-                                                                flight.legs
-                                                                  .length - 1
-                                                              } Stop${
-                                                                flight.legs
-                                                                  .length -
-                                                                  1 >
-                                                                1
-                                                                  ? "s"
-                                                                  : ""
-                                                              }`
-                                                            : "Non-stop"}
-                                                        </p>
-                                                        <div className="flightLine">
-                                                          <div></div>
-                                                          <div></div>
+                                                  {/* Outbound Segment */}
+                                                  {flight.outbound && (
+                                                    <div className="">
+                                                      <div className="d-flex align-items-center gap-5">
+                                                        <div className="flight_logo">
+                                                          <img
+                                                            src={flightImg}
+                                                            alt="img"
+                                                          />
+                                                          <p>
+                                                            {flight.airline}
+                                                          </p>
                                                         </div>
-                                                        <p>{flight.duration}</p>
-                                                      </div>
-                                                      {/* Arrival */}
-                                                      <div className="flight_search_destination">
-                                                        <h3>
-                                                          {new Date(
-                                                            flight.arrivalTime
-                                                          ).toLocaleTimeString(
-                                                            [],
+                                                        <div className="flight_search_destination">
+                                                          <h3>
+                                                            {new Date(
+                                                              flight.outbound.departureTime
+                                                            ).toLocaleTimeString(
+                                                              [],
+                                                              {
+                                                                hour: "2-digit",
+                                                                minute:
+                                                                  "2-digit",
+                                                              }
+                                                            )}
+                                                          </h3>
+                                                          <p>
                                                             {
-                                                              hour: "2-digit",
-                                                              minute: "2-digit",
-                                                            }
-                                                          )}
-                                                        </h3>
-                                                        <p>
-                                                          {flight.toAirport} -{" "}
-                                                          {new Date(
-                                                            flight.arrivalTime
-                                                          ).toLocaleDateString()}
-                                                        </p>
+                                                              flight.outbound
+                                                                .fromAirport
+                                                            }{" "}
+                                                            -{" "}
+                                                            {new Date(
+                                                              flight.outbound.departureTime
+                                                            ).toLocaleDateString()}
+                                                          </p>
+                                                        </div>
+                                                        {/* Duration & Stops */}
+                                                        <div className="flight_right_arrow">
+                                                          <p>
+                                                            {flight.outbound
+                                                              .legs?.length > 1
+                                                              ? `${
+                                                                  flight
+                                                                    .outbound
+                                                                    .legs
+                                                                    .length - 1
+                                                                } Stop${
+                                                                  flight
+                                                                    .outbound
+                                                                    .legs
+                                                                    .length -
+                                                                    1 >
+                                                                  1
+                                                                    ? "s"
+                                                                    : ""
+                                                                }`
+                                                              : "Non-stop"}
+                                                          </p>
+                                                          <div className="flightLine">
+                                                            <div></div>
+                                                            <div></div>
+                                                          </div>
+                                                          <p>
+                                                            {flight.duration}
+                                                          </p>
+                                                        </div>
+                                                        {/* Arrival */}
+                                                        <div className="flight_search_destination">
+                                                          <h3>
+                                                            {new Date(
+                                                              flight.outbound.arrivalTime
+                                                            ).toLocaleTimeString(
+                                                              [],
+                                                              {
+                                                                hour: "2-digit",
+                                                                minute:
+                                                                  "2-digit",
+                                                              }
+                                                            )}
+                                                          </h3>
+                                                          <p>
+                                                            {
+                                                              flight.outbound
+                                                                .toAirport
+                                                            }{" "}
+                                                            -{" "}
+                                                            {new Date(
+                                                              flight.outbound.arrivalTime
+                                                            ).toLocaleDateString()}
+                                                          </p>
+                                                        </div>
                                                       </div>
                                                     </div>
-                                                  </div>
-                                                  {/* return */}
+                                                  )}
+                                                  {/* Return Segment */}
+                                                  {flight.return && (
+                                                    <div className="">
+                                                      <div className="d-flex align-items-center gap-5">
+                                                        <div className="flight_logo">
+                                                          <img
+                                                            src={flightImg}
+                                                            alt="img"
+                                                          />
+                                                          <p>
+                                                            {flight.airline}
+                                                          </p>
+                                                        </div>
+                                                        <div className="flight_search_destination">
+                                                          <h3>
+                                                            {new Date(
+                                                              flight.return.departureTime
+                                                            ).toLocaleTimeString(
+                                                              [],
+                                                              {
+                                                                hour: "2-digit",
+                                                                minute:
+                                                                  "2-digit",
+                                                              }
+                                                            )}
+                                                          </h3>
+                                                          <p>
+                                                            {
+                                                              flight.return
+                                                                .fromAirport
+                                                            }{" "}
+                                                            -{" "}
+                                                            {new Date(
+                                                              flight.return.departureTime
+                                                            ).toLocaleDateString()}
+                                                          </p>
+                                                        </div>
+                                                        {/* Duration & Stops */}
+                                                        <div className="flight_right_arrow">
+                                                          <p>
+                                                            {flight.return.legs
+                                                              ?.length > 1
+                                                              ? `${
+                                                                  flight.return
+                                                                    .legs
+                                                                    .length - 1
+                                                                } Stop${
+                                                                  flight.return
+                                                                    .legs
+                                                                    .length -
+                                                                    1 >
+                                                                  1
+                                                                    ? "s"
+                                                                    : ""
+                                                                }`
+                                                              : "Non-stop"}
+                                                          </p>
+                                                          <div className="flightLine">
+                                                            <div></div>
+                                                            <div></div>
+                                                          </div>
+                                                          <p>
+                                                            {flight.duration}
+                                                          </p>
+                                                        </div>
+                                                        {/* Arrival */}
+                                                        <div className="flight_search_destination">
+                                                          <h3>
+                                                            {new Date(
+                                                              flight.return.arrivalTime
+                                                            ).toLocaleTimeString(
+                                                              [],
+                                                              {
+                                                                hour: "2-digit",
+                                                                minute:
+                                                                  "2-digit",
+                                                              }
+                                                            )}
+                                                          </h3>
+                                                          <p>
+                                                            {
+                                                              flight.return
+                                                                .toAirport
+                                                            }{" "}
+                                                            -{" "}
+                                                            {new Date(
+                                                              flight.return.arrivalTime
+                                                            ).toLocaleDateString()}
+                                                          </p>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  )}
                                                 </div>
                                                 {/* Price & Booking */}
                                                 <div className="col-md-3 d-flex justify-content-end">
@@ -2982,8 +3297,9 @@ const FlightSearch = () => {
                                                                     Base Fee
                                                                   </td>
                                                                   <td className="text-end">
+                                                                    ${" "}
                                                                     {
-                                                                      flight.flightFare
+                                                                      flight.basePrice
                                                                     }
                                                                   </td>
                                                                 </tr>
@@ -2992,8 +3308,9 @@ const FlightSearch = () => {
                                                                     Service Fee
                                                                   </td>
                                                                   <td className="text-end">
+                                                                    ${" "}
                                                                     {
-                                                                      flight.serviceFare
+                                                                      flight.serviceFee
                                                                     }
                                                                   </td>
                                                                 </tr>
@@ -3004,8 +3321,9 @@ const FlightSearch = () => {
                                                                     fees
                                                                   </td>
                                                                   <td className="text-end">
+                                                                    ${" "}
                                                                     {
-                                                                      flight.airlineTex
+                                                                      flight.airlineTax
                                                                     }
                                                                   </td>
                                                                 </tr>
@@ -3016,8 +3334,9 @@ const FlightSearch = () => {
                                                                     fees
                                                                   </td>
                                                                   <td className="text-end">
+                                                                    ${" "}
                                                                     {
-                                                                      flight.airlineCommission
+                                                                      flight.commissionFee
                                                                     }
                                                                   </td>
                                                                 </tr>
@@ -3026,6 +3345,7 @@ const FlightSearch = () => {
                                                                     Total:
                                                                   </td>
                                                                   <td className="text-end">
+                                                                    ${" "}
                                                                     {
                                                                       flight.price
                                                                     }
@@ -3040,7 +3360,7 @@ const FlightSearch = () => {
                                                     <div className="load_more_flight">
                                                       <button
                                                         className="btn btn_md"
-                                                        onClick={fetchfare}
+                                                        //onClick={fetchfare}
                                                       >
                                                         Book Now
                                                       </button>
@@ -3057,7 +3377,7 @@ const FlightSearch = () => {
                                                       handleToggle(index)
                                                     }
                                                   >
-                                                    Flight Detail{" "}
+                                                    View Detail{" "}
                                                     {openIndex === index ? (
                                                       <IoIosArrowUp />
                                                     ) : (
@@ -3069,15 +3389,23 @@ const FlightSearch = () => {
                                                     <div className="flight-detail">
                                                       <div className="detail-segment">
                                                         <strong>
-                                                          {flight.fromDetails}
+                                                          {
+                                                            flight.outbound
+                                                              .fromAirport
+                                                          }{" "}
+                                                          -{" "}
+                                                          {
+                                                            flight.outbound
+                                                              .toAirport
+                                                          }
                                                         </strong>
                                                         <p>
                                                           {new Date(
-                                                            flight.departureTime
+                                                            flight.outbound.departureTime
                                                           ).toLocaleString()}{" "}
                                                           -{" "}
                                                           {new Date(
-                                                            flight.arrivalTime
+                                                            flight.outbound.arrivalTime
                                                           ).toLocaleString()}{" "}
                                                           ({flight.duration})
                                                         </p>
@@ -3099,15 +3427,23 @@ const FlightSearch = () => {
                                                       </div>
                                                       <div className="detail-segment">
                                                         <strong>
-                                                          {flight.toDetails}
+                                                          {
+                                                            flight.return
+                                                              .fromAirport
+                                                          }{" "}
+                                                          -
+                                                          {
+                                                            flight.return
+                                                              .toAirport
+                                                          }
                                                         </strong>
                                                         <p>
                                                           {new Date(
-                                                            flight.departureTime
+                                                            flight.return.departureTime
                                                           ).toLocaleString()}{" "}
                                                           -{" "}
                                                           {new Date(
-                                                            flight.arrivalTime
+                                                            flight.return.arrivalTime
                                                           ).toLocaleString()}
                                                         </p>
                                                       </div>
@@ -3120,30 +3456,32 @@ const FlightSearch = () => {
                                         </div>
                                       ))}
                                     </div>
-                                    {totalPages > 1 && (
+                                    {totalPages2 > 1 && (
                                       <div className="pagination-controls">
                                         <button
                                           onClick={() =>
-                                            setCurrentPage((prev) =>
+                                            setCurrentPage2((prev) =>
                                               Math.max(prev - 1, 1)
                                             )
                                           }
-                                          disabled={currentPage === 1}
+                                          disabled={currentPage2 === 1}
                                         >
                                           Prev
                                         </button>
                                         <span className="font-semibold text-[#123b67]">
-                                          Page {currentPage} of {totalPages}
+                                          Page {currentPage2} of {totalPages2}
                                         </span>
                                         <button
                                           onClick={() =>
-                                            setCurrentPage((prev) =>
-                                              prev < totalPages
+                                            setCurrentPage2((prev) =>
+                                              prev < totalPages2
                                                 ? prev + 1
                                                 : prev
                                             )
                                           }
-                                          disabled={currentPage === totalPages}
+                                          disabled={
+                                            currentPage2 === totalPages2
+                                          }
                                         >
                                           Next
                                         </button>
@@ -3213,10 +3551,13 @@ const FlightSearch = () => {
                                                     )
                                                   }
                                                 >
-                                                  {airport.city_name}(
+                                                  {airport.city_name} (
+                                                  {airport.city_code}) -{" "}
+                                                  {airport.country_code}
+                                                  {/* {airport.city_name}(
                                                   {airport.city_code}) -{" "}
                                                   {airport.name} (
-                                                  {airport.country_code})
+                                                  {airport.country_code}) */}
                                                 </li>
                                               )
                                             )
@@ -3277,10 +3618,13 @@ const FlightSearch = () => {
                                                     )
                                                   }
                                                 >
-                                                  {airport.city_name}(
+                                                  {airport.city_name} (
+                                                  {airport.city_code}) -{" "}
+                                                  {airport.country_code}
+                                                  {/* {airport.city_name}(
                                                   {airport.city_code}) -{" "}
                                                   {airport.name} (
-                                                  {airport.country_code})
+                                                  {airport.country_code}) */}
                                                 </li>
                                               )
                                             )
@@ -3526,10 +3870,10 @@ const FlightSearch = () => {
                                                     </h6>
                                                     <div className="class-options">
                                                       {[
-                                                        "ECONOMY",
-                                                        "PREMIUM ECONOMY",
-                                                        "BUSINESS",
-                                                        "FIRST CLASS",
+                                                        "economy",
+                                                        "premium economy",
+                                                        "business",
+                                                        "first class",
                                                       ].map((cls) => (
                                                         <label
                                                           className="class-radio"
@@ -3842,15 +4186,15 @@ const FlightSearch = () => {
                             <div className="col-lg-12">
                               <div className="flight-tabs">
                                 <div className="tab-container">
-                                  {tabs.map((tab) => (
+                                  {tabs3.map((tab3) => (
                                     <div
-                                      key={tab}
+                                      key={tab3}
                                       className={`tab ${
-                                        activeTab === tab ? "active" : ""
+                                        activeTab3 === tab3 ? "active" : ""
                                       }`}
-                                      onClick={() => setActiveTab(tab)}
+                                      onClick={() => setActiveTab3(tab3)}
                                     >
-                                      {tab}
+                                      {tab3}
                                     </div>
                                   ))}
                                 </div>
@@ -3874,14 +4218,6 @@ const FlightSearch = () => {
                                             average of 15% on thousands of
                                             flights when you're signed in
                                           </h6>
-                                          {/* <button
-                                            type="button"
-                                            class="btn btn_theme btn_md"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal"
-                                          >
-                                            Sign In
-                                          </button> */}
                                         </div>
                                       </div>
                                     </div>
@@ -4118,7 +4454,7 @@ const FlightSearch = () => {
                                                     <div className="load_more_flight">
                                                       <button
                                                         className="btn btn_md"
-                                                        onClick={fetchfare}
+                                                        //onClick={fetchfare}
                                                       >
                                                         Book Now
                                                       </button>

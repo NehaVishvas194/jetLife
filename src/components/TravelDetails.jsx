@@ -92,7 +92,7 @@ const TravelsDetails = () => {
     try {
       const res = await axios.post(`${HOTEL_API}/book/hotel`, payload);
       console.log("Booking success:", res.data);
-      const result = res.data;
+      const result = res.data.data;
       navigate("/hotel_payment", { state: { result } });
     } catch (error) {
       console.error("Booking Failed:", error);

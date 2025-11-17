@@ -1,8 +1,14 @@
 import React from "react";
 import axios from "axios";
 import { HOTEL_API } from "../Url/BaseUrl";
+import { useLocation } from "react-router-dom";
+import { API_BASE_URL } from "../Url/BaseUrl";
 
 const HotelPayment = () => {
+  const location = useLocation();
+  const result = location.state?.result;
+  console.log("Hotel Result:-", result);
+
   const handlePayment = async () => {
     try {
       const payload = {
@@ -13,28 +19,28 @@ const HotelPayment = () => {
             PaymentCurrency: "USD",
             CompanyRef: "ORDER-12345-20251024-1901",
             RedirectURL:
-              "https://itdevelopmentservices.com/jettravel/success_page",
+              "https://itdevelopmentservices.com/jettravel/hotel_success_page",
             BackURL:
               "https://itdevelopmentservices.com/jettravel/cancel_payment",
             CompanyRefUnique: "1",
             PTL: "5",
-            customerName: name,
-            customerEmail: email,
+            customerName: "John Deo",
+            customerEmail: result.email,
             customerCity: "Dubai",
-            customerCountry: country,
-            customerPhone: phone,
+            customerCountry: "IN",
+            customerPhone: result.gsm,
           },
           Services: {
             Service: {
               ServiceType: "54841",
-              ServiceDescription: "Flight from Nairobi to Diani",
+              ServiceDescription: "Hotel Booking Payment ",
               ServiceDate: "2025/10/25 14:00",
             },
           },
         },
       };
       const res = await axios.post(
-        `${HOTEL_API}/create-dpo-transaction`,
+        `${API_BASE_URL}/create-dpo-transaction`,
         payload,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -42,7 +48,7 @@ const HotelPayment = () => {
 
       // ✅ Check if API returned success
       if (res.data?.status && res.data?.paymentUrl) {
-        localStorage.setItem("dpo_token", res.data.token);
+        localStorage.setItem("transaction_token", res.data.token);
         localStorage.setItem("dpo_companyRef", res.data.companyRef);
         window.location.href = res.data.paymentUrl;
       } else {
@@ -66,12 +72,10 @@ const HotelPayment = () => {
                   <div className="summary">
                     <h2>Booking Summary</h2>
                     <div className="section">
-                      <h3>{BookingType} Details</h3>
-                      <p>
-                        {fromCity} → {toCity}
-                      </p>
-                      <p>Arrival Time: {arrivalTime}</p>
-                      <p>Departure Time: {departureTime}</p>
+                      <h3>Hotel Details</h3>
+                      <p>{result.hotelId}</p>
+                      <p>Check Date: {result.checkIn}</p>
+                      <p>CheckOut Date: {result.checkOut}</p>
                     </div>
                     <div className="total">
                       <span>Total Amount:</span>

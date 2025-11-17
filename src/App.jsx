@@ -16,6 +16,7 @@ import DemoPayment from "./components/Payment";
 import SuccessPayment from "./components/SuccessPayment";
 import CancelPayment from "./components/CancelPayment";
 import HotelPayment from "./components/HotelPayment";
+import HotelSuccessPayment from "./components/HotelSuccessPayment";
 
 // 🔹 Lazy-loaded components
 // const Home = lazy(() => import("./components/home/Home"));
@@ -56,7 +57,7 @@ const OfferDetails = lazy(() => import("./components/home/OfferDetails"));
 const OfferPackages = lazy(() => import("./components/OfferPackages"));
 const Loader = lazy(() => import("./components/Loader"));
 
-console.log("date:-17-10-2025", "time:-18:22");
+console.log("date:-17-11-2025", "time:-18:16");
 
 function App() {
   useEffect(() => {
@@ -110,6 +111,7 @@ function App() {
           <Route path="/offer_packages" element={<OfferPackages />} />
           <Route path="/payment" element={<DemoPayment />} />
           <Route path="/success_page" element={<SuccessPayment />} />
+          <Route path="/hotel_success_page" element={<HotelSuccessPayment />} />
           <Route path="/cancel_payment" element={<CancelPayment />} />
         </Routes>
       </Suspense>
