@@ -76,16 +76,23 @@ const FlightSearch = () => {
   const [rowFlightsReturn, setRowFlightsReturn] = useState(
     location.state?.FlightReturn || []
   );
+  const [rowFlightMulti, setRowFlightMulti] = useState(
+    location.state?.FlightMultiCity || []
+  );
   const [openIndex, setOpenIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPage2, setCurrentPage2] = useState(1);
+  const [currentPage3, setCurrentPage3] = useState(1);
   const [fareKey, setFareKey] = useState("");
   const [showAllAirlines, setShowAllAirlines] = useState(false);
-  const [showAllFlightTimes, setShowAllFlightTimes] = useState(false);
   const [showAllAirlines2, setShowAllAirlines2] = useState(false);
+  const [showAllAirlines3, setShowAllAirlines3] = useState(false);
+  const [showAllFlightTimes, setShowAllFlightTimes] = useState(false);
   const [showAllFlightTimes2, setShowAllFlightTimes2] = useState(false);
+  const [showAllFlightTimes3, setShowAllFlightTimes3] = useState(false);
   const [selectedStops, setSelectedStops] = useState(null);
   const [selectedStops2, setSelectedStops2] = useState(null);
+  const [selectedStops3, setSelectedStops3] = useState(null);
   const [departureDate, setDepartureDate] = useState(null);
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
@@ -171,75 +178,66 @@ const FlightSearch = () => {
   }, []);
 
   // OneWay SearchAbility Data
-const fetchAirportSearch = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+  const fetchAirportSearch = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    const flightToken = localStorage.getItem("flightToken");
-    if (!flightToken) {
-      console.error("Flight Search:-No auth token available, cannot fetch airport data");
-      return;
-    }
-
-    const searchData = {
-      legs: [
-        {
-          origin: fromInput,
-          destination: toInput,
-          departureDate: departureDate,
-        },
-      ],
-      passengers: {
-        adults,
-        children,
-        infants,
-      },
-      cabinClass: travelClass,
-      tripType: "oneway",
-      currencyCode: "USD",
-      sort: "recommended",
-      bookingSources: ["amadeus", "sabre"],
-    };
-
-    const response = await axios.post(
-      `${FLIGHT_API}/flights/search`,
-      searchData,
-      {
-        headers: {
-          Authorization: `Bearer ${flightToken}`,
-          "Content-Type": "application/json",
-        },
+    try {
+      const flightToken = localStorage.getItem("flightToken");
+      if (!flightToken) {
+        console.error(
+          "Flight Search:-No auth token available, cannot fetch airport data"
+        );
+        return;
       }
-    );
 
-    // *** Extract session key ***
-    const sessionKey = response.data?.data?.searchSessionKey;
+      const searchData = {
+        legs: [
+          {
+            origin: fromInput,
+            destination: toInput,
+            departureDate: departureDate,
+          },
+        ],
+        passengers: {
+          adults,
+          children,
+          infants,
+        },
+        cabinClass: travelClass,
+        tripType: "oneway",
+        currencyCode: "USD",
+        sort: "recommended",
+        bookingSources: ["amadeus", "sabre"],
+      };
 
-    // *** Store it ***
-    if (sessionKey) {
+      const response = await axios.post(
+        `${FLIGHT_API}/flights/search`,
+        searchData,
+        {
+          headers: {
+            Authorization: `Bearer ${flightToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const sessionKey = response.data?.data?.searchSessionKey || {};
       localStorage.setItem("sessionKey", sessionKey);
-      console.log("Session Key Saved:", sessionKey);
-    } else {
-      console.log("Session Key Not Found in Response");
+
+      // *** Extract flights ***
+      const flightsData = response.data?.data?.flightOffers || [];
+
+      console.log("One Way Flights found:", flightsData);
+
+      setRowFlights(flightsData);
+    } catch (error) {
+      console.log("Error Fetching Search List Data:", error);
+      toast.error(error.response?.data?.message || "Flight Searching Error");
+    } finally {
+      setLoading(false);
     }
-
-    // *** Extract flights ***
-    const flightsData =
-      response.data?.data?.results?.flightOffers ||
-      response.data?.data?.flightOffers ||
-      [];
-
-    console.log("One Way Flights found:", flightsData);
-
-    setRowFlights(flightsData);
-  } catch (error) {
-    console.log("Error Fetching Search List Data:", error);
-    toast.error(error.response?.data?.message || "Flight Searching Error");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   // Flight Return SearchAbility Data
   const fetchReturnAirportSearch = async (e) => {
@@ -269,7 +267,7 @@ const fetchAirportSearch = async (e) => {
         returnDate: endDate,
         currencyCode: "USD",
         sort: "recommended",
-        // bookingSources: ["amadeus", "sabre"],
+        bookingSources: ["amadeus", "sabre"],
       };
 
       const response = await axios.post(
@@ -284,20 +282,10 @@ const fetchAirportSearch = async (e) => {
       );
 
       // *** Extract session key ***
-    const sessionKey = response.data?.data?.searchSessionKey;
+      const sessionKey2 = response.data?.data?.searchSessionKey || {};
+      localStorage.setItem("sessionKey", sessionKey2);
 
-    // *** Store it ***
-    if (sessionKey) {
-      localStorage.setItem("sessionKey", sessionKey);
-      console.log("Session Key Saved:", sessionKey);
-    } else {
-      console.log("Session Key Not Found in Response");
-    }
-
-      const flightsReturnsData =
-        response.data?.data?.results?.flightOffers ||
-        response.data?.data?.flightOffers ||
-        [];
+      const flightsReturnsData = response.data?.data?.flightOffers || [];
       console.log("Flights found:", flightsReturnsData);
       setRowFlightsReturn(flightsReturnsData);
     } catch (error) {
@@ -308,34 +296,56 @@ const fetchAirportSearch = async (e) => {
   };
 
   // flight Booking Data
-
-  const FightBooking = async (e) => {
+  const FlightSelection = async (e) => {
     e.preventDefault();
     try {
-      const authToken = localStorage.getItem("authToken");
+      const flightToken = localStorage.getItem("flightToken");
       const Token = localStorage.getItem("Token");
+      const sessionKey = localStorage.getItem("sessionKey");
+      const email = localStorage.getItem("email");
+      const phone = localStorage.getItem("phone");
 
-      if (!authToken || !Token) {
+      if (!flightToken || !Token) {
         const loginModal = new window.bootstrap.Modal(
           document.getElementById("exampleModal")
         );
         loginModal.show();
         return;
       }
-
-      const Data = {
-        departure_fare_key: fareKey,
-        pax_list: [{ type: "ADULT", count: adults }],
-      };
-      const response = await axios.post(`${FLIGHT_API}/bookings`, Data, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
+      const payload = {
+        searchSessionKey: sessionKey,
+        itemNumber: 1,
+        source: "amadeus",
+        // offerId: offerId,
+        travelers: [
+          {
+            id: "traveler_1",
+            type: "adult",
+            firstName: "John",
+            lastName: "Doe",
+            dateOfBirth: "1990-01-01",
+            gender: "Male",
+          },
+        ],
+        contactInfo: {
+          email: email,
+          phone: phone,
         },
-      });
-      const fareDetails = response.data?.result || {};
-      console.log("search Page Fare", fareDetails);
-      navigate("/booking_details", { state: { fareDetails } });
+      };
+
+      const response = await axios.post(
+        `${FLIGHT_API}/flights/select`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${flightToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const KeyData = response.data.data || {};
+      console.log("search Page Fare", KeyData);
+      navigate("/booking_details", { state: { KeyData } });
     } catch (error) {
       console.error(error);
     }
@@ -590,17 +600,8 @@ const fetchAirportSearch = async (e) => {
     const safeGet = (obj, key) => obj?.[key] || "";
     return {
       airline: safeGet(firstSegment, "segment.carrier.marketingCode") || "N/A",
-      // fromAirport: `${safeGet(
-      //   firstSegment,
-      //   "segment.departure.airportCode"
-      // )} - ${safeGet(firstSegment, "segment.departure.cityName")}`,
       fromAirport: `${safeGet(firstSegment, "segment.departure.airportCode")}`,
-      // toAirport: `${safeGet(
-      //   lastSagment,
-      //   "segment.arrival.airportCode"
-      // )} - ${safeGet(lastSagment, "segment.arrival.cityName")}`,
       toAirport: `${safeGet(lastSagment, "segment.arrival.airportCode")}`,
-
       departureTime: safeGet(firstSegment, "segment.departure.datetime"),
       arrivalTime: safeGet(lastSagment, "segment.arrival.datetime"),
       duration: formatDuration(offer["itinerary.duration"]),
@@ -766,10 +767,6 @@ const fetchAirportSearch = async (e) => {
       if (flightSegments.length === 0) return null;
 
       return {
-        // fromAirport: `${safeGet(
-        //   flightSegments[0],
-        //   "segment.departure.airportCode"
-        // )} - ${safeGet(flightSegments[0], "segment.departure.cityName")}`,
         fromAirport: `${safeGet(
           flightSegments[0],
           "segment.departure.airportCode"
@@ -910,6 +907,98 @@ const fetchAirportSearch = async (e) => {
   const endDate2 = startIndex2 + itemsPerPage;
   const paginatedData2 = sortedFlights2.slice(startIndex2, endDate2);
 
+  // Multicity Flight Data
+const formattedMultiTripFlight = rowFlightMulti.map((data) => {
+  const segments = data["itinerary.segments"] || [];
+  const legs = data.searchRequest?.legs || [];    // <-- MULTI-CITY LEGS
+  if (segments.length === 0 || legs.length === 0) return null;
+
+  const groupedSegments = [];
+
+  // Loop through each MULTI-CITY leg
+  let segIndex = 0;
+
+  legs.forEach((leg) => {
+    const legGroup = [];
+
+    while (segIndex < segments.length) {
+      const seg = segments[segIndex];
+
+      legGroup.push({
+        fromAirport: seg["segment.departure.airportCode"],
+        fromCity: seg["segment.departure.cityName"],
+        fromDate: seg["segment.departure.date"],
+        fromTime: seg["segment.departure.time"],
+        terminalFrom: seg["segment.departure.terminal"],
+
+        toAirport: seg["segment.arrival.airportCode"],
+        toCity: seg["segment.arrival.cityName"],
+        toDate: seg["segment.arrival.date"],
+        toTime: seg["segment.arrival.time"],
+        terminalTo: seg["segment.arrival.terminal"],
+
+        marketingAirline: seg["segment.carrier.marketingCode"],
+        flightNumber: seg["segment.flight.number"],
+        duration: seg["segment.flight.duration"],
+        stops: seg["segment.stops"],
+      });
+
+      // Stop when this segment reaches the destination of THIS LEG
+      if (
+        seg["segment.arrival.airportCode"] === leg.destination
+      ) {
+        segIndex++;
+        break;
+      }
+
+      segIndex++;
+    }
+
+    groupedSegments.push(legGroup);
+  });
+
+  // Fees & Taxes
+  const fees = data["offer.priceBreakdown"]?.["priceBreakdown.fees"] || [];
+  const taxes = data["offer.priceBreakdown"]?.["priceBreakdown.taxes"] || [];
+
+  // FIRST and LAST segment
+  const firstSeg = groupedSegments[0][0];
+  const lastGroup = groupedSegments[groupedSegments.length - 1];
+  const lastSeg = lastGroup[lastGroup.length - 1];
+
+  return {
+    offerId: data.offerId,
+
+    price: data["offer.priceBreakdown"]?.["priceBreakdown.totalPrice"]?.amount,
+    currency:
+      data["offer.priceBreakdown"]?.["priceBreakdown.totalPrice"]?.currency,
+
+    airline: firstSeg.marketingAirline,
+    flightNumber: firstSeg.flightNumber,
+
+    departureTime: `${firstSeg.fromDate}T${firstSeg.fromTime}`,
+    arrivalTime: `${lastSeg.toDate}T${lastSeg.toTime}`,
+
+    fromDetails: `${firstSeg.fromCity} (${firstSeg.fromAirport})`,
+    toDetails: `${lastSeg.toCity} (${lastSeg.toAirport})`,
+
+    baggerAmount: data.baggageAmount,
+    baggerType: data.baggageType,
+
+    duration: firstSeg.duration,
+    groupedSegments,
+    fees,
+    taxes,
+  };
+});
+
+
+  // Roundtrip Pagination logic
+  const totalPages3 = Math.ceil(formattedMultiTripFlight.length / itemsPerPage);
+  const startIndex3 = (currentPage3 - 1) * itemsPerPage;
+  const endDate3 = startIndex2 + itemsPerPage;
+  const paginatedData3 = formattedMultiTripFlight.slice(startIndex3, endDate3);
+
   const setting = {
     dots: false,
     arrows: true,
@@ -974,6 +1063,18 @@ const fetchAirportSearch = async (e) => {
         },
       },
     ],
+  };
+
+  const checkLogin = () => {
+    const Token = localStorage.getItem("Token");
+    if (!Token) {
+      const loginModal = new window.bootstrap.Modal(
+        document.getElementById("exampleModal")
+      );
+      loginModal.show();
+      return;
+    }
+    navigate("/booking_details");
   };
 
   const handleSubmitNormalUser = async (e) => {
@@ -1364,10 +1465,6 @@ const fetchAirportSearch = async (e) => {
                                             {airport.city_name} (
                                             {airport.city_code}) -{" "}
                                             {airport.country_code}
-                                            {/* {airport.city_name}(
-                                            {airport.city_code}) -{" "}
-                                            {airport.name} (
-                                            {airport.country_code}) */}
                                           </li>
                                         ))
                                       ) : !fromSelected ? (
@@ -1420,10 +1517,6 @@ const fetchAirportSearch = async (e) => {
                                             {airport.city_name} (
                                             {airport.city_code}) -{" "}
                                             {airport.country_code}
-                                            {/* {airport.city_name}(
-                                            {airport.city_code}) -{" "}
-                                            {airport.name} (
-                                            {airport.country_code}) */}
                                           </li>
                                         ))
                                       ) : !toSelected ? (
@@ -2370,10 +2463,6 @@ const fetchAirportSearch = async (e) => {
                                             {airport.city_name} (
                                             {airport.city_code}) -{" "}
                                             {airport.country_code}
-                                            {/* {airport.city_name}(
-                                            {airport.city_code}) -{" "}
-                                            {airport.name} (
-                                            {airport.country_code}) */}
                                           </li>
                                         ))
                                       ) : !fromSelected2 ? (
@@ -2388,7 +2477,6 @@ const fetchAirportSearch = async (e) => {
                                       ) : null}
                                     </ul>
                                   )}
-
                                   <div className="">
                                     <span>Start typing to filter airports</span>
                                   </div>
@@ -2432,10 +2520,6 @@ const fetchAirportSearch = async (e) => {
                                               {airport.city_name} (
                                               {airport.city_code}) -{" "}
                                               {airport.country_code}
-                                              {/* {airport.city_name}(
-                                              {airport.city_code}) -{" "}
-                                              {airport.name} (
-                                              {airport.country_code}) */}
                                             </li>
                                           )
                                         )
@@ -3360,7 +3444,7 @@ const fetchAirportSearch = async (e) => {
                                                     <div className="load_more_flight">
                                                       <button
                                                         className="btn btn_md"
-                                                        //onClick={fetchfare}
+                                                        onClick={checkLogin}
                                                       >
                                                         Book Now
                                                       </button>
@@ -3554,10 +3638,6 @@ const fetchAirportSearch = async (e) => {
                                                   {airport.city_name} (
                                                   {airport.city_code}) -{" "}
                                                   {airport.country_code}
-                                                  {/* {airport.city_name}(
-                                                  {airport.city_code}) -{" "}
-                                                  {airport.name} (
-                                                  {airport.country_code}) */}
                                                 </li>
                                               )
                                             )
@@ -3621,10 +3701,7 @@ const fetchAirportSearch = async (e) => {
                                                   {airport.city_name} (
                                                   {airport.city_code}) -{" "}
                                                   {airport.country_code}
-                                                  {/* {airport.city_name}(
-                                                  {airport.city_code}) -{" "}
-                                                  {airport.name} (
-                                                  {airport.country_code}) */}
+                                                  
                                                 </li>
                                               )
                                             )
@@ -3970,7 +4047,7 @@ const fetchAirportSearch = async (e) => {
                     className="section_padding pt-30"
                   >
                     <div className="container">
-                      <div className="row">
+                      {/* <div className="row">
                         <div className="col-md-12 mb-4 text-center">
                           <h4>Choose type of Flights you are interested</h4>
                         </div>
@@ -3995,7 +4072,7 @@ const fetchAirportSearch = async (e) => {
                             </div>
                           ))}
                         </Slider>
-                      </div>
+                      </div> */}
                       <div className="row">
                         <div className="col-md-3">
                           <div className="card booking-card m-0">
@@ -4222,11 +4299,10 @@ const fetchAirportSearch = async (e) => {
                                       </div>
                                     </div>
                                   </div>
-                                  <Slider
+                                  {/* <Slider
                                     {...setting2}
                                     className="choosedepartList"
                                   >
-                                    {/* Each item becomes a slide */}
                                     {[...Array(7)].map((_, index) => (
                                       <div key={index} className="px-2">
                                         <button className="btn chooseBtnFlt w-100">
@@ -4240,12 +4316,12 @@ const fetchAirportSearch = async (e) => {
                                         </button>
                                       </div>
                                     ))}
-                                  </Slider>
+                                  </Slider> */}
                                 </div>
                                 <div className="row">
                                   <div className="col-lg-12">
                                     <div className="flight_search_result_wrapper">
-                                      {paginatedData.map((flight, index) => (
+                                      {paginatedData3.map((flight, index) => (
                                         <div
                                           className="flight_search_item_wrappper"
                                           key={index}
@@ -4255,81 +4331,97 @@ const fetchAirportSearch = async (e) => {
                                               <div className="row">
                                                 <div className="col-md-9 flight-serach-main">
                                                   {/* Departure */}
-                                                  <div className="">
-                                                    <div className="d-flex align-items-center gap-5">
-                                                      <div className="flight_logo">
-                                                        <img
-                                                          src={flightImg}
-                                                          alt="img"
-                                                        />
-                                                        <p>{flight.airline}</p>
-                                                      </div>
-                                                      <div className="flight_search_destination">
-                                                        <h3>
-                                                          {new Date(
-                                                            flight.departureTime
+
+                                                  {Array.isArray(flight.groupedSegments) && flight.groupedSegments.length> 0 && flight.groupedSegments.map(
+                                                    (leg, idx) => {
+                                                     const first = leg[0];
+    const last = leg[leg.length - 1];
+                                                      return (
+                                                        <div
+                                                          className="mb-3"
+                                                          key={idx}
+                                                        >
+                                                          <div className="d-flex align-items-center gap-5">
+                                                            <div className="flight_logo">
+                                                              <img
+                                                                src={flightImg}
+                                                                alt="img"
+                                                              />
+                                                              <p>
+                                                                {
+                                                                  first.marketingAirline
+                                                                }
+                                                              </p>
+                                                            </div>
+                                                            {/* Departure */}
+                                                            <div className="flight_search_destination">
+                                                              <h3>
+                                                                {first.fromTime}
+                                                                {/* {new Date(
+                                                            first.fromTime
                                                           ).toLocaleTimeString(
                                                             [],
                                                             {
                                                               hour: "2-digit",
                                                               minute: "2-digit",
                                                             }
-                                                          )}
-                                                        </h3>
-                                                        <p>
-                                                          {flight.fromAirport} -{" "}
-                                                          {new Date(
-                                                            flight.departureTime
-                                                          ).toLocaleDateString()}
-                                                        </p>
-                                                      </div>
-                                                      {/* Duration */}
-                                                      <div className="flight_right_arrow">
-                                                        <p>
-                                                          {flight.legs?.length >
-                                                          1
-                                                            ? `${
-                                                                flight.legs
-                                                                  .length - 1
-                                                              } Stop${
-                                                                flight.legs
-                                                                  .length -
-                                                                  1 >
-                                                                1
-                                                                  ? "s"
-                                                                  : ""
-                                                              }`
-                                                            : "Non-stop"}
-                                                        </p>
-                                                        <div className="flightLine">
-                                                          <div></div>
-                                                          <div></div>
+                                                          )} */}
+                                                              </h3>
+                                                              <p>
+                                                                {
+                                                                  first.fromAirport
+                                                                }{" "}
+                                                                -{" "}
+                                                                {new Date(
+                                                                  first.fromDate
+                                                                ).toLocaleDateString()}
+                                                              </p>
+                                                            </div>
+                                                            {/* Duration */}
+                                                            <div className="flight_right_arrow">
+                                                              <p>
+                                                                {leg.length > 1
+                                                                  ? `${
+                                                                      leg.length -
+                                                                      1
+                                                                    } Stop`
+                                                                  : "Non-stop"}
+                                                              </p>
+                                                              <div className="flightLine">
+                                                                <div></div>
+                                                                <div></div>
+                                                              </div>
+                                                              <p>
+                                                                {first.duration}
+                                                              </p>
+                                                            </div>
+                                                            {/* Arrival */}
+                                                            <div className="flight_search_destination">
+                                                              <h3>
+                                                                {last.toTime}
+                                                                {/* {new Date(
+                                                            last.toTime
+                                                          ).toLocaleTimeString(
+                                                            [],
+                                                            {
+                                                              hour: "2-digit",
+                                                              minute: "2-digit",
+                                                            }
+                                                          )} */}
+                                                              </h3>
+                                                              <p>
+                                                                {last.toAirport}{" "}
+                                                                -{" "}
+                                                                {new Date(
+                                                                  last.toDate
+                                                                ).toLocaleDateString()}
+                                                              </p>
+                                                            </div>
+                                                          </div>
                                                         </div>
-                                                        <p>{flight.duration}</p>
-                                                      </div>
-                                                      {/* Arrival */}
-                                                      <div className="flight_search_destination">
-                                                        <h3>
-                                                          {new Date(
-                                                            flight.arrivalTime
-                                                          ).toLocaleTimeString(
-                                                            [],
-                                                            {
-                                                              hour: "2-digit",
-                                                              minute: "2-digit",
-                                                            }
-                                                          )}
-                                                        </h3>
-                                                        <p>
-                                                          {flight.toAirport} -{" "}
-                                                          {new Date(
-                                                            flight.arrivalTime
-                                                          ).toLocaleDateString()}
-                                                        </p>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                  {/* return */}
+                                                      );
+                                                    }
+                                                  )}
                                                 </div>
                                                 {/* Price & Booking */}
                                                 <div className="col-md-3 d-flex justify-content-end">
@@ -4534,30 +4626,32 @@ const fetchAirportSearch = async (e) => {
                                         </div>
                                       ))}
                                     </div>
-                                    {totalPages > 1 && (
+                                    {totalPages3 > 1 && (
                                       <div className="pagination-controls">
                                         <button
                                           onClick={() =>
-                                            setCurrentPage((prev) =>
+                                            setCurrentPage3((prev) =>
                                               Math.max(prev - 1, 1)
                                             )
                                           }
-                                          disabled={currentPage === 1}
+                                          disabled={currentPage3 === 1}
                                         >
                                           Prev
                                         </button>
                                         <span className="font-semibold text-[#123b67]">
-                                          Page {currentPage} of {totalPages}
+                                          Page {currentPage3} of {totalPages3}
                                         </span>
                                         <button
                                           onClick={() =>
-                                            setCurrentPage((prev) =>
-                                              prev < totalPages
+                                            setCurrentPage3((prev) =>
+                                              prev < totalPages3
                                                 ? prev + 1
                                                 : prev
                                             )
                                           }
-                                          disabled={currentPage === totalPages}
+                                          disabled={
+                                            currentPage3 === totalPages3
+                                          }
                                         >
                                           Next
                                         </button>

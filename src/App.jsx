@@ -5,8 +5,8 @@ import { Suspense, lazy, useEffect } from "react";
 import ScrollToTop from "./components/ScrollToTop";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import { ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 import Home from "./components/home/Home";
 import About from "./components/about/About";
 import ContactUs from "./components/contactus/ContactUs";
@@ -115,7 +115,6 @@ function App() {
           <Route path="/cancel_payment" element={<CancelPayment />} />
         </Routes>
       </Suspense>
-      <ToastContainer />
     </BrowserRouter>
   );
 }

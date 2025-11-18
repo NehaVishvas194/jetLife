@@ -182,8 +182,11 @@ const FormArea = () => {
         },
       });
 
-      const Flights = response.data?.data?.results?.flightOffers ||
-      response.data?.data?.flightOffers || [];
+      const sessionKey = response.data?.data?.searchSessionKey || {};
+      localStorage.setItem("sessionKey", sessionKey);
+
+
+      const Flights = response.data?.data?.flightOffers || [];
       console.log("One Way Flights found:", Flights);
       // navigate and pass data
       navigate("/searchFlight", { state: { Flights } });
@@ -243,8 +246,10 @@ const FormArea = () => {
         },
       });
 
-      const FlightReturn = response.data?.data?.results?.flightOffers ||
-      response.data?.data?.flightOffers || [];
+      const sessionKey2 = response.data?.data?.searchSessionKey || {};
+      localStorage.setItem("sessionKey", sessionKey2);
+
+      const FlightReturn = response.data?.data?.flightOffers || [];
       console.log("Return Flight Found:", FlightReturn);
       navigate("/searchFlight", {state: { FlightReturn,  activeUITab: "roundtrip" }}); //<< tell new page to open Return tab
     } catch (error) {
@@ -256,6 +261,72 @@ const FormArea = () => {
       setLoading(false);
     }
   };
+
+  // Flight Multicity SearchAbility Data
+  const fetchMultiAirportSearch = async (e) => {
+  e.preventDefault();
+   setLoading(true);
+
+  try {
+    const flightToken = localStorage.getItem("flightToken");
+    if (!flightToken) {
+      console.error("Flight Search:-No auth token available, cannot fetch airport data");
+      return;
+    }
+
+    // Build legs dynamically from UI
+    const legs = multiCityData.map((segment) => ({
+      origin: segment.from,                   
+      destination: segment.to,
+      departureDate: segment.date                    
+    }));
+
+    // Full payload
+    const payload = {
+      legs: legs,
+      passengers: {
+        adults: adults,
+        children: children,
+        infants: infants,
+      },
+      cabinClass: travelClass || "economy",
+      tripType: "multicity",
+      currencyCode: "USD",
+      sort: "recommended",
+      bookingSources: ["amadeus", "sabre"],
+    };
+
+    console.log("MultiCity API Payload:", payload);
+
+    // API call
+    const response = await axios.post(
+      `${FLIGHT_API}/flights/search`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${flightToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const sessionKey3 = response.data?.data?.searchSessionKey || {};
+    localStorage.setItem("sessionKey", sessionKey3);
+
+    const FlightMultiCity = response.data?.data?.flightOffers || [];
+    // Navigate to results page
+    navigate("/searchFlight", {
+      state: { FlightMultiCity, activeUITab:"multi_city" },
+    });
+  } catch (error) {
+    console.error("Error Fetching Multi-City Search Error:", error);
+     toast.error(
+        error.response?.data?.error?.description || "Flight Searching Error",
+      );
+  } finally{
+    setLoading(false);
+  }
+};
 
   // OneWay filter data
   let timeoutId;
@@ -416,7 +487,7 @@ const FormArea = () => {
   };
 
   const handleSelectAirport = (airport, index, type) => {
-    const formatted = `${airport.city_code} (${airport.city_name}) - ${airport.country_code}`;
+    const formatted = `${airport.city_code}`;
 
     const updated = [...multiCityData];
     updated[index][type] = formatted;
@@ -1474,7 +1545,7 @@ const FormArea = () => {
                           role="tabpanel"
                           aria-labelledby="multi_city-tab"
                         >
-                          <form action="#!">
+                          <form onSubmit={fetchMultiAirportSearch}>
                             {multiCityData.map((segment, index) => (
                               <div key={index}>
                                 <div className="row mb-2">
@@ -1520,10 +1591,6 @@ const FormArea = () => {
                                                       }
                                                     >
                                                     {airport.city_name} ({airport.city_code}) - {airport.country_code}
-                                                      {/* {airport.city_name}(
-                                                      {airport.city_code}) -{" "}
-                                                      {airport.name} (
-                                                      {airport.country_code}) */}
                                                     </li>
                                                   )
                                                 )
@@ -1585,10 +1652,6 @@ const FormArea = () => {
                                                       }
                                                     >
                                                     {airport.city_name} ({airport.city_code}) - {airport.country_code}
-                                                      {/* {airport.city_name}(
-                                                      {airport.city_code}) -{" "}
-                                                      {airport.name} (
-                                                      {airport.country_code}) */}
                                                     </li>
                                                   )
                                                 )
@@ -1921,7 +1984,7 @@ const FormArea = () => {
                                           type="submit"
                                           className="btn btn_theme btn_md"
                                         >
-                                          Search
+                                          {loading ? "Searching.." : "Search"}
                                         </button>
                                       </div>
                                     )}
