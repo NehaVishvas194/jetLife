@@ -908,90 +908,92 @@ const FlightSearch = () => {
   const paginatedData2 = sortedFlights2.slice(startIndex2, endDate2);
 
   // Multicity Flight Data
-const formattedMultiTripFlight = rowFlightMulti.map((data) => {
-  const segments = data["itinerary.segments"] || [];
-  const legs = data.searchRequest?.legs || [];    // <-- MULTI-CITY LEGS
-  if (segments.length === 0 || legs.length === 0) return null;
+  // Call this when you build formattedMultiTripFlight
+  const formattedMultiTripFlight = rowFlightMulti.map((data) => {
+    const segments = data["itinerary.segments"] || [];
+    const legs = data.searchRequest?.legs || []; // important: use API's searchRequest.legs
 
-  const groupedSegments = [];
-
-  // Loop through each MULTI-CITY leg
-  let segIndex = 0;
-
-  legs.forEach((leg) => {
-    const legGroup = [];
-
-    while (segIndex < segments.length) {
-      const seg = segments[segIndex];
-
-      legGroup.push({
-        fromAirport: seg["segment.departure.airportCode"],
-        fromCity: seg["segment.departure.cityName"],
-        fromDate: seg["segment.departure.date"],
-        fromTime: seg["segment.departure.time"],
-        terminalFrom: seg["segment.departure.terminal"],
-
-        toAirport: seg["segment.arrival.airportCode"],
-        toCity: seg["segment.arrival.cityName"],
-        toDate: seg["segment.arrival.date"],
-        toTime: seg["segment.arrival.time"],
-        terminalTo: seg["segment.arrival.terminal"],
-
-        marketingAirline: seg["segment.carrier.marketingCode"],
-        flightNumber: seg["segment.flight.number"],
-        duration: seg["segment.flight.duration"],
-        stops: seg["segment.stops"],
-      });
-
-      // Stop when this segment reaches the destination of THIS LEG
-      if (
-        seg["segment.arrival.airportCode"] === leg.destination
-      ) {
-        segIndex++;
-        break;
-      }
-
-      segIndex++;
+    // If no segments, still return an object so UI can render safely
+    if (!segments.length || !legs.length) {
+      return {
+        ...data,
+        groupedSegments: [],
+        // keep minimal fallback fields so UI won't blow up
+        price:
+          data["offer.priceBreakdown"]?.["priceBreakdown.totalPrice"]?.amount ||
+          "",
+      };
     }
 
-    groupedSegments.push(legGroup);
+    // Group segments by the actual requested legs (origin/destination)
+    const groupedSegments = legs.map((leg) => {
+      // find all segments that match this leg's origin+destination
+      const matches = segments.filter(
+        (seg) =>
+          seg["segment.departure.airportCode"] === leg.origin &&
+          seg["segment.arrival.airportCode"] === leg.destination
+      );
+
+      // Map to your UI-friendly object
+      return matches.map((seg) => {
+        const depDate = seg["segment.departure.date"];
+        const depTime = seg["segment.departure.time"];
+        const arrDate = seg["segment.arrival.date"];
+        const arrTime = seg["segment.arrival.time"];
+
+        // Build ISO-like datetime strings (no timezone). Keep them as local datetimes.
+        const departureDateTime = `${depDate}T${depTime}`;
+        const arrivalDateTime = `${arrDate}T${arrTime}`;
+
+        return {
+          // raw fields
+          raw: seg,
+          fromAirport: seg["segment.departure.airportCode"],
+          fromCity: seg["segment.departure.cityName"],
+          fromDate: depDate,
+          fromTime: depTime,
+          departureDateTime, // string
+          toAirport: seg["segment.arrival.airportCode"],
+          toCity: seg["segment.arrival.cityName"],
+          toDate: arrDate,
+          toTime: arrTime,
+          arrivalDateTime, // string
+
+          terminalFrom: seg["segment.departure.terminal"],
+          terminalTo: seg["segment.arrival.terminal"],
+
+          marketingAirline: seg["segment.carrier.marketingCode"],
+          flightNumber: seg["segment.flight.number"],
+          duration: seg["segment.flight.duration"],
+          stops: seg["segment.stops"],
+        };
+      });
+    });
+
+    // compute some top-level fields for the card (use first option of first leg etc)
+    const firstLegFirstOption =
+      (groupedSegments[0] && groupedSegments[0][0]) || null;
+    const lastLegs = groupedSegments[groupedSegments.length - 1] || [];
+    const lastLegLastOption = lastLegs[lastLegs.length - 1] || null;
+
+    return {
+      ...data,
+      groupedSegments, // array of legs; each leg is array of options
+      airline: firstLegFirstOption?.marketingAirline || "",
+      flightNumber: firstLegFirstOption?.flightNumber || "",
+      departureTime: firstLegFirstOption?.departureDateTime || "",
+      arrivalTime: lastLegLastOption?.arrivalDateTime || "",
+      fromDetails: firstLegFirstOption
+        ? `${firstLegFirstOption.fromCity} (${firstLegFirstOption.fromAirport})`
+        : "",
+      toDetails: lastLegLastOption
+        ? `${lastLegLastOption.toCity} (${lastLegLastOption.toAirport})`
+        : "",
+      price:
+        data["offer.priceBreakdown"]?.["priceBreakdown.totalPrice"]?.amount ||
+        "",
+    };
   });
-
-  // Fees & Taxes
-  const fees = data["offer.priceBreakdown"]?.["priceBreakdown.fees"] || [];
-  const taxes = data["offer.priceBreakdown"]?.["priceBreakdown.taxes"] || [];
-
-  // FIRST and LAST segment
-  const firstSeg = groupedSegments[0][0];
-  const lastGroup = groupedSegments[groupedSegments.length - 1];
-  const lastSeg = lastGroup[lastGroup.length - 1];
-
-  return {
-    offerId: data.offerId,
-
-    price: data["offer.priceBreakdown"]?.["priceBreakdown.totalPrice"]?.amount,
-    currency:
-      data["offer.priceBreakdown"]?.["priceBreakdown.totalPrice"]?.currency,
-
-    airline: firstSeg.marketingAirline,
-    flightNumber: firstSeg.flightNumber,
-
-    departureTime: `${firstSeg.fromDate}T${firstSeg.fromTime}`,
-    arrivalTime: `${lastSeg.toDate}T${lastSeg.toTime}`,
-
-    fromDetails: `${firstSeg.fromCity} (${firstSeg.fromAirport})`,
-    toDetails: `${lastSeg.toCity} (${lastSeg.toAirport})`,
-
-    baggerAmount: data.baggageAmount,
-    baggerType: data.baggageType,
-
-    duration: firstSeg.duration,
-    groupedSegments,
-    fees,
-    taxes,
-  };
-});
-
 
   // Roundtrip Pagination logic
   const totalPages3 = Math.ceil(formattedMultiTripFlight.length / itemsPerPage);
@@ -3701,7 +3703,6 @@ const formattedMultiTripFlight = rowFlightMulti.map((data) => {
                                                   {airport.city_name} (
                                                   {airport.city_code}) -{" "}
                                                   {airport.country_code}
-                                                  
                                                 </li>
                                               )
                                             )
@@ -4332,96 +4333,286 @@ const formattedMultiTripFlight = rowFlightMulti.map((data) => {
                                                 <div className="col-md-9 flight-serach-main">
                                                   {/* Departure */}
 
-                                                  {Array.isArray(flight.groupedSegments) && flight.groupedSegments.length> 0 && flight.groupedSegments.map(
-                                                    (leg, idx) => {
-                                                     const first = leg[0];
-    const last = leg[leg.length - 1];
-                                                      return (
-                                                        <div
-                                                          className="mb-3"
-                                                          key={idx}
-                                                        >
-                                                          <div className="d-flex align-items-center gap-5">
-                                                            <div className="flight_logo">
-                                                              <img
-                                                                src={flightImg}
-                                                                alt="img"
-                                                              />
-                                                              <p>
-                                                                {
-                                                                  first.marketingAirline
-                                                                }
-                                                              </p>
-                                                            </div>
-                                                            {/* Departure */}
-                                                            <div className="flight_search_destination">
-                                                              <h3>
-                                                                {first.fromTime}
-                                                                {/* {new Date(
-                                                            first.fromTime
-                                                          ).toLocaleTimeString(
-                                                            [],
-                                                            {
-                                                              hour: "2-digit",
-                                                              minute: "2-digit",
-                                                            }
-                                                          )} */}
-                                                              </h3>
-                                                              <p>
-                                                                {
-                                                                  first.fromAirport
-                                                                }{" "}
-                                                                -{" "}
-                                                                {new Date(
-                                                                  first.fromDate
-                                                                ).toLocaleDateString()}
-                                                              </p>
-                                                            </div>
-                                                            {/* Duration */}
-                                                            <div className="flight_right_arrow">
-                                                              <p>
-                                                                {leg.length > 1
-                                                                  ? `${
-                                                                      leg.length -
-                                                                      1
-                                                                    } Stop`
-                                                                  : "Non-stop"}
-                                                              </p>
-                                                              <div className="flightLine">
-                                                                <div></div>
-                                                                <div></div>
+                                                  {Array.isArray(
+                                                    flight.groupedSegments
+                                                  ) &&
+                                                    flight.groupedSegments
+                                                      .length > 0 &&
+                                                    flight.groupedSegments.map(
+                                                      (legOptions, legIdx) => {
+                                                        // legOptions is an array of options for this leg (can be length 0,1,2...)
+                                                        if (
+                                                          !legOptions ||
+                                                          legOptions.length ===
+                                                            0
+                                                        )
+                                                          return null;
+
+                                                        const primary =
+                                                          legOptions[0]; // summary row shows first option
+                                                        // parse datetimes safely (they are strings like "2025-12-10T19:50:00")
+                                                        const departDT =
+                                                          primary.departureDateTime
+                                                            ? new Date(
+                                                                primary.departureDateTime
+                                                              )
+                                                            : null;
+                                                        const arriveDT =
+                                                          primary.arrivalDateTime
+                                                            ? new Date(
+                                                                primary.arrivalDateTime
+                                                              )
+                                                            : null;
+
+                                                        return (
+                                                          <div
+                                                            className="mb-3"
+                                                            key={legIdx}
+                                                          >
+                                                            <div className="d-flex align-items-center gap-5">
+                                                              <div className="flight_logo">
+                                                                <img
+                                                                  src={
+                                                                    flightImg
+                                                                  }
+                                                                  alt="img"
+                                                                />
+                                                                <p>
+                                                                  {
+                                                                    primary.marketingAirline
+                                                                  }
+                                                                </p>
                                                               </div>
-                                                              <p>
-                                                                {first.duration}
-                                                              </p>
+
+                                                              <div className="flight_search_destination">
+                                                                <h3>
+                                                                  {departDT
+                                                                    ? departDT.toLocaleTimeString(
+                                                                        [],
+                                                                        {
+                                                                          hour: "2-digit",
+                                                                          minute:
+                                                                            "2-digit",
+                                                                        }
+                                                                      )
+                                                                    : primary.fromTime}
+                                                                </h3>
+                                                                <p>
+                                                                  {
+                                                                    primary.fromAirport
+                                                                  }{" "}
+                                                                  -{" "}
+                                                                  {departDT
+                                                                    ? departDT.toLocaleDateString()
+                                                                    : primary.fromDate}
+                                                                </p>
+                                                              </div>
+
+                                                              <div className="flight_right_arrow">
+                                                                <p>
+                                                                  {primary.stops &&
+                                                                  primary.stops
+                                                                    .toLowerCase()
+                                                                    .includes(
+                                                                      "stop"
+                                                                    )
+                                                                    ? primary.stops
+                                                                    : legOptions.length >
+                                                                      1
+                                                                    ? `${
+                                                                        legOptions.length -
+                                                                        1
+                                                                      } Stop${
+                                                                        legOptions.length -
+                                                                          1 >
+                                                                        1
+                                                                          ? "s"
+                                                                          : ""
+                                                                      }`
+                                                                    : "Non-stop"}
+                                                                </p>
+                                                                <div className="flightLine">
+                                                                  <div></div>
+                                                                  <div></div>
+                                                                </div>
+                                                                <p>
+                                                                  {
+                                                                    primary.duration
+                                                                  }
+                                                                </p>
+                                                              </div>
+
+                                                              <div className="flight_search_destination">
+                                                                <h3>
+                                                                  {arriveDT
+                                                                    ? arriveDT.toLocaleTimeString(
+                                                                        [],
+                                                                        {
+                                                                          hour: "2-digit",
+                                                                          minute:
+                                                                            "2-digit",
+                                                                        }
+                                                                      )
+                                                                    : primary.toTime}
+                                                                </h3>
+                                                                <p>
+                                                                  {
+                                                                    primary.toAirport
+                                                                  }{" "}
+                                                                  -{" "}
+                                                                  {arriveDT
+                                                                    ? arriveDT.toLocaleDateString()
+                                                                    : primary.toDate}
+                                                                </p>
+                                                              </div>
                                                             </div>
-                                                            {/* Arrival */}
-                                                            <div className="flight_search_destination">
-                                                              <h3>
-                                                                {last.toTime}
-                                                                {/* {new Date(
-                                                            last.toTime
-                                                          ).toLocaleTimeString(
-                                                            [],
-                                                            {
-                                                              hour: "2-digit",
-                                                              minute: "2-digit",
-                                                            }
-                                                          )} */}
-                                                              </h3>
-                                                              <p>
-                                                                {last.toAirport}{" "}
-                                                                -{" "}
-                                                                {new Date(
-                                                                  last.toDate
-                                                                ).toLocaleDateString()}
-                                                              </p>
-                                                            </div>
+
+                                                            {/* — show other options for this leg inside details (optional) — */}
+                                                            {legOptions.length >
+                                                              1 && (
+                                                              <div
+                                                                style={{
+                                                                  marginTop: 8,
+                                                                  marginLeft: 64,
+                                                                }}
+                                                              >
+                                                                <small
+                                                                  style={{
+                                                                    color:
+                                                                      "#666",
+                                                                  }}
+                                                                >
+                                                                  {
+                                                                    legOptions.length
+                                                                  }{" "}
+                                                                  options for
+                                                                  this leg —
+                                                                  click to
+                                                                  expand for
+                                                                  details
+                                                                </small>
+
+                                                                {/* Example: list other options (you can change to radio/select) */}
+                                                                <div
+                                                                  style={{
+                                                                    marginTop: 6,
+                                                                  }}
+                                                                >
+                                                                  {legOptions.map(
+                                                                    (
+                                                                      opt,
+                                                                      i
+                                                                    ) => {
+                                                                      const oDepart =
+                                                                        opt.departureDateTime
+                                                                          ? new Date(
+                                                                              opt.departureDateTime
+                                                                            )
+                                                                          : null;
+                                                                      const oArrive =
+                                                                        opt.arrivalDateTime
+                                                                          ? new Date(
+                                                                              opt.arrivalDateTime
+                                                                            )
+                                                                          : null;
+                                                                      return (
+                                                                        <div
+                                                                          key={
+                                                                            i
+                                                                          }
+                                                                          className="d-flex align-items-center"
+                                                                          style={{
+                                                                            gap: 12,
+                                                                            marginTop: 6,
+                                                                          }}
+                                                                        >
+                                                                          <div
+                                                                            style={{
+                                                                              width: 40,
+                                                                            }}
+                                                                          >
+                                                                            <img
+                                                                              src={
+                                                                                flightImg
+                                                                              }
+                                                                              alt="air"
+                                                                              style={{
+                                                                                width: 32,
+                                                                              }}
+                                                                            />
+                                                                          </div>
+                                                                          <div
+                                                                            style={{
+                                                                              flex: 1,
+                                                                            }}
+                                                                          >
+                                                                            <div
+                                                                              style={{
+                                                                                fontWeight:
+                                                                                  i ===
+                                                                                  0
+                                                                                    ? 600
+                                                                                    : 500,
+                                                                              }}
+                                                                            >
+                                                                              {oDepart
+                                                                                ? oDepart.toLocaleTimeString(
+                                                                                    [],
+                                                                                    {
+                                                                                      hour: "2-digit",
+                                                                                      minute:
+                                                                                        "2-digit",
+                                                                                    }
+                                                                                  )
+                                                                                : opt.fromTime}{" "}
+                                                                              -{" "}
+                                                                              {oArrive
+                                                                                ? oArrive.toLocaleTimeString(
+                                                                                    [],
+                                                                                    {
+                                                                                      hour: "2-digit",
+                                                                                      minute:
+                                                                                        "2-digit",
+                                                                                    }
+                                                                                  )
+                                                                                : opt.toTime}
+                                                                            </div>
+                                                                            <div
+                                                                              style={{
+                                                                                color:
+                                                                                  "#666",
+                                                                                fontSize: 13,
+                                                                              }}
+                                                                            >
+                                                                              {
+                                                                                opt.fromAirport
+                                                                              }{" "}
+                                                                              →{" "}
+                                                                              {
+                                                                                opt.toAirport
+                                                                              }{" "}
+                                                                              •{" "}
+                                                                              {
+                                                                                opt.duration
+                                                                              }
+                                                                            </div>
+                                                                          </div>
+                                                                          <div>
+                                                                            <button className="btn btn-sm">
+                                                                              Select
+                                                                            </button>
+                                                                          </div>
+                                                                        </div>
+                                                                      );
+                                                                    }
+                                                                  )}
+                                                                </div>
+                                                              </div>
+                                                            )}
                                                           </div>
-                                                        </div>
-                                                      );
-                                                    }
-                                                  )}
+                                                        );
+                                                      }
+                                                    )}
                                                 </div>
                                                 {/* Price & Booking */}
                                                 <div className="col-md-3 d-flex justify-content-end">
