@@ -247,7 +247,7 @@ const FormArea = () => {
       });
 
       const sessionKey2 = response.data?.data?.searchSessionKey || {};
-      localStorage.setItem("sessionKey", sessionKey2);
+      localStorage.setItem("sessionKey2", sessionKey2);
 
       const FlightReturn = response.data?.data?.flightOffers || [];
       console.log("Return Flight Found:", FlightReturn);
@@ -867,8 +867,8 @@ const FormArea = () => {
                                           }
                                           monthsShown={2}
                                           minDate={new Date()}
-                                          dateFormat="dd MMM yyyy"
-                                          placeholderText="dd-mm-yyyy"
+                                          dateFormat="yyyy MMM dd "
+                                          placeholderText="yyyy-mm-dd"
                                           className="rounded w-full cursor-pointer"
                                         />
                                         {departureDate && (

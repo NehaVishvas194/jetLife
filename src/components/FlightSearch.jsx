@@ -296,60 +296,45 @@ const FlightSearch = () => {
   };
 
   // flight Booking Data
-  const FlightSelection = async (e) => {
-    e.preventDefault();
-    try {
-      const flightToken = localStorage.getItem("flightToken");
-      const Token = localStorage.getItem("Token");
-      const sessionKey = localStorage.getItem("sessionKey");
-      const email = localStorage.getItem("email");
-      const phone = localStorage.getItem("phone");
+const FlightSelection = async (flight) => {
+  try {
+    const flightToken = localStorage.getItem("flightToken");
+    const Token = localStorage.getItem("Token");
+    const sessionKey = localStorage.getItem("sessionKey");
 
-      if (!flightToken || !Token) {
-        const loginModal = new window.bootstrap.Modal(
-          document.getElementById("exampleModal")
-        );
-        loginModal.show();
-        return;
-      }
-      const payload = {
-        searchSessionKey: sessionKey,
-        itemNumber: 1,
-        source: "amadeus",
-        // offerId: offerId,
-        travelers: [
-          {
-            id: "traveler_1",
-            type: "adult",
-            firstName: "John",
-            lastName: "Doe",
-            dateOfBirth: "1990-01-01",
-            gender: "Male",
-          },
-        ],
-        contactInfo: {
-          email: email,
-          phone: phone,
-        },
-      };
-
-      const response = await axios.post(
-        `${FLIGHT_API}/flights/select`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${flightToken}`,
-            "Content-Type": "application/json",
-          },
-        }
+    if (!flightToken || !Token) {
+      const loginModal = new window.bootstrap.Modal(
+        document.getElementById("exampleModal")
       );
-      const KeyData = response.data.data || {};
-      console.log("search Page Fare", KeyData);
-      navigate("/booking_details", { state: { KeyData } });
-    } catch (error) {
-      console.error(error);
+      loginModal.show();
+      return;
     }
-  };
+
+    const response = await axios.get(`${FLIGHT_API}/flights/select`, {
+      headers: {
+        Authorization: `Bearer ${flightToken}`,
+        "Content-Type": "application/json",
+      },
+      params: {
+        searchSessionKey: sessionKey,
+        itemNumber: flight.itemNumber,  // This MUST exist in your formattedFlights
+        source: "amadeus",
+      },
+    });
+
+    const selectionKey = response.data?.data?.selectionKey || {};
+    localStorage.setItem("selectionKey", selectionKey);
+
+    const KeyData = response.data.data || {};
+    console.log("search Page Fare", KeyData);
+
+    navigate("/booking_details", { state: { KeyData } });
+
+  } catch (error) {
+    console.error("Select Flight Error:", error);
+  }
+};
+
 
   // OneWay filter data
   let timeoutId;
@@ -599,6 +584,7 @@ const FlightSearch = () => {
 
     const safeGet = (obj, key) => obj?.[key] || "";
     return {
+      itemNumber: offer["offer.itemNumber"],
       airline: safeGet(firstSegment, "segment.carrier.marketingCode") || "N/A",
       fromAirport: `${safeGet(firstSegment, "segment.departure.airportCode")}`,
       toAirport: `${safeGet(lastSagment, "segment.arrival.airportCode")}`,
@@ -2299,7 +2285,7 @@ const FlightSearch = () => {
                                                     <div className="load_more_flight">
                                                       <button
                                                         className="btn btn_md"
-                                                        //onClick={fetchfare}
+                                                         onClick={() => FlightSelection(flight)}
                                                       >
                                                         Book Now
                                                       </button>
