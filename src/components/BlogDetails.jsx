@@ -32,6 +32,7 @@ const BlogDetails = () => {
   const [message, setMessage] = useState("");
 
   const [commentData, setCommentData] = useState([]);
+  const Token = localStorage.getItem("Token");
   // const [blog, setBlog] = useState(null);
 
   const fetchBanner = () => {
@@ -231,90 +232,99 @@ const BlogDetails = () => {
                         <p>Loading Api Data...</p>
                       )}
                     </div>
-                    <div className="mt-3 pb-3 border-bottom d-flex flex-wrap align-items-center justify-content-between"></div>
-                    <div className="my-3"></div>
-                    <h6>Comments</h6>
-                    {commentData.map((comment) => (
-                      <div className="card p-0 my-3" key={comment.id}>
-                        <div className="card-body">
-                          <div className="d-flex align-items-center justify-content-between">
-                            <div className="d-flex align-items-center gap-2">
-                              <div
-                                style={{
-                                  height: "40px",
-                                  width: "40px",
-                                  borderRadius: "50%",
-                                  backgroundColor: "#007bff",
-                                  color: "#fff",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  fontWeight: "bold",
-                                  fontSize: "16px",
-                                  textTransform: "uppercase",
-                                }}
-                              >
-                                {(comment.name && comment.name.charAt(0)) ||
-                                  "U"}
+                    {Token && (
+                      <div>
+                        <div className="mt-3 pb-3 border-bottom d-flex flex-wrap align-items-center justify-content-between"></div>
+
+                        <div className="my-3"></div>
+
+                        <h6 className="mb-3">Write a Comment</h6>
+
+                        {commentData.map((comment) => (
+                          <div className="card p-0 my-3" key={comment.id}>
+                            <div className="card-body">
+                              <div className="d-flex align-items-center justify-content-between">
+                                <div className="d-flex align-items-center gap-2">
+                                  <div
+                                    style={{
+                                      height: "40px",
+                                      width: "40px",
+                                      borderRadius: "50%",
+                                      backgroundColor: "#007bff",
+                                      color: "#fff",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      fontWeight: "bold",
+                                      fontSize: "16px",
+                                      textTransform: "uppercase",
+                                    }}
+                                  >
+                                    {(comment.name && comment.name.charAt(0)) ||
+                                      "U"}
+                                  </div>
+                                  <div className="tips-para">
+                                    <h6>{comment.name}</h6>
+                                    <p>{comment.email}</p>
+                                  </div>
+                                </div>
                               </div>
                               <div className="tips-para">
-                                <h6>{comment.name}</h6>
-                                <p>{comment.email}</p>
+                                <p>{comment.message}</p>
                               </div>
                             </div>
                           </div>
-                          <div className="tips-para">
-                            <p>{comment.message}</p>
-                          </div>
+                        ))}
+
+                        <div>
+                          <form onSubmit={(e) => handleSubmit(blogData.id, e)}>
+                            <div className="row">
+                              <div className="col-md-6">
+                                <div className="mb-3">
+                                  <label className="form-label">Name</label>
+                                  <input
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    className="form-control"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-md-6">
+                                <div className="mb-3">
+                                  <label className="form-label">Email</label>
+                                  <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="form-control"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="col-md-12">
+                                <div className="mb-3">
+                                  <label className="form-label">Message</label>
+                                  <textarea
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    className="form-control"
+                                    rows="4"
+                                  ></textarea>
+                                </div>
+                              </div>
+
+                              <div className="d-flex justify-content-end">
+                                <button className="btn btn_theme btn_md">
+                                  Post Comment
+                                </button>
+                              </div>
+                            </div>
+                          </form>
                         </div>
                       </div>
-                    ))}
-
-                    <h6 className="mb-3">Write A Comment</h6>
-                    <div>
-                      <form onSubmit={(e) => handleSubmit(blogData.id, e)}>
-                        <div className="row">
-                          <div className="col-md-6">
-                            <div className="mb-3">
-                              <label className="form-label">Name</label>
-                              <input
-                                type="text"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className="form-control"
-                              />
-                            </div>
-                          </div>
-                          <div className="col-md-6">
-                            <div className="mb-3">
-                              <label className="form-label">Email</label>
-                              <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="form-control"
-                              />
-                            </div>
-                          </div>
-                          <div className="col-md-12">
-                            <div className="mb-3">
-                              <label className="form-label">Message</label>
-                              <textarea
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                className="form-control"
-                                rows="4"
-                              ></textarea>
-                            </div>
-                          </div>
-                          <div className="d-flex justify-content-end">
-                            <button className="btn btn_theme btn_md">
-                              Post Comment
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>

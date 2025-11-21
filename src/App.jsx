@@ -57,7 +57,7 @@ const OfferDetails = lazy(() => import("./components/home/OfferDetails"));
 const OfferPackages = lazy(() => import("./components/OfferPackages"));
 const Loader = lazy(() => import("./components/Loader"));
 
-console.log("date:-17-11-2025", "time:-18:16");
+console.log("date:-21-11-2025", "time:-17:53");
 
 function App() {
   useEffect(() => {
